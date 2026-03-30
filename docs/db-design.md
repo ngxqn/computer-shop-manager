@@ -1,6 +1,6 @@
-# Thiết kế hệ thống dữ liệu cho hệ thống quán lí cửa hàng máy tính
+# Thiết kế hệ thống dữ liệu cho hệ thống quản lý cửa hàng máy tính
 
-BDF
+## 1. Sơ đồ phân rã chức năng (BFD)
 
 ```mermaid
 flowchart TD
@@ -14,8 +14,6 @@ flowchart TD
     A --> B5[Quản lý bán hàng]
     A --> B6[Quản lý nhà cung cấp]
     A --> B7[Quản lý bảo hành]
-    A --> B8[Quản lý đặt hàng]
-    A --> B9[Quản lý kho]
     A --> B10[Báo cáo thống kê]
 
     %% Nhập hàng
@@ -43,9 +41,10 @@ flowchart TD
     B4 --> B4e[Tìm kiếm theo loại]
 
     %% Bán hàng
-    B5 --> B5a[Tạo phiếu xuất]
-    B5 --> B5b[Sửa phiếu xuất]
-    B5 --> B5c[Tìm phiếu xuất]
+    %% Thêm dấu ngoặc kép để bọc văn bản lại vì dấu ngoặc đơn bên trong làm lỗi syntax
+    B5 --> B5a["Tạo phiếu xuất (Hóa đơn)"]
+    B5 --> B5b[Sửa hóa đơn]
+    B5 --> B5c[Tìm hóa đơn]
 
     %% Nhà cung cấp
     B6 --> B6a[Thêm NCC]
@@ -57,84 +56,136 @@ flowchart TD
     B7 --> B7b[Sửa phiếu BH]
     B7 --> B7c[Tìm phiếu BH]
 
-    %% Đặt hàng
-    B8 --> B8a[Tạo phiếu đặt]
-    B8 --> B8b[Sửa phiếu đặt]
-    B8 --> B8c[Tìm phiếu đặt]
-
-    %% Kho
-    B9 --> B9a[Nhập kho]
-    B9 --> B9b[Xuất kho]
-
     %% Báo cáo
     B10 --> B10a[Báo cáo nhập]
     B10 --> B10b[Báo cáo xuất]
     B10 --> B10c[Báo cáo doanh thu]
     B10 --> B10d[Báo cáo tồn kho]
 ```
+*(Ghi chú: Đã loại bỏ nhánh chức năng Kho phân mảnh và gộp chung vào cấu trúc của các nghiệp vụ xuất/nhập, phù hợp với kiến trúc 1 kho duy nhất).*
 
-ERD
+## 2. Mô hình Thực thể - Liên kết (ERD v2)
+
+So với mô hình cũ, ERD này đã được **chuẩn hóa**, không còn quan hệ N-Multiple (Many-to-Many). Bổ sung thêm các bảng `PHIEUNHAP`, bảng trung gian (Chi tiết), và 2 bảng đặc thù là `SERISANPHAM` và `PHIEUBAOHANH` theo yêu cầu BFD mới.
 
 ```mermaid
 erDiagram
-
     NHANVIEN {
         string MaNV PK
         string HoTen
         string GioiTinh
         string SDT
         string ChucVu
+        string TrangThai
     }
-
     KHACHHANG {
         string MaKH PK
         string HoTen
         string GioiTinh
         string SDT
         string DiaChi
+        string TrangThai
     }
-
-    SANPHAM {
-        string MaSP PK
-        string TenSP
-        float Gia
-        string Loai
-        int SoLuong
-        string MaNCC FK
-    }
-
-    KHO {
-        string MaKho PK
-        string TenKho
-    }
-
     NHACUNGCAP {
         string MaNCC PK
         string TenNCC
         string DiaChi
+        string SDT
+        string TrangThai
+    }
+    SANPHAM {
+        string MaSP PK
+        string TenSP
+        string LoaiSP
+        string MaNCC FK
+        float GiaBan
+        int TGBaoHanh "Theo tháng"
+        string TrangThai
+    }
+    SERISANPHAM {
+        string MaSeri PK "Serial/IMEI"
+        string MaSP FK
+        string MaPN FK "Nguồn gốc nhập"
+        string MaHD FK "Có thể NULL (chưa bán)"
+        string TinhTrang "Tồn kho, Đã bán, Lỗi"
+    }
+
+    PHIEUNHAP {
+        string MaPN PK
+        string MaNV FK
+        string MaNCC FK
+        date NgayNhap
+        float TongTien
+    }
+    CHITIETPHIEUNHAP {
+        string MaPN PK,FK
+        string MaSP PK,FK
+        int SoLuong
+        float DonGiaNhap
     }
 
     HOADON {
         string MaHD PK
+        string MaNV FK
+        string MaKH FK
         date NgayLap
         float TongTien
-        string MaNV FK
+    }
+    CHITIETHOADON {
+        string MaHD PK,FK
+        string MaSP PK,FK
+        int SoLuong
+        float DonGiaBan
     }
 
-    %% Relationships (crow's foot)
+    PHIEUBAOHANH {
+        string MaPBH PK
+        string MaSeri FK
+        string MaKH FK
+        string MaNV FK
+        date NgayTiepNhan
+        date NgayTraDuKien
+        string MoTaLoi
+        string TinhTrang "Đang xử lý, Đã hoàn thành"
+        float ChiPhi "0 nếu có bảo hành"
+    }
 
-    %% NhanVien lap HoaDon (1 - n)
-    NHANVIEN ||--o{ HOADON : lap
+    %% Relationships
 
-    %% KhachHang mua SanPham (m - n)
-    KHACHHANG }o--o{ SANPHAM : mua
+    NHANVIEN ||--o{ PHIEUNHAP : "lập"
+    NHANVIEN ||--o{ HOADON : "lập"
+    NHANVIEN ||--o{ PHIEUBAOHANH : "tiếp nhận"
 
-    %% HoaDon gom SanPham (m - n)
-    HOADON }o--o{ SANPHAM : gom
+    KHACHHANG ||--o{ HOADON : "mua"
+    KHACHHANG ||--o{ PHIEUBAOHANH : "yêu cầu"
 
-    %% Kho chua SanPham (1 - n)
-    KHO ||--o{ SANPHAM : chua
+    NHACUNGCAP ||--o{ SANPHAM : "cung cấp"
+    NHACUNGCAP ||--o{ PHIEUNHAP : "giao nhận"
 
-    %% NhaCungCap cung cap SanPham (1 - n)
-    NHACUNGCAP ||--o{ SANPHAM : cungcap
+    PHIEUNHAP ||--|{ CHITIETPHIEUNHAP : "gồm"
+    SANPHAM ||--o{ CHITIETPHIEUNHAP : "thuộc"
+
+    HOADON ||--|{ CHITIETHOADON : "gồm"
+    SANPHAM ||--o{ CHITIETHOADON : "thuộc"
+
+    SANPHAM ||--o{ SERISANPHAM : "có các mã máy"
+    PHIEUNHAP ||--o{ SERISANPHAM : "tạo ra (mới nhập kho)"
+    HOADON ||--o{ SERISANPHAM : "rời khỏi kho (bán ra)"
+
+    SERISANPHAM ||--o{ PHIEUBAOHANH : "được bảo hành"
 ```
+
+## 3. Lược đồ dữ liệu quan hệ (Relational Schema)
+
+Mô hình dữ liệu Mức Quan hệ tuân thủ 3NF:
+
+1. `NHANVIEN`(**MaNV**, HoTen, GioiTinh, SDT, ChucVu, TrangThai)
+2. `KHACHHANG`(**MaKH**, HoTen, GioiTinh, SDT, DiaChi, TrangThai)
+3. `NHACUNGCAP`(**MaNCC**, TenNCC, DiaChi, SDT, TrangThai)
+4. `SANPHAM`(**MaSP**, TenSP, LoaiSP, *MaNCC*, GiaBan, TGBaoHanh, TrangThai)
+5. `PHIEUNHAP`(**MaPN**, *MaNV*, *MaNCC*, NgayNhap, TongTien)
+6. `CHITIETPHIEUNHAP`(**MaPN**, **MaSP**, SoLuong, DonGiaNhap)
+7. `HOADON`(**MaHD**, *MaNV*, *MaKH*, NgayLap, TongTien)
+8. `CHITIETHOADON`(**MaHD**, **MaSP**, SoLuong, DonGiaBan)
+9. `SERISANPHAM`(**MaSeri**, *MaSP*, *MaPN*, *MaHD*, TinhTrang)
+10. `PHIEUBAOHANH`(**MaPBH**, *MaSeri*, *MaKH*, *MaNV*, NgayTiepNhan, NgayTraDuKien, MoTaLoi, TinhTrang, ChiPhi)
