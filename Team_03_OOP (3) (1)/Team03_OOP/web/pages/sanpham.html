@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Sản Phẩm & Kho</title>
+    <link rel="stylesheet" href="../css/style.css">
+
+</head>
+<body>
+
+    <header class="header">
+        <h1>Quản Lý Siêu Thị Mini</h1>
+        <div>Xin chào, Quản Trị Viên</div>
+    </header>
+
+    <div class="layout-container">
+        
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="nhanvien.html">Quản Lý Nhân Viên</a></li>
+                    <li><a href="khachhang.html">Quản Lý Khách Hàng</a></li>
+                    <li class="active"><a href="sanpham.html">Quản Lý Sản Phẩm/Kho</a></li>
+                    <li><a href="hoadon.html">Quản Lý Hóa Đơn</a></li>
+                    <li><a href="phieunhap.html">Quản Lý Phiếu Nhập</a></li>
+                    <li><a href="thongke.html">Báo Cáo & Thống Kê</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h2> Quản Lý Sản Phẩm & Kho</h2>
+
+            <div class="tools-bar">
+                <div class="search-and-filter">
+                    <input type="text" id="searchProduct" placeholder="Tìm kiếm theo Mã SP, Tên...">
+                    <select id="filterCategory" class="filter-select">
+                        <option value="">Lọc theo Danh mục</option>
+                        <option value="Thực Phẩm Tươi Sống">Thực Phẩm Tươi Sống</option>
+                        <option value="Đồ Uống">Đồ Uống</option>
+                        <option value="Gia Dụng">Gia Dụng</option>
+                    </select>
+                    <select id="filterStock" class="filter-select">
+                        <option value="">Lọc Tồn kho</option>
+                        <option value="low">Sắp hết hàng</option>
+                        <option value="ok">Còn hàng</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openAddModal()">+ Thêm Sản Phẩm Mới</button>
+                    <button class="btn-primary" style="background-color: var(--primary-color);" onclick="openImportModal()">Nhập Kho Hàng </button> 
+                </div>
+            </div>
+
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mã SP</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Giá Bán</th>
+                            <th>Giá Nhập (Gốc)</th>
+                            <th>Tồn Kho</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <tr>
+                            <td>SP001</td>
+                            <td>Sữa tươi Vinamilk 1L</td>
+                            <td>Đồ Uống</td>
+                            <td>25,000 VND</td>
+                            <td style="color: var(--text-light);">20,000 VND</td>
+                            <td><span class="stock-ok">500</span></td>
+                            <td>
+                                <button class="btn-action btn-detail" onclick="viewDetail('SP001')">Chi tiết</button>
+                                <button class="btn-action btn-edit" onclick="editProduct('SP001')">Sửa</button>
+                                <button class="btn-action btn-delete" onclick="deleteProduct('SP001')">Xóa</button>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>SP002</td>
+                            <td>Mì gói Hảo Hảo Tôm</td>
+                            <td>Thực Phẩm Khô</td>
+                            <td>4,500 VND</td>
+                            <td style="color: var(--text-light);">3,800 VND</td>
+                            <td><span class="stock-low">25</span></td>
+                            <td>
+                                <button class="btn-action btn-detail" onclick="viewDetail('SP002')">Chi tiết</button>
+                                <button class="btn-action btn-edit" onclick="editProduct('SP002')">Sửa</button>
+                                <button class="btn-action btn-delete" onclick="deleteProduct('SP002')">Xóa</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; color: var(--text-light);">
+                <p>Hiển thị 1 - 20 trên tổng số 850 sản phẩm.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dữ liệu giả định
+        let products = [
+            { maSP: 'SP001', ten: 'Sữa tươi Vinamilk 1L', danhMuc: 'Đồ Uống', giaBan: 25000, giaNhap: 20000, tonKho: 500 },
+            { maSP: 'SP002', ten: 'Mì gói Hảo Hảo Tôm', danhMuc: 'Thực Phẩm Khô', giaBan: 4500, giaNhap: 3800, tonKho: 25 },
+            { maSP: 'SP003', ten: 'Bàn chải đánh răng', danhMuc: 'Vệ Sinh Cá Nhân', giaBan: 15000, giaNhap: 12000, tonKho: 150 },
+        ];
+
+        const LOW_STOCK_THRESHOLD = 50; // Ngưỡng cảnh báo
+
+        // Hàm Tải và Hiển thị dữ liệu
+        function renderProducts(data) {
+            const tableBody = document.getElementById('productTableBody');
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">Không tìm thấy sản phẩm nào.</td></tr>';
+                return;
+            }
+
+            data.forEach(p => {
+                const stockClass = p.tonKho <= LOW_STOCK_THRESHOLD ? 'stock-low' : 'stock-ok';
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${p.maSP}</td>
+                    <td>${p.ten}</td>
+                    <td>${p.danhMuc}</td>
+                    <td>${formatCurrency(p.giaBan)}</td>
+                    <td style="color: var(--text-light);">${formatCurrency(p.giaNhap)}</td>
+                    <td><span class="${stockClass}">${p.tonKho}</span></td>
+                    <td>
+                        <button class="btn-action btn-detail" onclick="viewDetail('${p.maSP}')">Chi tiết</button>
+                        <button class="btn-action btn-edit" onclick="editProduct('${p.maSP}')">Sửa</button>
+                        <button class="btn-action btn-delete" onclick="deleteProduct('${p.maSP}')">Xóa</button>
+                    </td>
+                `;
+            });
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // Xử lý Tìm kiếm và Lọc
+        document.getElementById('searchProduct').addEventListener('keyup', filterProducts);
+        document.getElementById('filterCategory').addEventListener('change', filterProducts);
+        document.getElementById('filterStock').addEventListener('change', filterProducts);
+
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchProduct').value.toLowerCase();
+            const filterCategory = document.getElementById('filterCategory').value;
+            const filterStock = document.getElementById('filterStock').value;
+
+            const filteredData = products.filter(p => {
+                const matchesSearch = p.maSP.toLowerCase().includes(searchTerm) || p.ten.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = !filterCategory || p.danhMuc.includes(filterCategory); 
+                
+                let matchesStock = true;
+                if (filterStock === 'low') {
+                    matchesStock = p.tonKho <= LOW_STOCK_THRESHOLD;
+                } else if (filterStock === 'ok') {
+                    matchesStock = p.tonKho > LOW_STOCK_THRESHOLD;
+                }
+
+                return matchesSearch && matchesCategory && matchesStock;
+            });
+            renderProducts(filteredData);
+        }
+        
+        // Placeholder Functions (Sẽ được xử lý bởi Controller Java)
+        function openAddModal() {
+            alert('Mở modal thêm Sản Phẩm mới (gọi đến HangHoa.java / SanPham.java).');
+        }
+        function openImportModal() {
+            alert('Mở modal tạo Phiếu Nhập Kho (gọi đến PhieuNhapKho.java / Kho.java).');
+        }
+        function viewDetail(maSP) {
+            alert(`Xem chi tiết Sản Phẩm và lịch sử nhập/xuất kho của: ${maSP}`);
+        }
+        function editProduct(maSP) {
+            alert(`Sửa thông tin Sản Phẩm: ${maSP}`);
+        }
+        function deleteProduct(maSP) {
+            if (confirm(`Bạn có chắc muốn xóa Sản Phẩm ${maSP}?`)) {
+                alert(`Đã xóa Sản Phẩm ${maSP}.`);
+            }
+        }
+
+        // Khởi tạo bảng khi trang tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+            document.querySelector('.sidebar nav ul li:nth-child(3)').classList.add('active');
+        });
+    </script>
+</body>
+</html>

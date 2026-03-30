@@ -1,0 +1,50 @@
+Thu Ngan,NV001,Nguyen Van C,Nam,2000,0912345678,123 Duong Le Loi,0,Sang
+Ban Hang,NV002,Tran Thi Thu Thuy,Nu,1998,0987654321,456 Duong Nguyen Hue,1,Toi
+Ban Hang,NV003,Le Hoang Nam,Nam,2002,0905123456,78 Duong Pasteur,0,Sang
+Quan Li Kho,NV004,Pham Minh Anh,Nu,2001,0934567890,12 Duong Ly Tu Trong,2,Toi
+Ban Hang,NV005,Hoang Quoc Viet,Nam,1999,0911223344,89 Duong Tran Hung Dao,0,Sang
+Ban Hang,NV006,Nguyen Ngoc Lan,Nu,2003,0944556677,202 Duong Le Loi,1,Toi
+Ban Hang,NV007,Phan Van Duc,Nam,1997,0966778899,55 Duong Nguyen Hue,0,Sang
+Ban Hang,NV008,Do Thuy Trang,Nu,2000,0977889900,10 Duong Pasteur,3,Toi
+Ban Hang,NV009,Bui Anh Tuan,Nam,2002,0988990011,34 Duong Ly Tu Trong,0,Sang
+Ban Hang,NV010,Dang Phuong Hoa,Nu,1996,0999001122,67 Duong Tran Hung Dao,1,Toi
+Ban Hang,NV011,Vu Huu Kien,Nam,2001,0912123434,15 Duong Le Loi,2,Sang
+Ban Hang,NV012,Tran Khanh Vy,Nu,2004,0913134545,99 Duong Nguyen Hue,0,Toi
+Ban Hang,NV013,Hoang Minh Quan,Nam,1998,0914145656,120 Duong Pasteur,1,Sang
+Ban Hang,NV014,Le Thi Mai,Nu,2002,0915156767,45 Duong Ly Tu Trong,0,Toi
+Ban Hang,NV015,Pham Gia Bao,Nam,2000,0916167878,88 Duong Tran Hung Dao,2,Sang
+Ban Hang,NV016,Nguyen Thanh Binh,Nu,2003,0917178989,210 Duong Le Loi,0,Toi
+Thu Ngan,NV017,Phan Duc Hai,Nam,1995,0918189090,33 Duong Nguyen Hue,4,Sang
+Ban Hang,NV018,Vu Thu Ha,Nu,2001,0919190101,77 Duong Pasteur,1,Toi
+Quan Li Kho,NV019,Dang Quoc Hung,Nam,1999,0920201212,56 Duong Ly Tu Trong,0,Sang
+Ban Hang,NV020,Bui Ngoc Diep,Nu,2002,0921212323,11 Duong Tran Hung Dao,0,Toi
+Quan Li Kho,NV021,Nguyen Huu Thang,Nam,2000,0922223434,142 Duong Le Loi,2,Sang
+Ban Hang,NV022,Tran Minh Nguyet,Nu,2003,0923234545,66 Duong Nguyen Hue,1,Toi
+Ban Hang,NV023,Le Anh Dung,Nam,1997,0924245656,90 Duong Pasteur,0,Sang
+Ban Hang,NV024,Pham Hoang Yen,Nu,2001,0925256767,23 Duong Ly Tu Trong,3,Toi
+Ban Hang,NV025,Hoang Cong Thanh,Nam,1998,0926267878,150 Duong Tran Hung Dao,0,Sang
+Ban Hang,NV026,Nguyen Thi Oanh,Nu,2004,0927278989,44 Duong Le Loi,1,Toi
+Quan Li Kho,NV027,Phan Thanh Son,Nam,2002,0928289090,19 Duong Nguyen Hue,2,Sang
+Thu Ngan,NV028,Do Kim Chi,Nu,1999,0929290101,82 Duong Pasteur,0,Toi
+Ban Hang,NV029,Bui Van Phong,Nam,2000,0930301212,37 Duong Ly Tu Trong,1,Sang
+Ban Hang,NV030,Dang Bao Tram,Nu,2001,0931312323,61 Duong Tran Hung Dao,0,Toi
+Thu Ngan,NV031,Nguyen Duc Long,Nam,1996,0932323434,222 Duong Le Loi,3,Sang
+Thu Ngan,NV032,Tran My Linh,Nu,2003,0933334545,58 Duong Nguyen Hue,1,Toi
+Ban Hang,NV033,Le Quang Huy,Nam,1997,0934345656,101 Duong Pasteur,0,Sang
+Quan Li Kho,NV034,Pham Thi Nga,Nu,2002,0935356767,29 Duong Ly Tu Trong,2,Toi
+Ban Hang,NV035,Hoang Van An,Nam,2000,0936367878,160 Duong Tran Hung Dao,0,Sang
+Thu Ngan,NV036,Nguyen Hong Nhung,Nu,2004,0937378989,75 Duong Le Loi,1,Toi
+Ban Hang,NV037,Phan Gia Huy,Nam,1998,0938389090,14 Duong Nguyen Hue,0,Sang
+Quan Li Kho,NV038,Vu Tuyet Mai,Nu,2001,0939390101,88 Duong Pasteur,2,Toi
+Ban Hang,NV039,Dang Huu Phuoc,Nam,1999,0940401212,48 Duong Ly Tu Trong,1,Sang
+Ban Hang,NV040,Bui Minh Tu,Nu,2002,0941412323,105 Duong Tran Hung Dao,0,Toi
+Ban Hang,NV041,Nguyen Van Hoang,Nam,2000,0942423434,188 Duong Le Loi,4,Sang
+Ban Hang,NV042,Tran Phuong Thuy,Nu,2003,0943434545,26 Duong Nguyen Hue,1,Toi
+Ban Hang,NV043,Le Minh Tri,Nam,1997,0944445656,92 Duong Pasteur,0,Sang
+Thu Ngan,NV044,Pham Ngoc Anh,Nu,2001,0945456767,31 Duong Ly Tu Trong,2,Toi
+Ban Hang,NV045,Hoang Quoc Bao,Nam,1998,0946467878,170 Duong Tran Hung Dao,0,Sang
+Ban Hang,NV046,Nguyen Thi Hue,Nu,2004,0947478989,52 Duong Le Loi,1,Toi
+Quan Li Kho,NV047,Phan Thanh Tung,Nam,2002,0948489090,40 Duong Nguyen Hue,0,Sang
+Ban Hang,NV048,Do Thu Thao,Nu,1999,0949490101,111 Duong Pasteur,3,Toi
+Thu Ngan,NV049,Bui Duc Toan,Nam,2000,0950501212,64 Duong Ly Tu Trong,1,Sang
+Ban Hang,NV050,Dang Kieu Trang,Nu,2001,0951512323,125 Duong Tran Hung Dao,0,Toi

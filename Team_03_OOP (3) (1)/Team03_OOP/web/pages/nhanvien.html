@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nhân Viên</title>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    
+</head>
+<body>
+
+    <header class="header">
+        <h1>Quản Lý Siêu Thị Mini</h1>
+        <div>Xin chào, Quản Trị Viên</div>
+    </header>
+
+    <div class="layout-container">
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li class="active"><a href="nhanvien.html">Quản Lý Nhân Viên</a></li>
+                    <li ><a href="khachhang.html">Quản Lý Khách Hàng</a></li>
+                    <li ><a href="sanpham.html">Quản Lý Sản Phẩm/Kho</a></li>
+                    <li ><a href="hoadon.html">Quản Lý Hóa Đơn</a></li>
+                    <li ><a href="phieunhap.html">Quản Lý Phiếu Nhập</a></li>
+                    <li ><a href="thongke.html">Báo Cáo & Thống Kê</a></li>
+                    </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h2>Quản Lý Nhân Viên</h2>
+
+            <div class="tools-bar">
+                <div class="search-and-filter">
+                    <input type="text" id="searchEmployee" placeholder="Tìm kiếm theo Mã NV, Tên, SĐT...">
+                    <select id="filterRole" class="filter-select">
+                        <option value="">Lọc theo Chức danh</option>
+                        <option value="NhanVienBanHang">Nhân Viên Bán Hàng</option>
+                        </select>
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="openAddModal()">+ Thêm Nhân Viên Mới</button>
+                </div>
+            </div>
+
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mã NV</th>
+                            <th>Họ Tên</th>
+                            <th>Chức danh</th>
+                            <th>Số Điện Thoại</th>
+                            <th>Email</th>
+                            <th>Lương Cơ Bản</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody">
+                        </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <p>Hiển thị 1 - 20 trên tổng số 50 nhân viên.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dữ liệu giả định (Tương ứng với các class NhanVien.*.java)
+        let employees = [
+            { maNV: 'NV001', hoTen: 'Trần Thị C', chucDanh: 'Nhân Viên Bán Hàng', sdt: '0912345678', email: 'tranc@email.com', luongCB: 10000000 },
+            { maNV: 'NV002', hoTen: 'Phạm Văn D', chucDanh: 'Quản Lý Kho', sdt: '0987654321', email: 'phamd@email.com', luongCB: 15000000 },
+            { maNV: 'NV003', hoTen: 'Hoàng Minh E', chucDanh: 'Nhân Viên Thu Ngân', sdt: '0900112233', email: 'hoange@email.com', luongCB: 11000000 },
+        ];
+
+        // Hàm Tải và Hiển thị dữ liệu
+        function renderEmployees(data) {
+            const tableBody = document.getElementById('employeeTableBody');
+            tableBody.innerHTML = ''; // Xóa dữ liệu cũ
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">Không tìm thấy nhân viên nào.</td></tr>';
+                return;
+            }
+
+            data.forEach(emp => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${emp.maNV}</td>
+                    <td>${emp.hoTen}</td>
+                    <td>${emp.chucDanh}</td>
+                    <td>${emp.sdt}</td>
+                    <td>${emp.email}</td>
+                    <td>${formatCurrency(emp.luongCB)}</td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="editEmployee('${emp.maNV}')">Sửa</button>
+                        <button class="btn-action btn-delete" onclick="deleteEmployee('${emp.maNV}')">Xóa</button>
+                    </td>
+                `;
+            });
+        }
+        
+        // Hàm định dạng tiền tệ
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // Xử lý Tìm kiếm và Lọc (sẽ gọi đến QuanLiNhanVien.java)
+        document.getElementById('searchEmployee').addEventListener('keyup', filterEmployees);
+        document.getElementById('filterRole').addEventListener('change', filterEmployees);
+
+        function filterEmployees() {
+            const searchTerm = document.getElementById('searchEmployee').value.toLowerCase();
+            const filterRole = document.getElementById('filterRole').value;
+
+            const filteredData = employees.filter(emp => {
+                const matchesSearch = emp.maNV.toLowerCase().includes(searchTerm) || 
+                                      emp.hoTen.toLowerCase().includes(searchTerm) ||
+                                      emp.sdt.includes(searchTerm);
+                
+                const matchesRole = !filterRole || emp.chucDanh.includes(filterRole); // Lọc theo chức danh
+                
+                return matchesSearch && matchesRole;
+            });
+            renderEmployees(filteredData);
+        }
+
+        // Hàm mở Modal Thêm mới (Placeholder)
+        function openAddModal() {
+            alert('Chức năng mở cửa sổ/modal thêm Nhân Viên (sẽ được viết chi tiết sau).');
+        }
+
+        // Hàm Sửa (Placeholder)
+        function editEmployee(maNV) {
+            alert(`Sửa thông tin Nhân Viên có Mã: ${maNV}`);
+        }
+
+        // Hàm Xóa (Placeholder)
+        function deleteEmployee(maNV) {
+            if (confirm(`Bạn có chắc chắn muốn xóa Nhân Viên có Mã: ${maNV}?`)) {
+                alert(`Đã xóa Nhân Viên ${maNV}. (Logic này sẽ gọi đến QuanLiNhanVien.java)`);
+            }
+        }
+
+        // Khởi tạo bảng khi trang tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEmployees(employees);
+            // Kích hoạt mục menu hiện tại
+            document.querySelector('.sidebar nav ul li:nth-child(1)').classList.add('active');
+        });
+    </script>
+</body>
+</html>

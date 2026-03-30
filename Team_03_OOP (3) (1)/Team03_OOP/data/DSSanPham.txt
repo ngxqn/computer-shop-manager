@@ -1,0 +1,20 @@
+SP001,Áo Polo Cotton,Thời trang,200,150000.0
+SP002,Quần Jean Dài,Thời trang,5,250000.0
+SP003,Nước Suối Lavie 500ml,Nuoc,500,5000.0
+SP004,Bánh Quy AFC 200g,Banh,120,35000.0
+SP005,Nồi Cơm Điện 1.8L,Do gia dung,45,650000.0
+SP006,Tivi Samsung 4K 55 inch,Điện tử,30,1.2E7
+SP007,Điện Thoại iPhone 15,Điện tử,50,2.0E7
+SP008,Sữa Tươi Vinamilk 1L,Nuoc,300,30000.0
+SP009,Áo Khoác Da,Thời trang,60,500000.0
+SP010,Đèn LED Bàn Học,Do gia dung,90,120000.0
+SP011,Bánh Mì Sandwich,Banh,200,20000.0
+SP012,Tai Nghe Bluetooth,Điện tử,75,450000.0
+SP013,Kem Đánh Răng P/S,Khác,180,25000.0
+SP014,Bột Giặt Omo 800g,Khác,100,60000.0
+SP015,Tủ Lạnh Inverter,Do gia dung,20,8500000.0
+SP016,Nước Ngọt Coca-Cola,Nuoc,400,10000.0
+SP017,Bánh Gạo One One,Banh,110,40000.0
+SP018,Máy Tính Xách Tay Dell,Điện tử,35,1.5E7
+SP019,Đồng Hồ Đeo Tay,Thời trang,55,300000.0
+SP020,Bộ Dao Nhà Bếp,Do gia dung,70,220000.0

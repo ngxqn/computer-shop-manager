@@ -1,0 +1,60 @@
+package view;
+
+import controller.BaoCaoTonKho;
+import controller.QuanLi_Kho;
+import controller.QuanLi_SanPham;
+import modal.Kho;
+import modal.SanPham;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+public class BangDieuKhien_GiaoDich extends JPanel {
+    private QuanLi_Kho quanLiKho;
+    private QuanLi_SanPham quanLiSanPham;
+    private JTable bang;
+    private DefaultTableModel model;
+
+    public BangDieuKhien_GiaoDich(QuanLi_Kho qlk, QuanLi_SanPham qlsp) {
+        this.quanLiKho = qlk;
+        this.quanLiSanPham = qlsp;
+        setLayout(new BorderLayout(10, 10));
+
+        model = new DefaultTableModel(new String[]{"Mã SP", "Tên SP", "Loại", "Tồn Kho", "Giá Gốc"}, 0);
+        bang = new JTable(model);
+        add(new JScrollPane(bang), BorderLayout.CENTER);
+
+        JPanel pnlNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JButton btnNhapXuat = new JButton("Thực Hiện Nhập/Xuất Kho");
+        JButton btnBaoCao = new JButton("In Báo Cáo Tồn Kho");
+
+        // FIX LỖI TẠI ĐÂY: Gọi đúng Constructor 3 tham số
+        btnNhapXuat.addActionListener(e -> {
+            ThemGiaoDich dialog = new ThemGiaoDich(SwingUtilities.getWindowAncestor(this), quanLiKho, quanLiSanPham);
+            dialog.setVisible(true);
+            taiDuLieuVaoBang();
+        });
+
+        btnBaoCao.addActionListener(e -> {
+            Kho kho = quanLiKho.timKhoTheoMa("K01");
+            if (kho != null) {
+                new BaoCaoTonKho(SwingUtilities.getWindowAncestor(this), kho.layDanhSachSanPham()).setVisible(true);
+            }
+        });
+
+        pnlNut.add(btnNhapXuat); pnlNut.add(btnBaoCao);
+        add(pnlNut, BorderLayout.SOUTH);
+        taiDuLieuVaoBang();
+    }
+
+    public void taiDuLieuVaoBang() {
+        model.setRowCount(0);
+        Kho kho = quanLiKho.timKhoTheoMa("K01");
+        if (kho != null) {
+            for (SanPham sp : kho.layDanhSachSanPham()) {
+                model.addRow(new Object[]{sp.layID(), sp.layTen(), sp.layLoai(), sp.laySoLuong(), sp.layGiaGoc()});
+            }
+        }
+    }
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Siêu Thị Mini - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    
+</head>
+<body>
+
+    <header class="header">
+        <h1>Quản Lý Siêu Thị Mini</h1>
+        <div>Xin chào, Quản Trị Viên</div>
+    </header>
+
+    <div class="layout-container">
+        
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="pages/nhanvien.html">Quản Lý Nhân Viên</a></li>
+                    <li><a href="pages/khachhang.html">Quản Lý Khách Hàng</a></li>
+                    <li><a href="pages/sanpham.html">Quản Lý Sản Phẩm/Kho</a></li>
+                    <li><a href="pages/hoadon.html">Quản Lý Hóa Đơn</a></li>
+                    <li><a href="pages/phieunhap.html">Quản Lý Phiếu Nhập</a></li>
+                    <li><a href="pages/thongke.html">Báo Cáo & Thống Kê</a></li>
+                    </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h2>Tổng Quan Hoạt Động</h2>
+
+            <div class="dashboard-grid">
+                <div class="info-card" id="doanh-thu-card">
+                    <h3> Tổng Doanh Thu (Hôm nay)</h3>
+                    <p>0 VND</p>
+                </div>
+                
+                <div class="info-card" id="don-hang-card">
+                    <h3> Số Lượng Đơn Hàng</h3>
+                    <p>0</p>
+                </div>
+
+                <div class="info-card" id="khach-hang-card">
+                    <h3> Khách Hàng Mới (Tháng)</h3>
+                    <p>0</p>
+                </div>
+
+                <div class="info-card" id="can-nhap-kho-card">
+                    <h3> Sản Phẩm Sắp Hết</h3>
+                    <p>0</p>
+                </div>
+            </div>
+
+            <section style="margin-top: 40px; background-color: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                <h3>Hoạt Động Gần Đây</h3>
+                <p>Nội dung chi tiết (Ví dụ: Biểu đồ doanh thu 7 ngày gần nhất)</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const mockData = {
+            doanhThuHomNay: 15000000,
+            soLuongDonHang: 45,
+            khachHangMoiThang: 120,
+            sanPhamCanNhapKho: 8
+        };
+
+        function updateDashboard(data) {
+            document.querySelector('#doanh-thu-card p').textContent = formatCurrency(data.doanhThuHomNay);
+            document.querySelector('#don-hang-card p').textContent = data.soLuongDonHang;
+            document.querySelector('#khach-hang-card p').textContent = data.khachHangMoiThang;
+            document.querySelector('#can-nhap-kho-card p').textContent = data.sanPhamCanNhapKho;
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Dashboard đã sẵn sàng.');
+            // Giả lập việc fetch dữ liệu
+            setTimeout(() => {
+                updateDashboard(mockData);
+                console.log('Dữ liệu Dashboard đã được tải.');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

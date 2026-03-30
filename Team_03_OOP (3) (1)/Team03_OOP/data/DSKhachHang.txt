@@ -1,0 +1,50 @@
+KH001,Nguyen Anh Hung,Nam,1988,0967662421,459 Duong Le Loi
+KH002,Pham Dinh Nam,Nam,1993,0976410107,214 Duong Le Loi
+KH003,Phan Ngoc Oanh,Nu,1993,0948094988,13 Duong Pasteur
+KH004,Dang Phuong Chi,Nu,1982,0915204602,457 Duong Ly Tu Trong
+KH005,Le Quoc Lam,Nam,1991,0948381954,473 Duong Tran Hung Dao
+KH006,Dang Thanh Nga,Nu,2001,0917631165,221 Duong Nguyen Hue
+KH007,Phan Phuong Oanh,Nu,2005,0937861530,229 Duong Pasteur
+KH008,Do Dinh Quan,Nam,1995,0986641829,380 Duong Nguyen Hue
+KH009,Hoang Thi Yen,Nu,1992,0993041926,110 Duong Tran Hung Dao
+KH010,Hoang Thi Nga,Nu,1986,0941916315,417 Duong Tran Hung Dao
+KH011,Nguyen Thi Lan,Nu,1984,0980486851,192 Duong Nguyen Hue
+KH012,Vu Anh Son,Nam,2004,0933390098,284 Duong Ly Tu Trong
+KH013,Phan Huu Phong,Nam,2001,0980590483,43 Duong Pasteur
+KH014,Nguyen Thanh Vy,Nu,1990,0919179929,191 Duong Pasteur
+KH015,Phan Gia Binh,Nam,1994,0939527581,304 Duong Pasteur
+KH016,Pham Quoc Viet,Nam,1997,0942548483,230 Duong Ly Tu Trong
+KH017,Vu Minh Nga,Nu,2003,0967520448,22 Duong Nguyen Hue
+KH018,Phan Hanh Oanh,Nu,1983,0974442657,330 Duong Tran Hung Dao
+KH019,Dang Thi Quyen,Nu,1990,0983200778,416 Duong Nguyen Hue
+KH020,Nguyen Huu Son,Nam,1998,0953835041,313 Duong Tran Hung Dao
+KH021,Bui Huu Lam,Nam,2004,0944062828,296 Duong Nguyen Hue
+KH022,Dang Minh Quyen,Nu,1995,0987910174,385 Duong Tran Hung Dao
+KH023,Le Huu Son,Nam,1996,0970678885,420 Duong Le Loi
+KH024,Bui Thi Yen,Nu,1981,0973719918,172 Duong Nguyen Hue
+KH025,Pham Quoc Binh,Nam,1981,0968940562,17 Duong Nguyen Hue
+KH026,Pham Van Lam,Nam,1988,0956976939,403 Duong Nguyen Hue
+KH027,Vu Thanh Anh,Nu,1995,0991873832,236 Duong Nguyen Hue
+KH028,Nguyen Duc An,Nam,1988,0934149957,11 Duong Tran Hung Dao
+KH029,Bui Minh Vy,Nu,1991,0967732646,478 Duong Pasteur
+KH030,Do Thi Lan,Nu,1997,0942918451,209 Duong Nguyen Hue
+KH031,Phan Minh Yen,Nu,2001,0913840656,238 Duong Ly Tu Trong
+KH032,Le Van Chinh,Nam,1991,0955940027,337 Duong Nguyen Hue
+KH033,Vu Thi Trang,Nu,1997,0922849842,425 Duong Le Loi
+KH034,Bui Hanh Yen,Nu,1995,0968270392,382 Duong Le Loi
+KH035,Dang Thi Nga,Nu,1980,0947702582,319 Duong Nguyen Hue
+KH036,Phan Minh Lan,Nu,1981,0930777977,159 Duong Nguyen Hue
+KH037,Dang Anh Son,Nam,1985,0941913491,155 Duong Nguyen Hue
+KH038,Hoang Van Son,Nam,1990,0941097619,103 Duong Tran Hung Dao
+KH039,Dang Cong Viet,Nam,1997,0999516806,30 Duong Tran Hung Dao
+KH040,Hoang Minh Nga,Nu,1982,0918788484,394 Duong Pasteur
+KH041,Vu Thanh Trang,Nu,1995,0991783046,317 Duong Tran Hung Dao
+KH042,Phan Ngoc Nga,Nu,1991,0986518485,257 Duong Tran Hung Dao
+KH043,Dang Thanh Vy,Nu,1984,0981966205,455 Duong Tran Hung Dao
+KH044,Bui Dinh Lam,Nam,2003,0990390317,178 Duong Pasteur
+KH045,Hoang Thi Lan,Nu,1982,0963363403,115 Duong Tran Hung Dao
+KH046,Nguyen Gia Son,Nam,1995,0989053356,290 Duong Tran Hung Dao
+KH047,Pham Quoc Chinh,Nam,2001,0913253755,274 Duong Nguyen Hue
+KH048,Hoang Van Phong,Nam,2002,0987513361,332 Duong Pasteur
+KH049,Dang Thanh Lan,Nu,1988,0958197177,419 Duong Tran Hung Dao
+KH050,Le Dinh Phong,Nam,2000,0956974797,185 Duong Tran Hung Dao
