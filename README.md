@@ -4,7 +4,7 @@
 Đây là ứng dụng Desktop giúp quản lý hàng hóa, bán hàng và theo dõi kho cho mô hình siêu thị mini hoặc cửa hàng tiện lợi. 
 Dự án được xây dựng dựa trên cốt lõi là **Lập trình Hướng đối tượng (OOP)**, áp dụng mô hình **MVC (Model - View - Controller)** kết hợp lưu trữ dữ liệu thông qua các tệp văn bản (Text File).
 
-> **Lưu ý:** Thư mục `web/` trong dự án hiện chứa UI giả lập (Mock UI) bằng HTML/CSS/JS thuần và không kết nối trực tiếp với backend Java. Ứng dụng chính thức chạy bằng giao diện Swing (Desktop App).
+Ứng dụng chính thức chạy bằng giao diện Swing (Desktop App).
 
 ## Tính Năng Chính
 - **Quản Lý Bán Hàng & Hóa Đơn**: Tạo hóa đơn bán hàng, tính tổng tiền, lưu trữ lịch sử giao dịch.
