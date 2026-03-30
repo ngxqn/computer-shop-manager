@@ -23,7 +23,7 @@ public class QuanLi_NhanVien extends Luu_Tru_Du_Lieu { // Giữ nguyên tên Cla
     @Override
     public void docFileTXT() {
         this.danhSachNhanVien.clear();
-        File tapTinNV = new File("Team_03_OOP (3) (1)/Team03_OOP/data/DSNhanVien.txt");
+        File tapTinNV = new File("data/DSNhanVien.txt");
 
         try (BufferedReader boDoc = new BufferedReader(new FileReader(tapTinNV))) {
             String dong;
@@ -57,7 +57,7 @@ public class QuanLi_NhanVien extends Luu_Tru_Du_Lieu { // Giữ nguyên tên Cla
 
 	@Override
 	public void ghiFileTXT() { // Đổi tên phương thức
-		File tapTinNV = new File ("Team_03_OOP (3) (1)/Team03_OOP/data/DSNhanVien.txt"); // Đổi tên biến
+		File tapTinNV = new File ("data/DSNhanVien.txt"); // Đổi tên biến
 		
 		try (BufferedWriter boGhi = new BufferedWriter(new FileWriter(tapTinNV))) { // Đổi tên biến
 			for (NhanVien nhanVien : danhSachNhanVien) { 

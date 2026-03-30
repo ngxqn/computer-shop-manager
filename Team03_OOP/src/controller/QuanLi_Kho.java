@@ -12,7 +12,7 @@ import java.io.IOException;
 public class QuanLi_Kho extends Luu_Tru_Du_Lieu {
     private List<Kho> danhSachKho = new ArrayList<>();
     private QuanLi_SanPham qlSanPham;
-    private final String FILE_HOA_DON = "Team_03_OOP (3) (1)/Team03_OOP/data/DSHoaDon.txt";
+    private final String FILE_HOA_DON = "data/DSHoaDon.txt";
 
     public QuanLi_Kho(QuanLi_SanPham qlSanPham) {
         this.qlSanPham = qlSanPham;

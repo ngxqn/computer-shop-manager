@@ -8,8 +8,8 @@ import java.util.List;
 
 public class QuanLi_SanPham extends Luu_Tru_Du_Lieu {
     private List<SanPham> danhSachSanPham = new ArrayList<>();
-    private final String DUONG_DAN_FILE = "Team_03_OOP (3) (1)/Team03_OOP/data/DSSanPham.txt";
-    private final String DUONG_DAN_HOA_DON = "Team_03_OOP (3) (1)/Team03_OOP/data/DSHoaDon.txt";
+    private final String DUONG_DAN_FILE = "data/DSSanPham.txt";
+    private final String DUONG_DAN_HOA_DON = "data/DSHoaDon.txt";
 
     public QuanLi_SanPham() {
         docFileTXT();

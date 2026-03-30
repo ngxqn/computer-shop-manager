@@ -22,7 +22,7 @@ public class QuanLi_KhachHang extends Luu_Tru_Du_Lieu {
     @Override
     public void docFileTXT() {
         List<KhachHang> danhSachTam = new ArrayList<>();
-        File tapTinKH = new File ("Team_03_OOP (3) (1)/Team03_OOP/data/DSKhachHang.txt");
+        File tapTinKH = new File ("data/DSKhachHang.txt");
 
         if (!tapTinKH.exists()) {
             System.err.println("❌ Lỗi: Không tìm thấy file tại: " + tapTinKH.getAbsolutePath());
@@ -56,7 +56,7 @@ public class QuanLi_KhachHang extends Luu_Tru_Du_Lieu {
 
     @Override
     public void ghiFileTXT() {
-        File tapTinKH = new File ("Team_03_OOP (3) (1)/Team03_OOP/data/DSKhachHang.txt");
+        File tapTinKH = new File ("data/DSKhachHang.txt");
         tapTinKH.getParentFile().mkdirs();
 
         try (BufferedWriter boGhi = new BufferedWriter(new FileWriter(tapTinKH))) {
