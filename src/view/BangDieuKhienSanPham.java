@@ -20,7 +20,7 @@ public class BangDieuKhienSanPham extends JPanel {
     private JTextField truongTimKiem;
 
     private final String[] DANH_SACH_LOAI = {"Nuoc", "Banh", "Do gia dung", "Điện tử", "Thời trang", "Khác"};
-    private final NumberFormat dinhDangTien = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    private final NumberFormat dinhDangTien = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
 
     public BangDieuKhienSanPham(QuanLySanPham qlsp) {
         this.quanLySanPham = qlsp;

@@ -14,7 +14,7 @@ import java.util.List;
 public class ChiTietGiaoDich extends JDialog {
 
     private final SimpleDateFormat dinhDangNgay = new SimpleDateFormat("dd/MM/yyyy");
-    private final NumberFormat dinhDangVN = NumberFormat.getInstance(new Locale("vi", "VN"));
+    private final NumberFormat dinhDangVN = NumberFormat.getInstance(Locale.of("vi", "VN"));
 
     // Thuộc tính hiển thị
     private String maGD, loaiGD, nhanDoiTac, maDoiTac;

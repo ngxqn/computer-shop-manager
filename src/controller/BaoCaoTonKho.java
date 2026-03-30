@@ -20,7 +20,7 @@ public class BaoCaoTonKho extends JDialog {
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 
-        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        NumberFormat nf = NumberFormat.getInstance(Locale.of("vi", "VN"));
         double tongGiaTri = 0;
 
         for (SanPham sp : dssp) {
