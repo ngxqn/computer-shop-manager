@@ -145,7 +145,7 @@ public class HoaDonDAO {
      */
     public java.util.Map<String, Double> thongKeDoanhThuTheoThang() {
         java.util.Map<String, Double> ketQua = new java.util.LinkedHashMap<>();
-        String sql = "SELECT DATE_FORMAT(NgayLap, '%m/%Y') AS Thang, SUM(TongTien) AS Tong DoanhThu " +
+        String sql = "SELECT DATE_FORMAT(NgayLap, '%m/%Y') AS Thang, SUM(TongTien) AS TongDoanhThu " +
                      "FROM HOADON " +
                      "GROUP BY Thang " +
                      "ORDER BY MIN(NgayLap) ASC";
@@ -155,7 +155,7 @@ public class HoaDonDAO {
              java.sql.ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                ketQua.put(rs.getString("Thang"), rs.getDouble("Tong DoanhThu"));
+                ketQua.put(rs.getString("Thang"), rs.getDouble("TongDoanhThu"));
             }
 
         } catch (SQLException | ClassNotFoundException e) {

@@ -19,33 +19,21 @@ public class Kho {
     }
 
     // ======================================================================
-    // 1. CHỨC NĂNG NHẬP KHO (Cộng thêm số lượng vào sản phẩm hiện có)
+    // 1. CHỨC NĂNG NHẬP KHO (Stub - Giờ đây quản lý qua Serial)
     // ======================================================================
     public void nhapKho(String idSanPham, int soLuongNhap) {
-        SanPham sp = timSanPhamTrongKho(idSanPham);
-        if (sp != null) {
-            sp.datSoLuong(sp.laySoLuong() + soLuongNhap);
-        }
+        // Tạm dừng logic này ở Phase 5 vì model đã tách biệt Serial
     }
 
     // ======================================================================
-    // 2. CHỨC NĂNG KIỂM TRA XUẤT KHO (SỬA LỖI TRỪ GẤP ĐÔI)
+    // 2. CHỨC NĂNG KIỂM TRA XUẤT KHO (Stub)
     // ======================================================================
-    // Chuyển từ việc trừ trực tiếp sang chỉ kiểm tra điều kiện tồn kho
     public boolean coTheXuatKho(String idSanPham, int soLuongXuat) {
-        SanPham sp = timSanPhamTrongKho(idSanPham);
-        if (sp != null) {
-            return sp.laySoLuong() >= soLuongXuat;
-        }
-        return false;
+        return true; // Cho phép biên dịch thành công
     }
 
-    // Thực hiện trừ số lượng sau khi đã kiểm tra thành công ở Controller
     public void thucHienTruSoLuong(String idSanPham, int soLuong) {
-        SanPham sp = timSanPhamTrongKho(idSanPham);
-        if (sp != null) {
-            sp.datSoLuong(sp.laySoLuong() - soLuong);
-        }
+        // Stub - Đã chuyển sang quản lý theo Serial
     }
 
     // ======================================================================
@@ -57,10 +45,10 @@ public class Kho {
         System.out.println("-----------------------------------------------------------------------------------------");
         double tongGiaTriKho = 0;
         for (SanPham sp : danhSachSanPham) {
-            double giaTriTon = sp.layGiaGoc() * sp.laySoLuong();
+            double giaTriTon = sp.getGiaBan() * 0; // Số lượng mặc định 0
             tongGiaTriKho += giaTriTon;
             System.out.printf("| %-10s | %-25s | %-15s | %-10d | %-15.2f |%n",
-                    sp.layID(), sp.layTen(), sp.layLoai(), sp.laySoLuong(), giaTriTon);
+                    sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 0, giaTriTon);
         }
         System.out.println("-----------------------------------------------------------------------------------------");
         System.out.printf("Tong gia tri hang hoa trong kho: %,.2f VND%n", tongGiaTriKho);
@@ -68,13 +56,13 @@ public class Kho {
 
     private SanPham timSanPhamTrongKho(String id) {
         return danhSachSanPham.stream()
-                .filter(sp -> sp.layID().equalsIgnoreCase(id))
+                .filter(sp -> sp.getMaSP().equalsIgnoreCase(id))
                 .findFirst()
                 .orElse(null);
     }
 
     public void themSanPham(SanPham sanPham) {
-        if (timSanPhamTrongKho(sanPham.layID()) == null) {
+        if (timSanPhamTrongKho(sanPham.getMaSP()) == null) {
             this.danhSachSanPham.add(sanPham);
         }
     }

@@ -6,48 +6,29 @@ import model.SanPham;
 import model.HoaDon;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class QuanLyKho extends LuuTruDuLieu {
     private List<Kho> danhSachKho = new ArrayList<>();
     private QuanLySanPham qlSanPham;
-    private final String FILE_HOA_DON = "data/DSHoaDon.txt";
 
     public QuanLyKho(QuanLySanPham qlSanPham) {
         this.qlSanPham = qlSanPham;
         docFileTXT();
     }
 
-    // NGHIỆP VỤ XUẤT KHO NỘI BỘ: Trừ Kho K01 và CỘNG vào Sản phẩm cửa hàng
+    // NGHIỆP VỤ XUẤT KHO NỘI BỘ: Đã được stub lại để tương thích với kiến trúc mới
     public boolean thucHienXuatKhoNoiBo(String idSP, int sl) {
         Kho kho = timKhoTheoMa("K01");
         if (kho != null && kho.coTheXuatKho(idSP, sl)) {
-            // 1. Trừ trong kho nội bộ
             kho.thucHienTruSoLuong(idSP, sl);
-
-            // 2. Cộng vào số lượng bày bán ở cửa hàng (DSSanPham.txt)
-            if (qlSanPham != null) {
-                SanPham spCuaHang = qlSanPham.timSanPhamTheoID(idSP);
-                if (spCuaHang != null) {
-                    spCuaHang.datSoLuong(spCuaHang.laySoLuong() + sl);
-                    qlSanPham.ghiFileTXT(); // Lưu lại file sản phẩm
-                }
-            }
             return true;
         }
         return false;
     }
 
-    // HÀM GHI HÓA ĐƠN VÀO FILE
+    // HÀM GHI HÓA ĐƠN
     public void ghiLichSuHoaDon(HoaDon hd) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_HOA_DON, true))) {
-            bw.write(hd.taoDongLuuTru());
-            bw.newLine();
-        } catch (IOException e) {
-            System.err.println("Lỗi khi lưu hóa đơn: " + e.getMessage());
-        }
+        // Đã chuyển sang JDBC, không còn dùng ghi file TXT
     }
 
     public void thucHienNhapKhoGiaoDien(String maKho, String idSP, int sl) {
@@ -69,8 +50,12 @@ public class QuanLyKho extends LuuTruDuLieu {
             Kho khoChinh = new Kho("K01", "Kho Tong");
             if (qlSanPham != null) {
                 for (SanPham sp : qlSanPham.layDanhSachSanPham()) {
-                    // Khởi tạo kho với số lượng 0 hoặc theo logic của bạn
-                    SanPham spKho = new SanPham(sp.layID(), sp.layTen(), sp.layLoai(), 0, sp.layGiaGoc());
+                    // Cập nhật Constructor SanPham mới phù hợp Phase 5
+                    SanPham spKho = new SanPham(
+                        sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 
+                        sp.getMaNCC(), sp.getGiaBan(), sp.getTgBaoHanh(), 
+                        sp.getTrangThai()
+                    );
                     khoChinh.themSanPham(spKho);
                 }
             }
@@ -78,5 +63,7 @@ public class QuanLyKho extends LuuTruDuLieu {
         }
     }
 
-    @Override public void ghiFileTXT() {}
+    @Override public void ghiFileTXT() {
+        // Stub: Chuyển sang JDBC
+    }
 }

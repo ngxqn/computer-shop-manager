@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
     // Cấu hình mạng mặc định cho XAMPP MySQL
     // Bạn hãy thay thế "cuahangmaytinh" bằng tên cơ sở dữ liệu thực tế đã tạo nhé
-    private static final String DEFAULT_URL = "jdbc:mysql://localhost:3306/cuahangmaytinh";
+    private static final String DEFAULT_URL = "jdbc:mysql://localhost:3306/CuaHangMayTinh";
     private static final String DEFAULT_USER = "root";     // XAMPP mặc định là root
     private static final String DEFAULT_PASSWORD = "";     // XAMPP mặc định không có mật khẩu
 

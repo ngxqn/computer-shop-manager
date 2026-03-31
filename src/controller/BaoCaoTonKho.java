@@ -24,11 +24,12 @@ public class BaoCaoTonKho extends JDialog {
         double tongGiaTri = 0;
 
         for (SanPham sp : dssp) {
-            double giaTri = sp.layGiaGoc() * sp.laySoLuong();
+            int soLuong = 0; // Tồn kho sẽ được lấy từ SERISANPHAM ở phase tiếp theo
+            double giaTri = sp.getGiaBan() * soLuong;
             tongGiaTri += giaTri;
             model.addRow(new Object[]{
-                    sp.layID(), sp.layTen(), sp.layLoai(),
-                    sp.laySoLuong(), nf.format(giaTri) + " VNĐ"
+                    sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(),
+                    soLuong, nf.format(giaTri) + " VNĐ"
             });
         }
 

@@ -23,7 +23,7 @@ public class PhieuNhapKho {
     public double tinhTongGiaTri() {
         double tongGiaNhap = 0;
         for (SanPham sp : danhSachSanPham) {
-            tongGiaNhap += sp.layGiaGoc() * sp.laySoLuong();
+            tongGiaNhap += sp.getGiaBan() * 0; // Giá trị tạm thời là 0
         }
         return tongGiaNhap;
     }

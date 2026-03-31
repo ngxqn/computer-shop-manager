@@ -24,13 +24,13 @@ public class ChiTietGiaoDich extends JDialog {
 
     // CONSTRUCTOR 1: Xử lý Hóa Đơn
     public ChiTietGiaoDich(Window owner, HoaDon hd) {
-        super(owner, "Chi Tiết Hóa Đơn: " + hd.layMaGiaoDich(), ModalityType.APPLICATION_MODAL);
-        this.maGD = hd.layMaGiaoDich();
+        super(owner, "Chi Tiết Hóa Đơn: " + hd.getMaHD(), ModalityType.APPLICATION_MODAL);
+        this.maGD = hd.getMaHD();
         this.loaiGD = "HÓA ĐƠN XUẤT KHO (BÁN HÀNG)";
         this.nhanDoiTac = "Mã Khách Hàng:";
-        this.maDoiTac = hd.layMaKhachHang();
-        this.ngayGD = hd.layNgayGiaoDich();
-        this.dssp = hd.layDanhSachSanPham();
+        this.maDoiTac = hd.getMaKH();
+        this.ngayGD = hd.getNgayLap();
+        this.dssp = new java.util.ArrayList<>(); // Đã chuyển sang quản lý qua ChiTietHoaDonDAO
 
         khoiTaoGiaoDien(owner);
     }
@@ -115,10 +115,11 @@ public class ChiTietGiaoDich extends JDialog {
 
         if (dssp != null && !dssp.isEmpty()) {
             for (SanPham sp : dssp) {
-                double thanhTien = (double) sp.laySoLuong() * sp.layGiaGoc();
+                int soLuong = 0; // Đã chuyển sang Serial
+                double thanhTien = (double) soLuong * sp.getGiaBan();
                 sb.append(String.format(" %-12s %-25s %-8d %-15s %-15s%n",
-                        sp.layID(), sp.layTen(), sp.laySoLuong(),
-                        dinhDangVN.format(sp.layGiaGoc()), dinhDangVN.format(thanhTien)));
+                        sp.getMaSP(), sp.getTenSP(), soLuong,
+                        dinhDangVN.format(sp.getGiaBan()), dinhDangVN.format(thanhTien)));
             }
         }
         sb.append(" -----------------------------------------------------------------------------%n");
