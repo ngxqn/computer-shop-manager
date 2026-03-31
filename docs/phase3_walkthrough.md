@@ -29,7 +29,7 @@ Quá trình chuyển đổi cấu trúc (Refactor) từ hệ thống cơ sở "S
 Toàn bộ Source Code biên dịch sạch sẽ không có lỗi Compile ở cấp độ Model và DAO.
 
 > [!TIP]
-> Tác dụng tuyệt đối của thiết kế này là mọi thiết bị/Serial bán ra sẽ được lưu vết độc lập theo định danh mã Máy vào chung cùng dòng Khóa ngoại Hóa Đơn (MaHD, MaSeri). Do đó, khi tới "Phase 4 - Bảo hành", bạn có thể chỉ cần Query `MaSeri` là biết ngay máy đó có Hóa đơn hay không, mua lúc nào và ai nhập để tính thời gian.
+> Tác dụng tuyệt đối của thiết kế này là mọi thiết bị/Serial bán ra sẽ được lưu vết độc lập theo định danh mã Máy vào chung cùng dòng Khóa ngoại Hóa Đơn (MaHD, MaSeri). Do đó, khi tới "Phase 5 - Bảo hành", bạn có thể chỉ cần Query `MaSeri` là biết ngay máy đó có Hóa đơn hay không, mua lúc nào và ai nhập để tính thời gian.
 
 ## 🔜 Hướng đi tiếp theo
 
