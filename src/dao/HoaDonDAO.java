@@ -138,4 +138,30 @@ public class HoaDonDAO {
 
         return dsHoaDon;
     }
+
+    /**
+     * Thống kê tổng doanh thu theo từng tháng.
+     * Trả về Map với Key là "Tháng/Năm" và Value là Tổng tiền.
+     */
+    public java.util.Map<String, Double> thongKeDoanhThuTheoThang() {
+        java.util.Map<String, Double> ketQua = new java.util.LinkedHashMap<>();
+        String sql = "SELECT DATE_FORMAT(NgayLap, '%m/%Y') AS Thang, SUM(TongTien) AS Tong DoanhThu " +
+                     "FROM HOADON " +
+                     "GROUP BY Thang " +
+                     "ORDER BY MIN(NgayLap) ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                ketQua.put(rs.getString("Thang"), rs.getDouble("Tong DoanhThu"));
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return ketQua;
+    }
 }

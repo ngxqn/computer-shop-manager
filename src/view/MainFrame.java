@@ -46,31 +46,58 @@ public class MainFrame extends JFrame {
         // Tab Khách Hàng: Quản lý thông tin khách hàng thân thiết
         khachHangPanel = new BangDieuKhienKhachHang(qlkh);
 
-        // 4. Thêm các Tab vào JTabbedPane
+        // --- 4. Thêm các Tab vào JTabbedPane ---
         tabs.addTab("Kho Nội Bộ", giaoDichPanel);
         tabs.addTab("Bán Hàng & Hóa Đơn", hoaDonPanel);
         tabs.addTab("Sản Phẩm Cửa Hàng", sanPhamPanel);
         tabs.addTab("Quản Lý Nhân Viên", nhanVienPanel);
         tabs.addTab("Quản Lý Khách Hàng", khachHangPanel);
+        
+        BangDieuKhienBaoCao baoCaoPanel = new BangDieuKhienBaoCao();
+        tabs.addTab("Báo Cáo Doanh Thu", baoCaoPanel);
 
-        // --- 5. BỘ LẮNG NGHE SỰ KIỆN TỰ ĐỘNG LÀM MỚI (REFRESH) ---
-        // Giúp đồng bộ dữ liệu ngay lập tức khi người dùng chuyển tab
+        // --- 5. THIẾT LẬP MENU BAR (PHASE 5) ---
+        JMenuBar menuBar = new JMenuBar();
+        
+        JMenu menuHeThong = new JMenu("Hệ Thống");
+        JMenuItem itemThoat = new JMenuItem("Thoát");
+        itemThoat.addActionListener(e -> System.exit(0));
+        menuHeThong.add(itemThoat);
+        
+        JMenu menuNghiepVu = new JMenu("Nghiệp Vụ");
+        JMenuItem itemBaoHanh = new JMenuItem("Tiếp nhận Bảo hành");
+        itemBaoHanh.addActionListener(e -> {
+            new TiepNhanBaoHanhDialog(this).setVisible(true);
+        });
+        menuNghiepVu.add(itemBaoHanh);
+        
+        JMenu menuBaoCao = new JMenu("Báo Cáo");
+        JMenuItem itemDoanhThu = new JMenuItem("Doanh thu tháng");
+        itemDoanhThu.addActionListener(e -> tabs.setSelectedComponent(baoCaoPanel));
+        menuBaoCao.add(itemDoanhThu);
+        
+        menuBar.add(menuHeThong);
+        menuBar.add(menuNghiepVu);
+        menuBar.add(menuBaoCao);
+        this.setJMenuBar(menuBar);
+
+        // --- 6. BỘ LẮNG NGHE SỰ KIỆN TỰ ĐỘNG LÀM MỚI (REFRESH) ---
         tabs.addChangeListener(e -> {
             int selectedIndex = tabs.getSelectedIndex();
             String titleTab = tabs.getTitleAt(selectedIndex);
 
             if (titleTab.equals("Sản Phẩm Cửa Hàng")) {
-                sanPhamPanel.taiDuLieuVaoBang(); // Nạp lại DSSanPham.txt
+                sanPhamPanel.taiDuLieuVaoBang();
             } else if (titleTab.equals("Kho Nội Bộ")) {
-                giaoDichPanel.taiDuLieuVaoBang(); // Nạp lại dữ liệu kho
+                giaoDichPanel.taiDuLieuVaoBang();
             } else if (titleTab.equals("Bán Hàng & Hóa Đơn")) {
-                hoaDonPanel.taiDuLieu(); // Nạp lại DSHoaDon.txt
+                hoaDonPanel.taiDuLieu();
             } else if (titleTab.equals("Quản Lý Nhân Viên")) {
-                qlnv.docFileTXT(); // Cập nhật danh sách nhân viên
-                // nhanVienPanel.taiDuLieuVaoBang(); // Nếu có hàm refresh trong Panel NV
+                qlnv.docFileTXT();
             } else if (titleTab.equals("Quản Lý Khách Hàng")) {
-                qlkh.docFileTXT(); // Cập nhật danh sách khách hàng
-                // khachHangPanel.taiDuLieuVaoBang(); // Nếu có hàm refresh trong Panel KH
+                qlkh.docFileTXT();
+            } else if (titleTab.equals("Báo Cáo Doanh Thu")) {
+                baoCaoPanel.taiDuLieu();
             }
         });
 
