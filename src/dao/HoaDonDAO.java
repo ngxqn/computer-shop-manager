@@ -105,4 +105,37 @@ public class HoaDonDAO {
             }
         }
     }
+
+    /**
+     * Lấy toàn bộ Hóa Đơn từ Database để hiển thị trên bảng lịch sử
+     */
+    public List<HoaDon> layTatCaHoaDon() {
+        List<HoaDon> dsHoaDon = new java.util.ArrayList<>();
+        String sql = "SELECT MaHD, MaNV, MaKH, NgayLap, TongTien FROM HOADON ORDER BY NgayLap DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                HoaDon hd = new HoaDon();
+                hd.setMaHD(rs.getString("MaHD"));
+                hd.setMaNV(rs.getString("MaNV"));
+                hd.setMaKH(rs.getString("MaKH"));
+                
+                java.sql.Timestamp ts = rs.getTimestamp("NgayLap");
+                if (ts != null) {
+                    hd.setNgayLap(new java.util.Date(ts.getTime()));
+                }
+                
+                hd.setTongTien(rs.getDouble("TongTien"));
+                dsHoaDon.add(hd);
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return dsHoaDon;
+    }
 }

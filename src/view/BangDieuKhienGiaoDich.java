@@ -53,7 +53,8 @@ public class BangDieuKhienGiaoDich extends JPanel {
         Kho kho = quanLiKho.timKhoTheoMa("K01");
         if (kho != null) {
             for (SanPham sp : kho.layDanhSachSanPham()) {
-                model.addRow(new Object[]{sp.layID(), sp.layTen(), sp.layLoai(), sp.laySoLuong(), sp.layGiaGoc()});
+                // Tạm thời để số lượng là 0 do SanPham không còn quản lý theo lượng (Phase 3)
+                model.addRow(new Object[]{sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 0, sp.getGiaBan()});
             }
         }
     }

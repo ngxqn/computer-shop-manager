@@ -22,12 +22,7 @@ public class QuanLySanPham extends LuuTruDuLieu {
      * Trừ trực tiếp số lượng sản phẩm bày bán tại cửa hàng khi có khách mua
      */
     public boolean thucHienBanHangTruTrucTiep(String idSP, int slBan) {
-        SanPham sp = timSanPhamTheoID(idSP);
-        if (sp != null && sp.laySoLuong() >= slBan) {
-            sp.datSoLuong(sp.laySoLuong() - slBan);
-            ghiFileTXT(); // Lưu lại thay đổi vào file DSSanPham.txt ngay lập tức
-            return true;
-        }
+        // Đã chuyển sang dùng JDBC & SeriSanPham, hàm này không còn được sử dụng.
         return false;
     }
 
@@ -35,13 +30,7 @@ public class QuanLySanPham extends LuuTruDuLieu {
      * Ghi lịch sử hóa đơn bán hàng vào file DSHoaDon.txt
      */
     public void ghiLichSuHoaDon(HoaDon hd) {
-        // Sử dụng FileWriter với tham số true để ghi tiếp vào cuối file (append)
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(DUONG_DAN_HOA_DON, true))) {
-            bw.write(hd.taoDongLuuTru());
-            bw.newLine();
-        } catch (IOException e) {
-            System.err.println("Lỗi khi ghi file lịch sử hóa đơn: " + e.getMessage());
-        }
+        // Đã chuyển sang dùng HoaDonDAO với JDBC Transactions, phương thức này không còn sử dụng.
     }
 
     // --- CÁC HÀM QUẢN LÝ (CRUD) GIỮ NGUYÊN ---
@@ -52,13 +41,13 @@ public class QuanLySanPham extends LuuTruDuLieu {
 
     public SanPham timSanPhamTheoID(String id) {
         return danhSachSanPham.stream()
-                .filter(s -> s.layID().equalsIgnoreCase(id))
+                .filter(s -> s.getMaSP() != null && s.getMaSP().equalsIgnoreCase(id))
                 .findFirst()
                 .orElse(null);
     }
 
     public boolean themSanPham(SanPham sp) {
-        if (timSanPhamTheoID(sp.layID()) == null) {
+        if (timSanPhamTheoID(sp.getMaSP()) == null) {
             danhSachSanPham.add(sp);
             ghiFileTXT();
             return true;
@@ -79,10 +68,10 @@ public class QuanLySanPham extends LuuTruDuLieu {
     public boolean suaSanPham(String id, String tenMoi, String loaiMoi, int slMoi, double giaMoi) {
         SanPham sp = timSanPhamTheoID(id);
         if (sp != null) {
-            sp.datTen(tenMoi);
-            sp.datLoai(loaiMoi);
-            sp.datSoLuong(slMoi);
-            sp.datGiaGoc(giaMoi);
+            sp.setTenSP(tenMoi);
+            sp.setLoaiSP(loaiMoi);
+            // Logic cập nhật số lượng đã bị loại bỏ ở Model SanPham
+            sp.setGiaBan(giaMoi);
             ghiFileTXT();
             return true;
         }
@@ -93,42 +82,12 @@ public class QuanLySanPham extends LuuTruDuLieu {
 
     @Override
     public void docFileTXT() {
+        // Đã chuyển toàn bộ sang JDBC Database, không còn đọc File TXT
         danhSachSanPham.clear();
-        File f = new File(DUONG_DAN_FILE);
-        if (!f.exists()) return;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
-                String[] d = line.split(",");
-                // Cấu trúc: ID, Ten, Loai, SoLuong, GiaGoc
-                if (d.length == 5) {
-                    danhSachSanPham.add(new SanPham(
-                            d[0], d[1], d[2],
-                            Integer.parseInt(d[3]),
-                            Double.parseDouble(d[4])
-                    ));
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Lỗi đọc file sản phẩm: " + e.getMessage());
-        }
     }
 
     @Override
     public void ghiFileTXT() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(DUONG_DAN_FILE))) {
-            for (SanPham sp : danhSachSanPham) {
-                bw.write(sp.layID() + "," +
-                        sp.layTen() + "," +
-                        sp.layLoai() + "," +
-                        sp.laySoLuong() + "," +
-                        sp.layGiaGoc());
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Lỗi ghi file sản phẩm: " + e.getMessage());
-        }
+        // Đã chuyển toàn bộ sang JDBC Database, không còn lưu File TXT
     }
 }
