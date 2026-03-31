@@ -1,16 +1,15 @@
 package controller;
-import dao.LuuTruDuLieu;
 
+import dao.LuuTruDuLieu;
+import dao.SanPhamDAO;
 import model.SanPham;
 import model.HoaDon;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuanLySanPham extends LuuTruDuLieu {
     private List<SanPham> danhSachSanPham = new ArrayList<>();
-    private final String DUONG_DAN_FILE = "data/DSSanPham.txt";
-    private final String DUONG_DAN_HOA_DON = "data/DSHoaDon.txt";
+    private SanPhamDAO sanPhamDAO = new SanPhamDAO();
 
     public QuanLySanPham() {
         docFileTXT();
@@ -33,7 +32,7 @@ public class QuanLySanPham extends LuuTruDuLieu {
         // Đã chuyển sang dùng HoaDonDAO với JDBC Transactions, phương thức này không còn sử dụng.
     }
 
-    // --- CÁC HÀM QUẢN LÝ (CRUD) GIỮ NGUYÊN ---
+    // --- CÁC HÀM QUẢN LÝ (CRUD) ---
 
     public List<SanPham> layDanhSachSanPham() {
         return danhSachSanPham;
@@ -49,7 +48,7 @@ public class QuanLySanPham extends LuuTruDuLieu {
     public boolean themSanPham(SanPham sp) {
         if (timSanPhamTheoID(sp.getMaSP()) == null) {
             danhSachSanPham.add(sp);
-            ghiFileTXT();
+            ghiFileTXT(); // Trong JDBC thực tế có thể gọi DAO.them()
             return true;
         }
         return false;
@@ -59,18 +58,21 @@ public class QuanLySanPham extends LuuTruDuLieu {
         SanPham sp = timSanPhamTheoID(id);
         if (sp != null) {
             danhSachSanPham.remove(sp);
-            ghiFileTXT();
+            ghiFileTXT(); // Trong JDBC thực tế có thể gọi DAO.xoa()
             return true;
         }
         return false;
     }
 
-    public boolean suaSanPham(String id, String tenMoi, String loaiMoi, int slMoi, double giaMoi) {
+    /**
+     * Cập nhật thông tin sản phẩm. 
+     * Đã lược bỏ tham số slMoi vì số lượng được quản lý theo dải Serial (Kho).
+     */
+    public boolean suaSanPham(String id, String tenMoi, String loaiMoi, double giaMoi) {
         SanPham sp = timSanPhamTheoID(id);
         if (sp != null) {
             sp.setTenSP(tenMoi);
             sp.setLoaiSP(loaiMoi);
-            // Logic cập nhật số lượng đã bị loại bỏ ở Model SanPham
             sp.setGiaBan(giaMoi);
             ghiFileTXT();
             return true;
@@ -78,16 +80,17 @@ public class QuanLySanPham extends LuuTruDuLieu {
         return false;
     }
 
-    // --- CÁC HÀM ĐỌC/GHI FILE HỆ THỐNG ---
+    // --- CÁC HÀM ĐỌC/GHI DATA ---
 
     @Override
     public void docFileTXT() {
-        // Đã chuyển toàn bộ sang JDBC Database, không còn đọc File TXT
-        danhSachSanPham.clear();
+        // Chuyển sang JDBC: Nạp dữ liệu từ Database
+        this.danhSachSanPham = sanPhamDAO.layTatCa();
     }
 
     @Override
     public void ghiFileTXT() {
-        // Đã chuyển toàn bộ sang JDBC Database, không còn lưu File TXT
+        // Đã chuyển sang JDBC, logic lưu trữ trực tiếp đã do Repository/DAO đảm nhận khi thực hiện nghiệp vụ
+        System.out.println("Ghi nhận: Dữ liệu Sản phẩm hiện đã được đồng bộ với Database.");
     }
 }

@@ -7,8 +7,12 @@ CREATE TABLE NHANVIEN (
     MaNV VARCHAR(20) PRIMARY KEY,
     HoTen NVARCHAR(100) NOT NULL,
     GioiTinh NVARCHAR(10),
+    NamSinh VARCHAR(20),
     SDT VARCHAR(20),
+    DiaChi NVARCHAR(255),
     ChucVu NVARCHAR(50),
+    SoNgayNghi INT DEFAULT 0,
+    CaLamViec NVARCHAR(50),
     TrangThai NVARCHAR(50) DEFAULT 'Đang làm việc'
 );
 
@@ -16,6 +20,7 @@ CREATE TABLE KHACHHANG (
     MaKH VARCHAR(20) PRIMARY KEY,
     HoTen NVARCHAR(100) NOT NULL,
     GioiTinh NVARCHAR(10),
+    NamSinh VARCHAR(20),
     SDT VARCHAR(20),
     DiaChi NVARCHAR(255),
     TrangThai NVARCHAR(50) DEFAULT 'Hoạt động'

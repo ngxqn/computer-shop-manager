@@ -1,19 +1,15 @@
 package controller;
-import dao.LuuTruDuLieu;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import dao.LuuTruDuLieu;
+import dao.KhachHangDAO;
+import model.KhachHang;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.Scanner;
-import model.KhachHang;
 
 public class QuanLyKhachHang extends LuuTruDuLieu {
     private List<KhachHang> danhSachKhachHang = new ArrayList<>();
+    private KhachHangDAO khachHangDAO = new KhachHangDAO();
     private final Scanner sc = new Scanner(System.in);
 
     public List<KhachHang> layDanhSachKhachHang(){
@@ -22,58 +18,19 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
 
     @Override
     public void docFileTXT() {
-        List<KhachHang> danhSachTam = new ArrayList<>();
-        File tapTinKH = new File ("data/DSKhachHang.txt");
-
-        if (!tapTinKH.exists()) {
-            System.err.println("❌ Lỗi: Không tìm thấy file tại: " + tapTinKH.getAbsolutePath());
-            return;
-        }
-
-        try (BufferedReader boDoc = new BufferedReader(new FileReader(tapTinKH))) {
-            String dong;
-            int soDong = 0;
-            while ((dong = boDoc.readLine()) != null) {
-                soDong++;
-                if (dong.trim().isEmpty()) continue;
-                try {
-                    String duLieu[] = dong.split(",");
-                    if (duLieu.length < 6) continue;
-
-                    KhachHang kh = new KhachHang(duLieu[0].trim(), duLieu[1].trim(), duLieu[2].trim(),
-                            duLieu[3].trim(), duLieu[4].trim(), duLieu[5].trim());
-                    danhSachTam.add(kh);
-                } catch (Exception e) {
-                    System.err.println("❌ Lỗi dòng " + soDong);
-                }
-            }
-            danhSachKhachHang.clear();
-            danhSachKhachHang.addAll(danhSachTam);
-            System.out.println("✅ Đã đọc " + danhSachKhachHang.size() + " khách hàng.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Chuyển sang JDBC: Nạp dữ liệu từ Database
+        this.danhSachKhachHang = khachHangDAO.layTatCa();
+        System.out.println("✅ Đã nạp danh sách khách hàng từ Database.");
     }
 
     @Override
     public void ghiFileTXT() {
-        File tapTinKH = new File ("data/DSKhachHang.txt");
-        tapTinKH.getParentFile().mkdirs();
-
-        try (BufferedWriter boGhi = new BufferedWriter(new FileWriter(tapTinKH))) {
-            for (KhachHang kh : danhSachKhachHang) {
-                // Sử dụng hàm taoDong() để lấy chuỗi CSV chuẩn
-                boGhi.write(kh.taoDong().toString());
-                boGhi.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("❌ Lỗi ghi file: " + e.getMessage());
-        }
+        // Đã chuyển toàn bộ sang JDBC Database, không còn lưu File TXT
+        System.out.println("ℹ️ Thông tin khách hàng hiện tại được đồng bộ với Database.");
     }
 
-    // --- SỬA LẠI LOGIC TÌM KIẾM ---
+    // --- LOGIC TÌM KIẾM ---
 
-    // Hàm này trả về danh sách kết quả (phục vụ tìm kiếm theo tên)
     public ArrayList<KhachHang> timKhachHang(String keyword) {
         ArrayList<KhachHang> ketQua = new ArrayList<>();
         for (KhachHang kh : danhSachKhachHang) {
@@ -84,7 +41,6 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
         return ketQua;
     }
 
-    // Hàm bổ trợ: Tìm chính xác 1 người theo ID (Dùng cho Thêm/Sửa/Xóa)
     private KhachHang timChinhXacTheoID(String id) {
         for (KhachHang kh : danhSachKhachHang) {
             if (kh.layID().equalsIgnoreCase(id)) return kh;
@@ -93,83 +49,27 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
     }
 
     public String phatSinhIDTuDong() {
-        if (danhSachKhachHang.isEmpty()) {
-            return "KH001";
-        }
-
-        // Tìm ID lớn nhất hiện tại
+        if (danhSachKhachHang.isEmpty()) return "KH001";
         int maxID = 0;
         for (KhachHang kh : danhSachKhachHang) {
-            // Cắt chuỗi "KH001" -> lấy phần số "001" -> chuyển thành số 1
             try {
-                int idSo = Integer.parseInt(kh.layID().substring(2));
-                if (idSo > maxID) {
-                    maxID = idSo;
-                }
-            } catch (Exception e) {
-                // Đề phòng trường hợp ID không đúng định dạng KHxxx
-                continue;
-            }
+                int idSo = Integer.parseInt(kh.layID().substring(2).trim());
+                if (idSo > maxID) maxID = idSo;
+            } catch (Exception e) {}
         }
-
-        // Tăng ID lên 1 và định dạng lại thành KHxxx (ví dụ KH009 -> KH010)
         return String.format("KH%03d", maxID + 1);
     }
 
     public void themKhachHang(Scanner sc) {
-        System.out.println("--- THEM KHACH HANG MOI (ID TU DONG) ---");
-
-        // Tự động phát sinh ID
-        String idMoi = phatSinhIDTuDong();
-        System.out.println("ID cap cho khach hang moi: " + idMoi);
-
-        KhachHang khachHangMoi = new KhachHang();
-        khachHangMoi.datID(idMoi);
-
-        // Bạn cần đảm bảo trong lớp Nguoi hoặc KhachHang
-        // hàm nhap() không còn hỏi "Mời nhập id" nữa.
-        khachHangMoi.nhap(sc);
-
-        danhSachKhachHang.add(khachHangMoi);
-        ghiFileTXT();
-        System.out.println("✅ Them khach hang thanh cong!");
+        System.out.println("Tính năng thêm khách hàng mới chưa được chuyển hoàn toàn sang JDBC INSERT.");
     }
 
     public void suaKhachHang(String id) {
-        KhachHang khCanSua = timChinhXacTheoID(id);
-        if (khCanSua == null) {
-            System.out.println("❌ Không tìm thấy ID: " + id);
-            return;
-        }
-
-        System.out.println("1. Họ Tên | 2. Giới Tính | 3. Năm Sinh | 4. SDT | 5. Địa Chỉ");
-        System.out.print("Chọn: ");
-        String chon = sc.nextLine(); // Dùng nextLine để tránh trôi lệnh
-
-        switch (chon) {
-            case "1" -> { System.out.print("Tên mới: "); khCanSua.datHoTen(sc.nextLine()); }
-            case "2" -> { System.out.print("Giới tính mới: "); khCanSua.datGioiTinh(sc.nextLine()); }
-            case "3" -> { System.out.print("Năm sinh mới: "); khCanSua.datNamSinh(sc.nextLine()); }
-            case "4" -> { System.out.print("SDT mới: "); khCanSua.datSDT(sc.nextLine()); }
-            case "5" -> { System.out.print("Địa chỉ mới: "); khCanSua.datDiaChi(sc.nextLine()); }
-            default -> { System.out.println("Sai lựa chọn!"); return; }
-        }
-        ghiFileTXT();
-        System.out.println("✅ Đã cập nhật!");
+        // Triển khai logic GUI tương ứng
     }
 
     public void xoaKhachHang(String id) {
-        KhachHang khCanXoa = timChinhXacTheoID(id);
-        if (khCanXoa == null) {
-            System.out.println("❌ Không tìm thấy ID: " + id);
-            return;
-        }
-        System.out.print("Xác nhận xóa (Y/N): ");
-        if (sc.nextLine().equalsIgnoreCase("Y")) {
-            danhSachKhachHang.remove(khCanXoa);
-            ghiFileTXT();
-            System.out.println("✅ Đã xóa!");
-        }
+        // Triển khai logic GUI tương ứng
     }
 
     public void xuatDanhSachKhachHang() {

@@ -15,11 +15,11 @@ public class BangDieuKhienSanPham extends JPanel {
     private QuanLySanPham quanLySanPham;
     private JTable bangSanPham;
     private DefaultTableModel moHinhBang;
-    private JTextField truongID, truongTen, truongSoLuong, truongGiaGoc;
+    private JTextField truongID, truongTen, truongGiaBan, truongBaoHanh;
     private JComboBox<String> hopChonLoai;
     private JTextField truongTimKiem;
 
-    private final String[] DANH_SACH_LOAI = {"Nuoc", "Banh", "Do gia dung", "Điện tử", "Thời trang", "Khác"};
+    private final String[] DANH_SACH_LOAI = {"Laptop", "PC", "Linh kiện", "Màn hình", "Chuột & Bàn phím", "Khác"};
     private final NumberFormat dinhDangTien = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
 
     public BangDieuKhienSanPham(QuanLySanPham qlsp) {
@@ -42,7 +42,7 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void thietLapBang() {
-        String[] tenCot = {"ID", "Tên SP", "Loại", "SL", "Giá Gốc", "Giá Bán"};
+        String[] tenCot = {"Mã SP", "Tên Sản Phẩm", "Loại", "Giá Bán", "Bảo Hành (Tháng)", "Trạng Thái"};
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
@@ -63,27 +63,27 @@ public class BangDieuKhienSanPham extends JPanel {
         JPanel bang = new JPanel(new GridLayout(3, 4, 10, 10));
         truongID = new JTextField(15);
         truongTen = new JTextField(15);
-        truongSoLuong = new JTextField(15);
-        truongGiaGoc = new JTextField(15);
+        truongGiaBan = new JTextField(15);
+        truongBaoHanh = new JTextField(15);
         hopChonLoai = new JComboBox<>(DANH_SACH_LOAI);
 
-        bang.add(new JLabel("ID Sản Phẩm:")); bang.add(truongID);
+        bang.add(new JLabel("Mã Sản Phẩm:")); bang.add(truongID);
         bang.add(new JLabel("Tên Sản Phẩm:")); bang.add(truongTen);
-        bang.add(new JLabel("Loại:")); bang.add(hopChonLoai);
-        bang.add(new JLabel("Số Lượng:")); bang.add(truongSoLuong);
-        bang.add(new JLabel("Giá Gốc (VNĐ):")); bang.add(truongGiaGoc);
+        bang.add(new JLabel("Loại SP:")); bang.add(hopChonLoai);
+        bang.add(new JLabel("Giá Bán (VNĐ):")); bang.add(truongGiaBan);
+        bang.add(new JLabel("Bảo Hành (Tháng):")); bang.add(truongBaoHanh);
 
         return bang;
     }
 
     private JPanel thietLapBangNut() {
         JPanel bang = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton nutThem = new JButton("Thêm Sản Phẩm");
-        JButton nutSua = new JButton("Sửa Sản Phẩm");
-        JButton nutXoa = new JButton("Xóa Sản Phẩm");
-        JButton nutReset = new JButton("Làm mới/Tải lại");
+        JButton nutThem = new JButton("Thêm SP (Danh mục)");
+        JButton nutSua = new JButton("Sửa SP (Danh mục)");
+        JButton nutXoa = new JButton("Xóa SP (Danh mục)");
+        JButton nutReset = new JButton("Làm mới UI");
         truongTimKiem = new JTextField(15);
-        JButton nutTimKiem = new JButton("Tìm Kiếm (ID)");
+        JButton nutTimKiem = new JButton("Tìm ID");
 
         nutThem.addActionListener(e -> themSanPham());
         nutSua.addActionListener(e -> suaSanPham());
@@ -97,10 +97,8 @@ public class BangDieuKhienSanPham extends JPanel {
         return bang;
     }
 
-    // --- PHẦN SỬA ĐỔI ĐỂ ĐỒNG BỘ ---
     public void taiDuLieuVaoBang() {
-        // Luôn đọc lại file để lấy số lượng mới nhất từ tab Giao dịch
-        quanLySanPham.docFileTXT();
+        quanLySanPham.docFileTXT(); // Gọi hàm này để reload từ DB (vì Controller đã refactor sang DB)
         dienDuLieuVaoBang(quanLySanPham.layDanhSachSanPham());
     }
 
@@ -108,12 +106,12 @@ public class BangDieuKhienSanPham extends JPanel {
         moHinhBang.setRowCount(0);
         for (SanPham sanPham : danhSachSanPham) {
             Object[] duLieuHang = {
-                    sanPham.layID(),
-                    sanPham.layTen(),
-                    sanPham.layLoai(),
-                    sanPham.laySoLuong(),
-                    dinhDangTien.format(sanPham.layGiaGoc()),
-                    dinhDangTien.format(sanPham.tinhGiaBan())
+                    sanPham.getMaSP(),
+                    sanPham.getTenSP(),
+                    sanPham.getLoaiSP(),
+                    dinhDangTien.format(sanPham.getGiaBan()),
+                    sanPham.getTgBaoHanh(),
+                    sanPham.getTrangThai()
             };
             moHinhBang.addRow(duLieuHang);
         }
@@ -127,46 +125,40 @@ public class BangDieuKhienSanPham extends JPanel {
         SanPham sanPham = quanLySanPham.timSanPhamTheoID(id);
 
         if (sanPham != null) {
-            truongID.setText(sanPham.layID());
-            truongTen.setText(sanPham.layTen());
-            hopChonLoai.setSelectedItem(sanPham.layLoai());
-            truongSoLuong.setText(String.valueOf(sanPham.laySoLuong()));
-            // SỬA: Dùng String.format để tránh lỗi hiển thị số thực lớn
-            truongGiaGoc.setText(String.format("%.0f", sanPham.layGiaGoc()));
+            truongID.setText(sanPham.getMaSP());
+            truongTen.setText(sanPham.getTenSP());
+            hopChonLoai.setSelectedItem(sanPham.getLoaiSP());
+            truongGiaBan.setText(String.format("%.0f", sanPham.getGiaBan()));
+            truongBaoHanh.setText(String.valueOf(sanPham.getTgBaoHanh()));
             truongID.setEditable(false);
         }
     }
 
-    private SanPham taoSanPhamTuForm() {
+    private void themSanPham() {
         String id = truongID.getText().trim();
         String ten = truongTen.getText().trim();
         String loai = (String) hopChonLoai.getSelectedItem();
-        String slText = truongSoLuong.getText().trim().replace(",", "");
-        String giaGocText = truongGiaGoc.getText().trim().replace(",", "");
+        String giaBanStr = truongGiaBan.getText().trim();
+        String baoHanhStr = truongBaoHanh.getText().trim();
 
-        if (id.isEmpty() || ten.isEmpty() || slText.isEmpty() || giaGocText.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin.");
-            return null;
+        if (id.isEmpty() || ten.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã và Tên sản phẩm.");
+            return;
         }
 
         try {
-            int soLuong = Integer.parseInt(slText);
-            double giaGoc = Double.parseDouble(giaGocText);
-            return new SanPham(id, ten, loai, soLuong, giaGoc);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Số lượng hoặc Giá không hợp lệ.");
-            return null;
-        }
-    }
-
-    private void themSanPham() {
-        SanPham sanPhamMoi = taoSanPhamTuForm();
-        if (sanPhamMoi != null && quanLySanPham.themSanPham(sanPhamMoi)) {
-            taiDuLieuVaoBang();
-            datLaiForm();
-            JOptionPane.showMessageDialog(this, "Thêm thành công!");
-        } else if (sanPhamMoi != null) {
-            JOptionPane.showMessageDialog(this, "ID đã tồn tại!");
+            double giaBan = Double.parseDouble(giaBanStr);
+            int baoHanh = Integer.parseInt(baoHanhStr);
+            SanPham sanPhamMoi = new SanPham(id, ten, loai, "NCC01", giaBan, baoHanh, "Đang kinh doanh");
+            if (quanLySanPham.themSanPham(sanPhamMoi)) {
+                taiDuLieuVaoBang();
+                datLaiForm();
+                JOptionPane.showMessageDialog(this, "Thêm danh mục SP thành công!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Mã SP đã tồn tại!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Giá bán hoặc Bảo hành không hợp lệ.");
         }
     }
 
@@ -177,16 +169,15 @@ public class BangDieuKhienSanPham extends JPanel {
         try {
             String ten = truongTen.getText().trim();
             String loai = (String) hopChonLoai.getSelectedItem();
-            int sl = Integer.parseInt(truongSoLuong.getText().trim());
-            double giaGoc = Double.parseDouble(truongGiaGoc.getText().trim());
-
-            if (quanLySanPham.suaSanPham(id, ten, loai, sl, giaGoc)) {
+            double giaBan = Double.parseDouble(truongGiaBan.getText().trim());
+            // Gọi hàm suaSanPham đã refactor (loại bỏ tham số số lượng)
+            if (quanLySanPham.suaSanPham(id, ten, loai, giaBan)) {
                 taiDuLieuVaoBang();
                 datLaiForm();
-                JOptionPane.showMessageDialog(this, "Sửa thành công!");
+                JOptionPane.showMessageDialog(this, "Cập nhật danh mục thành công!");
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Lỗi dữ liệu.");
+            JOptionPane.showMessageDialog(this, "Lỗi định dạng dữ liệu.");
         }
     }
 
@@ -194,11 +185,11 @@ public class BangDieuKhienSanPham extends JPanel {
         String id = truongID.getText().trim();
         if (truongID.isEditable()) return;
 
-        int xacNhan = JOptionPane.showConfirmDialog(this, "Xóa sản phẩm " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        int xacNhan = JOptionPane.showConfirmDialog(this, "Xóa danh mục sản phẩm " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION && quanLySanPham.xoaSanPham(id)) {
             taiDuLieuVaoBang();
             datLaiForm();
-            JOptionPane.showMessageDialog(this, "Xóa thành công!");
+            JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm khỏi danh mục.");
         }
     }
 
@@ -211,8 +202,10 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void datLaiForm() {
-        truongID.setText(""); truongTen.setText("");
-        truongSoLuong.setText(""); truongGiaGoc.setText("");
+        truongID.setText(""); 
+        truongTen.setText("");
+        truongGiaBan.setText(""); 
+        truongBaoHanh.setText("");
         hopChonLoai.setSelectedIndex(0);
         truongID.setEditable(true);
         bangSanPham.clearSelection();
