@@ -133,9 +133,8 @@ erDiagram
     }
     CHITIETHOADON {
         string MaHD PK,FK
-        string MaSP PK,FK
-        int SoLuong
-        float DonGiaBan
+        string MaSeri PK,FK "Mỗi dòng = 1 Serial cụ thể"
+        float DonGiaBan "Giá tại thời điểm bán"
     }
 
     PHIEUBAOHANH {
@@ -166,7 +165,7 @@ erDiagram
     SANPHAM ||--o{ CHITIETPHIEUNHAP : "thuộc"
 
     HOADON ||--|{ CHITIETHOADON : "gồm"
-    SANPHAM ||--o{ CHITIETHOADON : "thuộc"
+    SERISANPHAM ||--o{ CHITIETHOADON : "được bán qua"
 
     SANPHAM ||--o{ SERISANPHAM : "có các mã máy"
     PHIEUNHAP ||--o{ SERISANPHAM : "tạo ra (mới nhập kho)"
@@ -186,6 +185,6 @@ Mô hình dữ liệu Mức Quan hệ tuân thủ 3NF:
 5. `PHIEUNHAP`(**MaPN**, *MaNV*, *MaNCC*, NgayNhap, TongTien)
 6. `CHITIETPHIEUNHAP`(**MaPN**, **MaSP**, SoLuong, DonGiaNhap)
 7. `HOADON`(**MaHD**, *MaNV*, *MaKH*, NgayLap, TongTien)
-8. `CHITIETHOADON`(**MaHD**, **MaSP**, SoLuong, DonGiaBan)
+8. `CHITIETHOADON`(**MaHD**, ***MaSeri***, DonGiaBan)
 9. `SERISANPHAM`(**MaSeri**, *MaSP*, *MaPN*, *MaHD*, TinhTrang)
 10. `PHIEUBAOHANH`(**MaPBH**, *MaSeri*, *MaKH*, *MaNV*, NgayTiepNhan, NgayTraDuKien, MoTaLoi, TinhTrang, ChiPhi)

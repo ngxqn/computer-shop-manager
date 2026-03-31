@@ -158,7 +158,7 @@ flowchart TD
     P23 -->|Truyền MaHD, Danh sách MaSeri, DonGia| P24
     
     %% Cập nhật Serial & Chi tiết HĐ
-    P24 -->|"Lưu CHITIETHOADON (MaHD, MaSP, SoLuong...)"| D8
+    P24 -->|"Lưu CHITIETHOADON (MaHD, MaSeri, DonGiaBan)"| D8
     P24 -->|"Cập nhật SERISANPHAM (TinhTrang='Đã bán', MaHD)"| D9
     
     %% Hoàn tất
