@@ -3,7 +3,6 @@ package view;
 import controller.BaoCaoTonKho;
 import controller.QuanLyKho;
 import controller.QuanLySanPham;
-import model.Kho;
 import model.SanPham;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -37,10 +36,7 @@ public class BangDieuKhienGiaoDich extends JPanel {
         });
 
         btnBaoCao.addActionListener(e -> {
-            Kho kho = quanLiKho.timKhoTheoMa("K01");
-            if (kho != null) {
-                new BaoCaoTonKho(SwingUtilities.getWindowAncestor(this), kho.getSanPhamList()).setVisible(true);
-            }
+            new BaoCaoTonKho(SwingUtilities.getWindowAncestor(this), quanLiKho).setVisible(true);
         });
 
         pnlNut.add(btnNhapXuat); pnlNut.add(btnBaoCao);
@@ -50,12 +46,17 @@ public class BangDieuKhienGiaoDich extends JPanel {
 
     public void taiDuLieuVaoBang() {
         model.setRowCount(0);
-        Kho kho = quanLiKho.timKhoTheoMa("K01");
-        if (kho != null) {
-            for (SanPham sp : kho.getSanPhamList()) {
-                // Tạm thời để số lượng là 0 do SanPham không còn quản lý theo lượng (Phase 3)
-                model.addRow(new Object[]{sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 0, sp.getGiaBan()});
-            }
+        List<SanPham> dssp = quanLiSanPham.getSanPhamList();
+        
+        for (SanPham sp : dssp) {
+            int tonKho = quanLiKho.layTonKhoThucTe(sp.getMaSP());
+            model.addRow(new Object[]{
+                sp.getMaSP(), 
+                sp.getTenSP(), 
+                sp.getLoaiSP(), 
+                tonKho, 
+                sp.getGiaBan()
+            });
         }
     }
 }

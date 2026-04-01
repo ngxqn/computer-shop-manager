@@ -5,36 +5,41 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class PhieuNhapKho {
-    private String maGiaoDich;
+    private String maPN;
     private Date ngayNhap;
-    private String maNhanVien;
-    private List<SanPham> danhSachSanPham = new ArrayList<>();
+    private String maNV;
+    private String maNCC;
+    private double tongTien;
+    private List<ChiTietPhieuNhap> danhSachChiTiet = new ArrayList<>();
 
-    public PhieuNhapKho(String maGiaoDich, Date ngayNhap, String maNhanVien) {
-        this.maGiaoDich = maGiaoDich;
+    public PhieuNhapKho(String maPN, Date ngayNhap, String maNV, String maNCC, double tongTien) {
+        this.maPN = maPN;
         this.ngayNhap = ngayNhap;
-        this.maNhanVien = maNhanVien;
+        this.maNV = maNV;
+        this.maNCC = maNCC;
+        this.tongTien = tongTien;
     }
 
     public PhieuNhapKho() {
         this.ngayNhap = new Date();
     }
 
-    public double tinhTongGiaTri() {
-        double tongGiaNhap = 0;
-        for (SanPham sp : danhSachSanPham) {
-            tongGiaNhap += sp.getGiaBan() * 0; // Giá trị tạm thời là 0
-        }
-        return tongGiaNhap;
-    }
-
     // Getters & Setters
-    public String getMaGiaoDich() { return maGiaoDich; }
-    public Date getNgayNhap() { return ngayNhap; }
-    public String getMaNhanVien() { return maNhanVien; }
-    public List<SanPham> getSanPhamList() { return danhSachSanPham; }
+    public String getMaPN() { return maPN; }
+    public void setMaPN(String maPN) { this.maPN = maPN; }
 
-    public void themSanPham(SanPham sp) {
-        this.danhSachSanPham.add(sp);
-    }
+    public Date getNgayNhap() { return ngayNhap; }
+    public void setNgayNhap(Date ngayNhap) { this.ngayNhap = ngayNhap; }
+
+    public String getMaNV() { return maNV; }
+    public void setMaNV(String maNV) { this.maNV = maNV; }
+
+    public String getMaNCC() { return maNCC; }
+    public void setMaNCC(String maNCC) { this.maNCC = maNCC; }
+
+    public double getTongTien() { return tongTien; }
+    public void setTongTien(double tongTien) { this.tongTien = tongTien; }
+
+    public List<ChiTietPhieuNhap> getDanhSachChiTiet() { return danhSachChiTiet; }
+    public void themChiTiet(ChiTietPhieuNhap ct) { this.danhSachChiTiet.add(ct); }
 }

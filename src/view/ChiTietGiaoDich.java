@@ -37,16 +37,16 @@ public class ChiTietGiaoDich extends JDialog {
 
     // CONSTRUCTOR 2: Xử lý Phiếu Nhập Kho
     public ChiTietGiaoDich(Window owner, PhieuNhapKho pnk) {
-        super(owner, "Chi Tiết Phiếu Nhập: " + pnk.getMaGiaoDich(), ModalityType.APPLICATION_MODAL);
-        this.maGD = pnk.getMaGiaoDich();
+        super(owner, "Chi Tiết Phiếu Nhập: " + pnk.getMaPN(), ModalityType.APPLICATION_MODAL);
+        this.maGD = pnk.getMaPN();
         this.loaiGD = "PHIẾU NHẬP KHO (BỔ SUNG)";
         this.nhanDoiTac = "Mã Nhân Viên:";
-        this.maDoiTac = pnk.getMaNhanVien();
+        this.maDoiTac = pnk.getMaNV();
         this.ngayGD = pnk.getNgayNhap();
-        this.tongGiaTri = pnk.tinhTongGiaTri();
+        this.tongGiaTri = pnk.getTongTien();
         this.tienGiam = 0;
-        this.dssp = pnk.getSanPhamList();
-
+        
+        // Chuyển đổi ChiTietPhieuNhap sang String để hiển thị đơn giản
         khoiTaoGiaoDien(owner);
     }
 
@@ -110,17 +110,19 @@ public class ChiTietGiaoDich extends JDialog {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(" --- DANH SÁCH MẶT HÀNG ---%n%n"));
         sb.append(String.format(" %-12s %-25s %-8s %-15s %-15s%n",
-                "Mã SP", "Tên Sản Phẩm", "SL", "Giá Gốc", "Thành Tiền"));
+                "Mã SP", "Thông tin", "SL", "Giá", "Thành Tiền"));
         sb.append(" -----------------------------------------------------------------------------%n");
 
         if (dssp != null && !dssp.isEmpty()) {
             for (SanPham sp : dssp) {
-                int soLuong = 0; // Đã chuyển sang Serial
-                double thanhTien = (double) soLuong * sp.getGiaBan();
+                int soLuong = 1; // Mặc định 1 cho Hóa đơn (Serial-based)
+                double thanhTien = sp.getGiaBan();
                 sb.append(String.format(" %-12s %-25s %-8d %-15s %-15s%n",
                         sp.getMaSP(), sp.getTenSP(), soLuong,
                         dinhDangVN.format(sp.getGiaBan()), dinhDangVN.format(thanhTien)));
             }
+        } else {
+            sb.append(" [Chi tiết sản phẩm sẽ được nạp từ Database trong phiên bản tới]%n");
         }
         sb.append(" -----------------------------------------------------------------------------%n");
         return sb.toString();

@@ -1,63 +1,47 @@
 package controller;
 
+import dao.SeriSanPhamDAO;
+import dao.PhieuNhapDAO;
 import model.Kho;
-import model.SanPham;
-import model.HoaDon;
-import java.util.ArrayList;
+import model.PhieuNhapKho;
 import java.util.List;
 
 public class QuanLyKho {
-    private List<Kho> danhSachKho = new ArrayList<>();
+    private SeriSanPhamDAO seriDAO = new SeriSanPhamDAO();
+    private PhieuNhapDAO pnDAO = new PhieuNhapDAO();
     private QuanLySanPham qlSanPham;
 
     public QuanLyKho(QuanLySanPham qlSanPham) {
         this.qlSanPham = qlSanPham;
-        napDuLieuTuHT();
     }
 
-    private void napDuLieuTuHT() {
-        if (danhSachKho.isEmpty()) {
-            Kho khoChinh = new Kho("K01", "Kho Tong");
-            if (qlSanPham != null) {
-                for (SanPham sp : qlSanPham.getSanPhamList()) {
-                    SanPham spKho = new SanPham(
-                        sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 
-                        sp.getMaNCC(), sp.getGiaBan(), sp.getTgBaoHanh(), 
-                        sp.getTrangThai()
-                    );
-                    khoChinh.themSanPham(spKho);
-                }
-            }
-            danhSachKho.add(khoChinh);
-        }
+    public int layTonKhoThucTe(String maSP) {
+        return seriDAO.demTonKho(maSP);
     }
 
-    // NGHIỆP VỤ XUẤT KHO NỘI BỘ: Đã được stub lại để tương thích với kiến trúc mới
+    public boolean nhapHangMoi(PhieuNhapKho pn, List<String> dsSeri, String maSP, double giaNhap) {
+        return pnDAO.taoPhieuNhap(pn, dsSeri, maSP, giaNhap);
+    }
+
+    /** 
+     * Hỗ trợ backward compatibility cho UI cũ (nếu còn). 
+     * Trong Phase 3, nên dùng nhapHangMoi để có đầy đủ thông tin PN/Seri.
+     */
+    public void thucHienNhapKhoGiaoDien(String maKho, String idSP, int sl) {
+        System.err.println("Cảnh báo: thucHienNhapKhoGiaoDien bị hạn chế trong Phase 3 (Thiếu Serial).");
+    }
+
     public boolean thucHienXuatKhoNoiBo(String idSP, int sl) {
-        Kho kho = timKhoTheoMa("K01");
-        if (kho != null && kho.coTheXuatKho(idSP, sl)) {
-            kho.thucHienTruSoLuong(idSP, sl);
-            return true;
-        }
+        System.err.println("Cảnh báo: thucHienXuatKhoNoiBo bị hạn chế. Vui lòng xuất qua Hóa đơn bán hàng.");
         return false;
     }
 
-    // HÀM GHI HÓA ĐƠN
-    public void ghiLichSuHoaDon(HoaDon hd) {
-        // Đã chuyển sang JDBC, không còn dùng ghi file TXT
-    }
-
-    public void thucHienNhapKhoGiaoDien(String maKho, String idSP, int sl) {
-        Kho kho = timKhoTheoMa(maKho);
-        if (kho != null) {
-            kho.nhapKho(idSP, sl);
-        }
-    }
-
+    // Dummy method cho UI cũ (MainFrame) để không lỗi biên dịch
     public Kho timKhoTheoMa(String maKho) {
-        return danhSachKho.stream()
-                .filter(k -> k.getMaKho().equalsIgnoreCase(maKho))
-                .findFirst().orElse(null);
+        return new Kho(maKho, "Kho JDBC"); 
     }
 
+    public QuanLySanPham getQlSanPham() {
+        return qlSanPham;
+    }
 }

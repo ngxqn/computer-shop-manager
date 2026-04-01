@@ -37,4 +37,32 @@ public class SeriSanPhamDAO {
         }
         return null;
     }
+
+    public int demTonKho(String maSP) {
+        String sql = "SELECT COUNT(*) FROM SERISANPHAM WHERE MaSP = ? AND TinhTrang = 'Trong kho'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, maSP);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi demTonKho: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public boolean kiemTraTonTai(String maSeri) {
+        String sql = "SELECT 1 FROM SERISANPHAM WHERE MaSeri = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, maSeri);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi kiemTraTonTai: " + e.getMessage());
+        }
+        return false;
+    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class BaoCaoTonKho extends JDialog {
-    public BaoCaoTonKho(Window owner, List<SanPham> dssp) {
+    public BaoCaoTonKho(Window owner, QuanLyKho qlKho) {
         super(owner, "BÁO CÁO TỒN KHO CHI TIẾT", ModalityType.APPLICATION_MODAL);
         this.setSize(800, 500);
         this.setLocationRelativeTo(owner);
@@ -23,9 +23,11 @@ public class BaoCaoTonKho extends JDialog {
         NumberFormat nf = NumberFormat.getInstance(Locale.of("vi", "VN"));
         double tongGiaTri = 0;
 
+        List<SanPham> dssp = qlKho.getQlSanPham().getSanPhamList();
         for (SanPham sp : dssp) {
-            int soLuong = 0; // Tồn kho sẽ được lấy từ SERISANPHAM ở phase tiếp theo
-            double giaTri = sp.getGiaBan() * soLuong;
+            int soLuong = qlKho.layTonKhoThucTe(sp.getMaSP());
+            // Giá trị tồn tối thiểu nên tính dựa trên giá nhập, nhưng tạm thời dùng giá bán * 0.8
+            double giaTri = (sp.getGiaBan() * 0.8) * soLuong; 
             tongGiaTri += giaTri;
             model.addRow(new Object[]{
                     sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(),
@@ -34,11 +36,11 @@ public class BaoCaoTonKho extends JDialog {
         }
 
         // 2. Panel tổng cộng
-        JLabel lblTong = new JLabel("TỔNG GIÁ TRỊ KHO: " + nf.format(tongGiaTri) + " VNĐ  ");
+        JLabel lblTong = new JLabel("TỔNG GIÁ TRỊ TỒN (ƯỚC TÍNH): " + nf.format(tongGiaTri) + " VNĐ  ");
         lblTong.setFont(new Font("Arial", Font.BOLD, 16));
         lblTong.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        this.add(new JLabel("HỆ THỐNG QUẢN LÝ KHO - TEAM 03", SwingConstants.CENTER), BorderLayout.NORTH);
+        this.add(new JLabel("HỆ THỐNG QUẢN LÝ KHO - JDBC LIVE", SwingConstants.CENTER), BorderLayout.NORTH);
         this.add(new JScrollPane(table), BorderLayout.CENTER);
         this.add(lblTong, BorderLayout.SOUTH);
     }
