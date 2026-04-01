@@ -39,7 +39,7 @@ public class BangDieuKhienGiaoDich extends JPanel {
         btnBaoCao.addActionListener(e -> {
             Kho kho = quanLiKho.timKhoTheoMa("K01");
             if (kho != null) {
-                new BaoCaoTonKho(SwingUtilities.getWindowAncestor(this), kho.layDanhSachSanPham()).setVisible(true);
+                new BaoCaoTonKho(SwingUtilities.getWindowAncestor(this), kho.getSanPhamList()).setVisible(true);
             }
         });
 
@@ -52,7 +52,7 @@ public class BangDieuKhienGiaoDich extends JPanel {
         model.setRowCount(0);
         Kho kho = quanLiKho.timKhoTheoMa("K01");
         if (kho != null) {
-            for (SanPham sp : kho.layDanhSachSanPham()) {
+            for (SanPham sp : kho.getSanPhamList()) {
                 // Tạm thời để số lượng là 0 do SanPham không còn quản lý theo lượng (Phase 3)
                 model.addRow(new Object[]{sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 0, sp.getGiaBan()});
             }

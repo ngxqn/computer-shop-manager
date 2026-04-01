@@ -11,14 +11,14 @@ public class QuanLyNhanVien extends LuuTruDuLieu {
     private List<NhanVien> danhSachNhanVien = new ArrayList<>(); 
     private NhanVienDAO nhanVienDAO = new NhanVienDAO();
     
-    public List<NhanVien> layDanhSachNhanVien(){ 
+    public List<NhanVien> getNhanVienList(){ 
         return this.danhSachNhanVien;
     }
 
     @Override
     public void docFileTXT() {
         // Chuyển sang JDBC: Nạp dữ liệu từ Database
-        this.danhSachNhanVien = nhanVienDAO.layTatCa();
+        this.danhSachNhanVien = nhanVienDAO.getAll();
         System.out.println("✅ Đã nạp danh sách nhân viên từ Database.");
     }
 
@@ -33,7 +33,7 @@ public class QuanLyNhanVien extends LuuTruDuLieu {
         int maxID = 0;
         for (NhanVien nv : danhSachNhanVien) {
             try {
-                int idSo = Integer.parseInt(nv.layID().replaceAll("[^0-9]", ""));
+                int idSo = Integer.parseInt(nv.getID().replaceAll("[^0-9]", ""));
                 if (idSo > maxID) maxID = idSo;
             } catch (Exception e) {
                 // Bỏ qua nếu ID không đúng định dạng số
@@ -45,7 +45,7 @@ public class QuanLyNhanVien extends LuuTruDuLieu {
     public ArrayList<NhanVien> timNhanVien(String keyword) {
         ArrayList<NhanVien> ketQua = new ArrayList<>();
         for (NhanVien nv : danhSachNhanVien) {
-            if (nv.layID().equalsIgnoreCase(keyword) || nv.layHoTen().toLowerCase().contains(keyword.toLowerCase())) {
+            if (nv.getID().equalsIgnoreCase(keyword) || nv.getHoTen().toLowerCase().contains(keyword.toLowerCase())) {
                 ketQua.add(nv);
             }
         }
@@ -54,7 +54,7 @@ public class QuanLyNhanVien extends LuuTruDuLieu {
 
     public NhanVien timNhanVienTheoID(String id) { 
         for (NhanVien nhanVien : danhSachNhanVien) { 
-            if (nhanVien.layID().equalsIgnoreCase(id)) { 
+            if (nhanVien.getID().equalsIgnoreCase(id)) { 
                 return nhanVien; 
             }
         }

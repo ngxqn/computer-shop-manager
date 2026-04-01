@@ -29,10 +29,10 @@ public class PhieuNhapKho {
     }
 
     // Getters & Setters
-    public String layMaGiaoDich() { return maGiaoDich; }
-    public Date layNgayNhap() { return ngayNhap; }
-    public String layMaNhanVien() { return maNhanVien; }
-    public List<SanPham> layDanhSachSanPham() { return danhSachSanPham; }
+    public String getMaGiaoDich() { return maGiaoDich; }
+    public Date getNgayNhap() { return ngayNhap; }
+    public String getMaNhanVien() { return maNhanVien; }
+    public List<SanPham> getSanPhamList() { return danhSachSanPham; }
 
     public void themSanPham(SanPham sp) {
         this.danhSachSanPham.add(sp);

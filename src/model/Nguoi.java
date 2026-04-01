@@ -12,42 +12,42 @@ abstract public class Nguoi {
 	protected String diaChi; // Đổi tên thuộc tính
 	
 	// --- GETTERS ---
-	public String layID() { // Đổi tên phương thức
+	public String getID() { 
 		return id;
 	}
-	public String layHoTen() { // Đổi tên phương thức
+	public String getHoTen() { 
 		return hoTen;
 	}
-	public String layGioiTinh() { // Đổi tên phương thức
+	public String getGioiTinh() { 
 		return gioiTinh;
 	}
-	public String layNamSinh() { // Đổi tên phương thức
+	public String getNamSinh() { 
 		return namSinh;
 	}
-	public String laySDT() { // Đổi tên phương thức
+	public String getSdt() { 
 		return sdt;
 	}
-	public String layDiaChi() { // Đổi tên phương thức
+	public String getDiaChi() { 
 		return diaChi;
 	}
 	
 	// --- SETTERS ---
-	public void datID(String id) { // Đổi tên phương thức
+	public void setID(String id) { 
 		this.id = id;
 	}
-	public void datHoTen(String hoTen) { // Đổi tên phương thức
+	public void setHoTen(String hoTen) { 
 		this.hoTen = hoTen;
 	}
-	public void datGioiTinh(String gioiTinh) { // Đổi tên phương thức
+	public void setGioiTinh(String gioiTinh) { 
 		this.gioiTinh = gioiTinh;
 	}
-	public void datNamSinh(String namSinh) { // Đổi tên phương thức
+	public void setNamSinh(String namSinh) { 
 		this.namSinh = namSinh;
 	}
-	public void datSDT(String sdt) { // Đổi tên phương thức
+	public void setSdt(String sdt) { 
 		this.sdt = sdt;
 	}
-	public void datDiaChi(String diaChi) { // Đổi tên phương thức
+	public void setDiaChi(String diaChi) { 
 		this.diaChi = diaChi;
 	}
 	
@@ -69,15 +69,15 @@ abstract public class Nguoi {
 	public void nhap(Scanner sc) {
 		try {
 		System.out.println("Moi nhap ho ten:");
-		this.datHoTen(sc.nextLine()); // Đổi tên phương thức
+		this.setHoTen(sc.nextLine()); 
 		System.out.println("Moi nhap gioi tinh (Nam/Nu):");
-		this.datGioiTinh(sc.nextLine()); // Đổi tên phương thức
+		this.setGioiTinh(sc.nextLine()); 
 		System.out.println("Moi nhap nam sinh (VD: 1990):");
-		this.datNamSinh(sc.nextLine()); // Đổi tên phương thức
+		this.setNamSinh(sc.nextLine()); 
 		System.out.println("Moi nhap SDT:");
-		this.datSDT(sc.nextLine()); // Đổi tên phương thức
+		this.setSdt(sc.nextLine()); 
 		System.out.println("Moi nhap dia chi:");
-		this.datDiaChi(sc.nextLine()); // Đổi tên phương thức
+		this.setDiaChi(sc.nextLine()); 
 		} catch (Exception e) {
 			System.out.println("Loi khi nhap Nguoi: " + e.getMessage());
 		}
@@ -88,7 +88,7 @@ abstract public class Nguoi {
 	}
 
 	// --- PHƯƠNG THỨC HỖ TRỢ GHI FILE (cho lớp con) ---
-	public StringBuilder taoDongCoBan() { // Đổi tên phương thức
+	public StringBuilder getBaseDataString() { 
 		StringBuilder sb = new StringBuilder();
 		sb.append(id).append(",");
 		sb.append(hoTen).append(",");

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SanPhamDAO {
 
-    public List<SanPham> layTatCa() {
+    public List<SanPham> getAll() {
         List<SanPham> ds = new ArrayList<>();
         String sql = "SELECT MaSP, TenSP, LoaiSP, MaNCC, GiaBan, TGBaoHanh, TrangThai FROM SANPHAM";
 

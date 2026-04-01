@@ -88,7 +88,7 @@ public class BangDieuKhienSanPham extends JPanel {
         nutThem.addActionListener(e -> themSanPham());
         nutSua.addActionListener(e -> suaSanPham());
         nutXoa.addActionListener(e -> xoaSanPham());
-        nutReset.addActionListener(e -> datLaiForm());
+        nutReset.addActionListener(e -> resetForm());
         nutTimKiem.addActionListener(e -> timKiemSanPham(truongTimKiem.getText()));
 
         bang.add(nutThem); bang.add(nutSua); bang.add(nutXoa);
@@ -99,7 +99,7 @@ public class BangDieuKhienSanPham extends JPanel {
 
     public void taiDuLieuVaoBang() {
         quanLySanPham.docFileTXT(); // Gọi hàm này để reload từ DB (vì Controller đã refactor sang DB)
-        dienDuLieuVaoBang(quanLySanPham.layDanhSachSanPham());
+        dienDuLieuVaoBang(quanLySanPham.getSanPhamList());
     }
 
     private void dienDuLieuVaoBang(List<SanPham> danhSachSanPham) {
@@ -152,7 +152,7 @@ public class BangDieuKhienSanPham extends JPanel {
             SanPham sanPhamMoi = new SanPham(id, ten, loai, "NCC01", giaBan, baoHanh, "Đang kinh doanh");
             if (quanLySanPham.themSanPham(sanPhamMoi)) {
                 taiDuLieuVaoBang();
-                datLaiForm();
+                resetForm();
                 JOptionPane.showMessageDialog(this, "Thêm danh mục SP thành công!");
             } else {
                 JOptionPane.showMessageDialog(this, "Mã SP đã tồn tại!");
@@ -173,7 +173,7 @@ public class BangDieuKhienSanPham extends JPanel {
             // Gọi hàm suaSanPham đã refactor (loại bỏ tham số số lượng)
             if (quanLySanPham.suaSanPham(id, ten, loai, giaBan)) {
                 taiDuLieuVaoBang();
-                datLaiForm();
+                resetForm();
                 JOptionPane.showMessageDialog(this, "Cập nhật danh mục thành công!");
             }
         } catch (Exception e) {
@@ -188,7 +188,7 @@ public class BangDieuKhienSanPham extends JPanel {
         int xacNhan = JOptionPane.showConfirmDialog(this, "Xóa danh mục sản phẩm " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION && quanLySanPham.xoaSanPham(id)) {
             taiDuLieuVaoBang();
-            datLaiForm();
+            resetForm();
             JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm khỏi danh mục.");
         }
     }
@@ -201,7 +201,7 @@ public class BangDieuKhienSanPham extends JPanel {
         dienDuLieuVaoBang(list);
     }
 
-    private void datLaiForm() {
+    private void resetForm() {
         truongID.setText(""); 
         truongTen.setText("");
         truongGiaBan.setText(""); 

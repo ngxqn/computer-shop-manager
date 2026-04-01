@@ -8,14 +8,14 @@ abstract public class NhanVien extends Nguoi {
     protected String caLamViec;
     protected String chucVu;
 
-    public String layChucVu() { return chucVu; }
-    public int layLuongCoBan() { return LuongCoBan; }
-    public int laySoNgayNghi() { return this.soNgayNghi; }
-    public String layCaLamViec() { return this.caLamViec; }
+    public String getChucVu() { return chucVu; }
+    public int getLuongCoBan() { return LuongCoBan; }
+    public int getSoNgayNghi() { return this.soNgayNghi; }
+    public String getCaLamViec() { return this.caLamViec; }
 
-    public void datChucVu(String chucVu) { this.chucVu = chucVu; }
-    public void datSoNgayNghi(int soNgayNghi) { this.soNgayNghi = soNgayNghi; }
-    public void datCaLamViec(String caLamViec) { this.caLamViec = caLamViec; }
+    public void setChucVu(String chucVu) { this.chucVu = chucVu; }
+    public void setSoNgayNghi(int soNgayNghi) { this.soNgayNghi = soNgayNghi; }
+    public void setCaLamViec(String caLamViec) { this.caLamViec = caLamViec; }
 
     public NhanVien(String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi, String caLamViec) {
         super(id, hoTen, gioiTinh, namSinh, sdt, diaChi);
@@ -59,9 +59,9 @@ abstract public class NhanVien extends Nguoi {
     public void nhap(Scanner sc) {
         super.nhap(sc);
         System.out.println("Moi nhap so ngay nghi: ");
-        this.datSoNgayNghi(Integer.parseInt(sc.nextLine()));
+        this.setSoNgayNghi(Integer.parseInt(sc.nextLine()));
         System.out.println("Moi nhap ca lam viec (Sang/Toi):");
-        this.datCaLamViec(sc.nextLine());
+        this.setCaLamViec(sc.nextLine());
         this.kiemTraCaLamViec();
     }
 
@@ -72,10 +72,10 @@ abstract public class NhanVien extends Nguoi {
                 chucVu, soNgayNghi, caLamViec, xepLoai(), tinhLuong());
     }
 
-    public StringBuilder taoDong() {
+    public StringBuilder getDataString() {
         StringBuilder sb = new StringBuilder();
         sb.append(chucVu).append(",");
-        sb.append(super.taoDongCoBan()); // id, hoTen, gioiTinh, namSinh, sdt, diaChi,
+        sb.append(super.getBaseDataString()); // id, hoTen, gioiTinh, namSinh, sdt, diaChi,
         sb.append(soNgayNghi).append(",");
         sb.append(caLamViec);
         return sb;

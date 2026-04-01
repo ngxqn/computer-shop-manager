@@ -120,7 +120,7 @@ public class BangDieuKhienNhanVien extends JPanel {
         nutThem.addActionListener(e -> themNhanVien());
         nutSua.addActionListener(e -> suaNhanVien());
         nutXoa.addActionListener(e -> xoaNhanVien());
-        nutReset.addActionListener(e -> datLaiForm());
+        nutReset.addActionListener(e -> resetForm());
 
         // Gọi hàm tìm kiếm mới
         nutTimKiem.addActionListener(e -> thucHienTimKiem(truongTimKiem.getText()));
@@ -146,8 +146,8 @@ public class BangDieuKhienNhanVien extends JPanel {
         if (!ketQua.isEmpty()) {
             for (NhanVien nv : ketQua) {
                 moHinhBang.addRow(new Object[]{
-                        nv.layID(), nv.layHoTen(), nv.layGioiTinh(), nv.layNamSinh(),
-                        nv.laySDT(), nv.layDiaChi(), nv.layChucVu(), nv.xepLoai(),
+                        nv.getID(), nv.getHoTen(), nv.getGioiTinh(), nv.getNamSinh(),
+                        nv.getSdt(), nv.getDiaChi(), nv.getChucVu(), nv.xepLoai(),
                         dinhDangLuong.format(nv.tinhLuong())
                 });
             }
@@ -161,10 +161,10 @@ public class BangDieuKhienNhanVien extends JPanel {
     private void taiDuLieuVaoBang() {
         quanLyNhanVien.docFileTXT();
         moHinhBang.setRowCount(0);
-        for (NhanVien nv : quanLyNhanVien.layDanhSachNhanVien()) {
+        for (NhanVien nv : quanLyNhanVien.getNhanVienList()) {
             moHinhBang.addRow(new Object[]{
-                    nv.layID(), nv.layHoTen(), nv.layGioiTinh(), nv.layNamSinh(),
-                    nv.laySDT(), nv.layDiaChi(), nv.layChucVu(), nv.xepLoai(),
+                    nv.getID(), nv.getHoTen(), nv.getGioiTinh(), nv.getNamSinh(),
+                    nv.getSdt(), nv.getDiaChi(), nv.getChucVu(), nv.xepLoai(),
                     dinhDangLuong.format(nv.tinhLuong())
             });
         }
@@ -173,10 +173,10 @@ public class BangDieuKhienNhanVien extends JPanel {
     private void themNhanVien() {
         NhanVien nvMoi = taoNhanVienTuForm();
         if (nvMoi == null) return;
-        quanLyNhanVien.layDanhSachNhanVien().add(nvMoi);
+        quanLyNhanVien.getNhanVienList().add(nvMoi);
         quanLyNhanVien.ghiFileTXT();
         taiDuLieuVaoBang();
-        datLaiForm();
+        resetForm();
         JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
     }
 
@@ -189,8 +189,8 @@ public class BangDieuKhienNhanVien extends JPanel {
         }
         NhanVien nvMoi = taoNhanVienTuForm();
         if (nvMoi == null) return;
-        int index = quanLyNhanVien.layDanhSachNhanVien().indexOf(nvCu);
-        quanLyNhanVien.layDanhSachNhanVien().set(index, nvMoi);
+        int index = quanLyNhanVien.getNhanVienList().indexOf(nvCu);
+        quanLyNhanVien.getNhanVienList().set(index, nvMoi);
         quanLyNhanVien.ghiFileTXT();
         taiDuLieuVaoBang();
         JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
@@ -205,10 +205,10 @@ public class BangDieuKhienNhanVien extends JPanel {
         }
         int xacNhan = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION) {
-            quanLyNhanVien.layDanhSachNhanVien().remove(nv);
+            quanLyNhanVien.getNhanVienList().remove(nv);
             quanLyNhanVien.ghiFileTXT();
             taiDuLieuVaoBang();
-            datLaiForm();
+            resetForm();
             JOptionPane.showMessageDialog(this, "Đã xóa nhân viên!");
         }
     }
@@ -219,19 +219,19 @@ public class BangDieuKhienNhanVien extends JPanel {
         String id = (String) bangNhanVien.getValueAt(row, 0);
         NhanVien nv = quanLyNhanVien.timNhanVienTheoID(id);
         if (nv != null) {
-            truongID.setText(nv.layID());
-            truongHoTen.setText(nv.layHoTen());
-            hopChonGioiTinh.setSelectedItem(nv.layGioiTinh());
-            truongNamSinh.setText(nv.layNamSinh());
-            truongSDT.setText(nv.laySDT());
-            truongDiaChi.setText(nv.layDiaChi());
-            hopChonChucVu.setSelectedItem(nv.layChucVu());
-            truongSoNgayNghi.setText(String.valueOf(nv.laySoNgayNghi()));
-            hopChonCaLamViec.setSelectedItem(nv.layCaLamViec());
+            truongID.setText(nv.getID());
+            truongHoTen.setText(nv.getHoTen());
+            hopChonGioiTinh.setSelectedItem(nv.getGioiTinh());
+            truongNamSinh.setText(nv.getNamSinh());
+            truongSDT.setText(nv.getSdt());
+            truongDiaChi.setText(nv.getDiaChi());
+            hopChonChucVu.setSelectedItem(nv.getChucVu());
+            truongSoNgayNghi.setText(String.valueOf(nv.getSoNgayNghi()));
+            hopChonCaLamViec.setSelectedItem(nv.getCaLamViec());
         }
     }
 
-    private void datLaiForm() {
+    private void resetForm() {
         truongID.setText(quanLyNhanVien.phatSinhIDTuDong());
         truongHoTen.setText(""); truongNamSinh.setText("");
         truongSDT.setText(""); truongDiaChi.setText("");

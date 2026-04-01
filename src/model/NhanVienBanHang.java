@@ -7,11 +7,11 @@ public class NhanVienBanHang extends NhanVien  { // Giữ nguyên tên Interface
 	// SỬA: Constructor 11 đối số
 	public NhanVienBanHang (String chucVu, String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi, String caLamViec) {
 	    super(id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
-	    super.datChucVu("Ban Hang"); // Đổi tên phương thức
+	    super.setChucVu("Ban Hang"); 
 	}
 
 	public NhanVienBanHang() {
-		super.datChucVu("Ban Hang"); // Đổi tên phương thức
+		super.setChucVu("Ban Hang"); 
 	}
 
     @Override

@@ -68,9 +68,9 @@ public class Kho {
     }
 
     // Getters/Setters
-    public String layMaKho() { return maKho; }
-    public String layTenKho() { return tenKho; }
-    public List<SanPham> layDanhSachSanPham() { return danhSachSanPham; }
-    public void datMaKho(String maKho) { this.maKho = maKho; }
-    public void datTenKho(String tenKho) { this.tenKho = tenKho; }
+    public String getMaKho() { return maKho; }
+    public String getTenKho() { return tenKho; }
+    public List<SanPham> getSanPhamList() { return danhSachSanPham; }
+    public void setMaKho(String maKho) { this.maKho = maKho; }
+    public void setTenKho(String tenKho) { this.tenKho = tenKho; }
 }

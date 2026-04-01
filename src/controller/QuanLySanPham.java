@@ -34,7 +34,7 @@ public class QuanLySanPham extends LuuTruDuLieu {
 
     // --- CÁC HÀM QUẢN LÝ (CRUD) ---
 
-    public List<SanPham> layDanhSachSanPham() {
+    public List<SanPham> getSanPhamList() {
         return danhSachSanPham;
     }
 
@@ -85,7 +85,7 @@ public class QuanLySanPham extends LuuTruDuLieu {
     @Override
     public void docFileTXT() {
         // Chuyển sang JDBC: Nạp dữ liệu từ Database
-        this.danhSachSanPham = sanPhamDAO.layTatCa();
+        this.danhSachSanPham = sanPhamDAO.getAll();
     }
 
     @Override

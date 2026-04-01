@@ -10,7 +10,7 @@ import java.util.List;
 
 public class KhachHangDAO {
 
-    public List<KhachHang> layTatCa() {
+    public List<KhachHang> getAll() {
         List<KhachHang> ds = new ArrayList<>();
         // SELECT bổ sung NamSinh so với Java Model KhachHang
         String sql = "SELECT MaKH, HoTen, GioiTinh, NamSinh, SDT, DiaChi FROM KHACHHANG";

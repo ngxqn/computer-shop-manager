@@ -61,7 +61,7 @@ public class BangDieuKhienHoaDon extends JPanel {
         
         try {
             HoaDonDAO dao = new HoaDonDAO();
-            List<HoaDon> danhSach = dao.layTatCaHoaDon();
+            List<HoaDon> danhSach = dao.getAllHoaDon();
             
             for (HoaDon hd : danhSach) {
                 String tienFormatted = dinhDangTien.format(hd.getTongTien());

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class NhanVienDAO {
 
-    public List<NhanVien> layTatCa() {
+    public List<NhanVien> getAll() {
         List<NhanVien> ds = new ArrayList<>();
         // SELECT bổ sung các cột còn thiếu so với Java Model để đảm bảo tính năng tính lương, liên lạc
         String sql = "SELECT MaNV, HoTen, GioiTinh, NamSinh, SDT, DiaChi, ChucVu, SoNgayNghi, CaLamViec FROM NHANVIEN";

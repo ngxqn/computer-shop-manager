@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
 
 public class BangDieuKhienKhachHang extends JPanel {
 
@@ -40,7 +39,7 @@ public class BangDieuKhienKhachHang extends JPanel {
         this.add(bangDieuKhien, BorderLayout.CENTER);
 
         taiDuLieuVaoBang();
-        datLaiForm(); // Để thiết lập trạng thái ban đầu cho ô ID
+        resetForm(); // Để thiết lập trạng thái ban đầu cho ô ID
     }
 
     private void thietLapBang() {
@@ -91,7 +90,7 @@ public class BangDieuKhienKhachHang extends JPanel {
         nutThem.addActionListener(e -> themKhachHang());
         nutSua.addActionListener(e -> suaKhachHang());
         nutXoa.addActionListener(e -> xoaKhachHang());
-        nutReset.addActionListener(e -> datLaiForm());
+        nutReset.addActionListener(e -> resetForm());
         nutTimKiem.addActionListener(e -> timKiemKhachHang(truongTimKiem.getText()));
 
         bangNut.add(nutThem); bangNut.add(nutSua); bangNut.add(nutXoa);
@@ -118,17 +117,17 @@ public class BangDieuKhienKhachHang extends JPanel {
         // hoặc dùng phương thức tạo mới có sẵn:
         String idMoi = quanLyKhachHang.phatSinhIDTuDong(); // Hãy chuyển hàm này trong controller sang public
 
-        khMoi.datID(idMoi);
-        khMoi.datHoTen(truongHoTen.getText().trim());
-        khMoi.datGioiTinh((String) hopChonGioiTinh.getSelectedItem());
-        khMoi.datNamSinh(truongNamSinh.getText().trim());
-        khMoi.datSDT(truongSDT.getText().trim());
-        khMoi.datDiaChi(truongDiaChi.getText().trim());
+        khMoi.setID(idMoi);
+        khMoi.setHoTen(truongHoTen.getText().trim());
+        khMoi.setGioiTinh((String) hopChonGioiTinh.getSelectedItem());
+        khMoi.setNamSinh(truongNamSinh.getText().trim());
+        khMoi.setSdt(truongSDT.getText().trim());
+        khMoi.setDiaChi(truongDiaChi.getText().trim());
 
-        quanLyKhachHang.layDanhSachKhachHang().add(khMoi);
+        quanLyKhachHang.getKhachHangList().add(khMoi);
         quanLyKhachHang.ghiFileTXT();
         taiDuLieuVaoBang();
-        datLaiForm();
+        resetForm();
         JOptionPane.showMessageDialog(this, "Thêm thành công! ID khách hàng là: " + idMoi);
     }
 
@@ -141,13 +140,13 @@ public class BangDieuKhienKhachHang extends JPanel {
 
         String id = truongID.getText().trim();
         // Tìm khách hàng trong danh sách của controller
-        for (KhachHang kh : quanLyKhachHang.layDanhSachKhachHang()) {
-            if (kh.layID().equals(id)) {
-                kh.datHoTen(truongHoTen.getText().trim());
-                kh.datGioiTinh((String) hopChonGioiTinh.getSelectedItem());
-                kh.datNamSinh(truongNamSinh.getText().trim());
-                kh.datSDT(truongSDT.getText().trim());
-                kh.datDiaChi(truongDiaChi.getText().trim());
+        for (KhachHang kh : quanLyKhachHang.getKhachHangList()) {
+            if (kh.getID().equals(id)) {
+                kh.setHoTen(truongHoTen.getText().trim());
+                kh.setGioiTinh((String) hopChonGioiTinh.getSelectedItem());
+                kh.setNamSinh(truongNamSinh.getText().trim());
+                kh.setSdt(truongSDT.getText().trim());
+                kh.setDiaChi(truongDiaChi.getText().trim());
                 break;
             }
         }
@@ -169,10 +168,10 @@ public class BangDieuKhienKhachHang extends JPanel {
 
         if (confirm == JOptionPane.YES_OPTION) {
             // Sử dụng logic xóa từ controller
-            quanLyKhachHang.layDanhSachKhachHang().removeIf(kh -> kh.layID().equals(id));
+            quanLyKhachHang.getKhachHangList().removeIf(kh -> kh.getID().equals(id));
             quanLyKhachHang.ghiFileTXT();
             taiDuLieuVaoBang();
-            datLaiForm();
+            resetForm();
             JOptionPane.showMessageDialog(this, "Đã xóa khách hàng.");
         }
     }
@@ -191,15 +190,15 @@ public class BangDieuKhienKhachHang extends JPanel {
         moHinhBang.setRowCount(0);
         for (KhachHang kh : danhSach) {
             moHinhBang.addRow(new Object[]{
-                    kh.layID(), kh.layHoTen(), kh.layGioiTinh(),
-                    kh.layNamSinh(), kh.laySDT(), kh.layDiaChi()
+                    kh.getID(), kh.getHoTen(), kh.getGioiTinh(),
+                    kh.getNamSinh(), kh.getSdt(), kh.getDiaChi()
             });
         }
     }
 
     private void taiDuLieuVaoBang() {
         quanLyKhachHang.docFileTXT();
-        dienDuLieuVaoBang(quanLyKhachHang.layDanhSachKhachHang());
+        dienDuLieuVaoBang(quanLyKhachHang.getKhachHangList());
     }
 
     private void hienThiKhachHangDuocChon() {
@@ -217,7 +216,7 @@ public class BangDieuKhienKhachHang extends JPanel {
         }
     }
 
-    private void datLaiForm() {
+    private void resetForm() {
         truongID.setText("ID Tự Động");
         truongID.setEditable(false);
         truongID.setBackground(Color.WHITE);

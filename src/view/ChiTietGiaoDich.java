@@ -37,15 +37,15 @@ public class ChiTietGiaoDich extends JDialog {
 
     // CONSTRUCTOR 2: Xử lý Phiếu Nhập Kho
     public ChiTietGiaoDich(Window owner, PhieuNhapKho pnk) {
-        super(owner, "Chi Tiết Phiếu Nhập: " + pnk.layMaGiaoDich(), ModalityType.APPLICATION_MODAL);
-        this.maGD = pnk.layMaGiaoDich();
+        super(owner, "Chi Tiết Phiếu Nhập: " + pnk.getMaGiaoDich(), ModalityType.APPLICATION_MODAL);
+        this.maGD = pnk.getMaGiaoDich();
         this.loaiGD = "PHIẾU NHẬP KHO (BỔ SUNG)";
         this.nhanDoiTac = "Mã Nhân Viên:";
-        this.maDoiTac = pnk.layMaNhanVien();
-        this.ngayGD = pnk.layNgayNhap();
+        this.maDoiTac = pnk.getMaNhanVien();
+        this.ngayGD = pnk.getNgayNhap();
         this.tongGiaTri = pnk.tinhTongGiaTri();
         this.tienGiam = 0;
-        this.dssp = pnk.layDanhSachSanPham();
+        this.dssp = pnk.getSanPhamList();
 
         khoiTaoGiaoDien(owner);
     }

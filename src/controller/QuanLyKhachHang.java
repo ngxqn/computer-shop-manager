@@ -12,14 +12,14 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
     private KhachHangDAO khachHangDAO = new KhachHangDAO();
     private final Scanner sc = new Scanner(System.in);
 
-    public List<KhachHang> layDanhSachKhachHang(){
+    public List<KhachHang> getKhachHangList(){
         return this.danhSachKhachHang;
     }
 
     @Override
     public void docFileTXT() {
         // Chuyển sang JDBC: Nạp dữ liệu từ Database
-        this.danhSachKhachHang = khachHangDAO.layTatCa();
+        this.danhSachKhachHang = khachHangDAO.getAll();
         System.out.println("✅ Đã nạp danh sách khách hàng từ Database.");
     }
 
@@ -34,7 +34,7 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
     public ArrayList<KhachHang> timKhachHang(String keyword) {
         ArrayList<KhachHang> ketQua = new ArrayList<>();
         for (KhachHang kh : danhSachKhachHang) {
-            if (kh.layID().equalsIgnoreCase(keyword) || kh.layHoTen().toLowerCase().contains(keyword.toLowerCase())) {
+            if (kh.getID().equalsIgnoreCase(keyword) || kh.getHoTen().toLowerCase().contains(keyword.toLowerCase())) {
                 ketQua.add(kh);
             }
         }
@@ -43,7 +43,7 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
 
     private KhachHang timChinhXacTheoID(String id) {
         for (KhachHang kh : danhSachKhachHang) {
-            if (kh.layID().equalsIgnoreCase(id)) return kh;
+            if (kh.getID().equalsIgnoreCase(id)) return kh;
         }
         return null;
     }
@@ -53,7 +53,7 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
         int maxID = 0;
         for (KhachHang kh : danhSachKhachHang) {
             try {
-                int idSo = Integer.parseInt(kh.layID().substring(2).trim());
+                int idSo = Integer.parseInt(kh.getID().substring(2).trim());
                 if (idSo > maxID) maxID = idSo;
             } catch (Exception e) {}
         }
@@ -82,7 +82,7 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
         System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
         for (KhachHang kh : danhSachKhachHang) {
             System.out.printf("| %-10s | %-25s | %-10s | %-10s | %-15s | %-30s |%n",
-                    kh.layID(), kh.layHoTen(), kh.layGioiTinh(), kh.layNamSinh(), kh.laySDT(), kh.layDiaChi());
+                    kh.getID(), kh.getHoTen(), kh.getGioiTinh(), kh.getNamSinh(), kh.getSdt(), kh.getDiaChi());
         }
     }
 }

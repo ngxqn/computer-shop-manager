@@ -30,8 +30,8 @@ public class KhachHang extends Nguoi { // Giữ nguyên tên Class KhachHang
 	}
 	
 	// PHƯƠNG THỨC HỖ TRỢ GHI FILE
-	public StringBuilder taoDong() { // Đổi tên phương thức (từ toLine)
-		StringBuilder sb = super.taoDongCoBan(); // Phương thức taoDongCoBan của Nguoi
+	public StringBuilder getDataString() { 
+		StringBuilder sb = super.getBaseDataString(); 
 		sb.deleteCharAt(sb.length() - 1); // Xóa dấu phẩy cuối cùng
 		return sb;
 	}

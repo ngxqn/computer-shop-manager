@@ -109,7 +109,7 @@ public class HoaDonDAO {
     /**
      * Lấy toàn bộ Hóa Đơn từ Database để hiển thị trên bảng lịch sử
      */
-    public List<HoaDon> layTatCaHoaDon() {
+    public List<HoaDon> getAllHoaDon() {
         List<HoaDon> dsHoaDon = new java.util.ArrayList<>();
         String sql = "SELECT MaHD, MaNV, MaKH, NgayLap, TongTien FROM HOADON ORDER BY NgayLap DESC";
 

@@ -40,7 +40,7 @@ public class QuanLyKho extends LuuTruDuLieu {
 
     public Kho timKhoTheoMa(String maKho) {
         return danhSachKho.stream()
-                .filter(k -> k.layMaKho().equalsIgnoreCase(maKho))
+                .filter(k -> k.getMaKho().equalsIgnoreCase(maKho))
                 .findFirst().orElse(null);
     }
 
@@ -49,7 +49,7 @@ public class QuanLyKho extends LuuTruDuLieu {
         if (danhSachKho.isEmpty()) {
             Kho khoChinh = new Kho("K01", "Kho Tong");
             if (qlSanPham != null) {
-                for (SanPham sp : qlSanPham.layDanhSachSanPham()) {
+                for (SanPham sp : qlSanPham.getSanPhamList()) {
                     // Cập nhật Constructor SanPham mới phù hợp Phase 5
                     SanPham spKho = new SanPham(
                         sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 
