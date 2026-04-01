@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Scanner;
+
 
 public class KhachHang extends Nguoi { // Giữ nguyên tên Class KhachHang
 	
@@ -18,21 +18,4 @@ public class KhachHang extends Nguoi { // Giữ nguyên tên Class KhachHang
 		super();
 	}
 	
-	@Override
-	public void nhap(Scanner sc) {
-		super.nhap(sc); // Phương thức nhap của Nguoi
-	}
-	
-	@Override
-	public void xuat() {
-		super.xuat(); // Phương thức xuat của Nguoi
-		System.out.printf(" %n");
-	}
-	
-	// PHƯƠNG THỨC HỖ TRỢ GHI FILE
-	public StringBuilder getDataString() { 
-		StringBuilder sb = super.getBaseDataString(); 
-		sb.deleteCharAt(sb.length() - 1); // Xóa dấu phẩy cuối cùng
-		return sb;
-	}
 }

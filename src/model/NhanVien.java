@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Scanner;
+
 
 abstract public class NhanVien extends Nguoi {
     public final int LuongCoBan = 5000000;
@@ -55,29 +55,4 @@ abstract public class NhanVien extends Nguoi {
 
     public abstract float tinhLuong();
 
-    @Override
-    public void nhap(Scanner sc) {
-        super.nhap(sc);
-        System.out.println("Moi nhap so ngay nghi: ");
-        this.setSoNgayNghi(Integer.parseInt(sc.nextLine()));
-        System.out.println("Moi nhap ca lam viec (Sang/Toi):");
-        this.setCaLamViec(sc.nextLine());
-        this.kiemTraCaLamViec();
-    }
-
-    @Override
-    public void xuat() {
-        super.xuat();
-        System.out.printf(" %-15s | %-12d | %-12s | %-10s | %-15.0f |%n",
-                chucVu, soNgayNghi, caLamViec, xepLoai(), tinhLuong());
-    }
-
-    public StringBuilder getDataString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(chucVu).append(",");
-        sb.append(super.getBaseDataString()); // id, hoTen, gioiTinh, namSinh, sdt, diaChi,
-        sb.append(soNgayNghi).append(",");
-        sb.append(caLamViec);
-        return sb;
-    }
 }

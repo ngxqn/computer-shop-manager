@@ -48,25 +48,21 @@ public class QuanLyKhachHang {
     }
 
 
-    public void suaKhachHang(String id) {
-        // Triển khai logic GUI tương ứng
+    public boolean themKhachHang(KhachHang kh) {
+        boolean success = khachHangDAO.insert(kh);
+        if (success) refreshData();
+        return success;
     }
 
-    public void xoaKhachHang(String id) {
-        // Triển khai logic GUI tương ứng
+    public boolean suaKhachHang(KhachHang kh) {
+        boolean success = khachHangDAO.update(kh);
+        if (success) refreshData();
+        return success;
     }
 
-    public void xuatDanhSachKhachHang() {
-        if (danhSachKhachHang.isEmpty()) {
-            System.out.println("Danh sách rỗng!");
-            return;
-        }
-        System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
-        System.out.printf("| %-10s | %-25s | %-10s | %-10s | %-15s | %-30s |%n", "ID", "Họ Tên", "G.Tính", "N.Sinh", "SDT", "Địa Chỉ");
-        System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
-        for (KhachHang kh : danhSachKhachHang) {
-            System.out.printf("| %-10s | %-25s | %-10s | %-10s | %-15s | %-30s |%n",
-                    kh.getID(), kh.getHoTen(), kh.getGioiTinh(), kh.getNamSinh(), kh.getSdt(), kh.getDiaChi());
-        }
+    public boolean xoaKhachHang(String maKH) {
+        boolean success = khachHangDAO.delete(maKH);
+        if (success) refreshData();
+        return success;
     }
 }

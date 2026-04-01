@@ -172,10 +172,15 @@ public class BangDieuKhienNhanVien extends JPanel {
     private void themNhanVien() {
         NhanVien nvMoi = taoNhanVienTuForm();
         if (nvMoi == null) return;
-        quanLyNhanVien.getNhanVienList().add(nvMoi);
-        taiDuLieuVaoBang();
-        resetForm();
-        JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
+        
+        boolean success = quanLyNhanVien.themNhanVien(nvMoi);
+        if (success) {
+            taiDuLieuVaoBang();
+            resetForm();
+            JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Lỗi khi thêm nhân viên vào Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void suaNhanVien() {
@@ -187,10 +192,14 @@ public class BangDieuKhienNhanVien extends JPanel {
         }
         NhanVien nvMoi = taoNhanVienTuForm();
         if (nvMoi == null) return;
-        int index = quanLyNhanVien.getNhanVienList().indexOf(nvCu);
-        quanLyNhanVien.getNhanVienList().set(index, nvMoi);
-        taiDuLieuVaoBang();
-        JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+        
+        boolean success = quanLyNhanVien.suaNhanVien(nvMoi);
+        if (success) {
+            taiDuLieuVaoBang();
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật nhân viên vào Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void xoaNhanVien() {
@@ -202,10 +211,14 @@ public class BangDieuKhienNhanVien extends JPanel {
         }
         int xacNhan = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION) {
-            quanLyNhanVien.getNhanVienList().remove(nv);
-            taiDuLieuVaoBang();
-            resetForm();
-            JOptionPane.showMessageDialog(this, "Đã xóa nhân viên!");
+            boolean success = quanLyNhanVien.xoaNhanVien(id);
+            if (success) {
+                taiDuLieuVaoBang();
+                resetForm();
+                JOptionPane.showMessageDialog(this, "Đã xóa nhân viên (Soft Delete)!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa nhân viên trong Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

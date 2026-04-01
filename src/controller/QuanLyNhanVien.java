@@ -55,19 +55,21 @@ public class QuanLyNhanVien {
         return null;
     }
 
+    public boolean themNhanVien(NhanVien nv) {
+        boolean success = nhanVienDAO.insert(nv);
+        if (success) refreshData();
+        return success;
+    }
 
-    public void xuatDanhSachNhanVien() { 
-        if (danhSachNhanVien.isEmpty()) { 
-            System.out.println("Danh sach nhan vien hien tai dang rong.");
-            return;
-        }
-        
-        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.printf("| %-10s | %-25s | %-10s | %-10s | %-15s | %-30s | %-15s | %-12s | %-15s | %-15s | %-10s | %n", "ID", "Ho Ten", "Gioi Tinh", "Nam Sinh", "SDT", "Dia Chi", "Chuc Vu", "Ngay Nghi", "Ca Lam Viec", "Xep Loai", "Tong Luong");
-        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        for (NhanVien nhanVien : danhSachNhanVien) { 
-            nhanVien.xuat(); 
-        }
-        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+    public boolean suaNhanVien(NhanVien nv) {
+        boolean success = nhanVienDAO.update(nv);
+        if (success) refreshData();
+        return success;
+    }
+
+    public boolean xoaNhanVien(String maNV) {
+        boolean success = nhanVienDAO.delete(maNV);
+        if (success) refreshData();
+        return success;
     }
 }

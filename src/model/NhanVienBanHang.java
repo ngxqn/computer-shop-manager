@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Scanner;
+
 
 public class NhanVienBanHang extends NhanVien  { // Giữ nguyên tên Interface
 	
@@ -20,13 +20,4 @@ public class NhanVienBanHang extends NhanVien  { // Giữ nguyên tên Interface
         return (LuongCoBan * super.heSoXepLoai() * super.heSoCa());
     }
 	
-	@Override
-	public void nhap(Scanner sc) {
-		super.nhap(sc);
-	}
-	
-	@Override
-	public void xuat() {
-		super.xuat();
-	}
 }

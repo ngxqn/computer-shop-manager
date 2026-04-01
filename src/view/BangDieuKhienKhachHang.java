@@ -101,21 +101,13 @@ public class BangDieuKhienKhachHang extends JPanel {
     }
 
     private void themKhachHang() {
-        // Kiểm tra nhập liệu cơ bản (không kiểm tra ID vì tự động)
         if (truongHoTen.getText().trim().isEmpty() || truongSDT.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập ít nhất Họ tên và SDT!");
             return;
         }
 
-        // 1. Gọi logic phát sinh ID tự động từ Controller
-        // Vì QuanLyKhachHang có phương thức phatSinhIDTuDong() là private,
-        // ta nên gán ID trong phương thức themKhachHang(Scanner) hoặc tạo 1 hàm public phụ trợ.
-        // Ở đây ta mô phỏng logic để GUI lấy được ID mới:
-
         KhachHang khMoi = new KhachHang();
-        // Giả sử bạn đã sửa QuanLyKhachHang để phatSinhIDTuDong thành public
-        // hoặc dùng phương thức tạo mới có sẵn:
-        String idMoi = quanLyKhachHang.phatSinhIDTuDong(); // Hãy chuyển hàm này trong controller sang public
+        String idMoi = quanLyKhachHang.phatSinhIDTuDong(); 
 
         khMoi.setID(idMoi);
         khMoi.setHoTen(truongHoTen.getText().trim());
@@ -124,10 +116,14 @@ public class BangDieuKhienKhachHang extends JPanel {
         khMoi.setSdt(truongSDT.getText().trim());
         khMoi.setDiaChi(truongDiaChi.getText().trim());
 
-        quanLyKhachHang.getKhachHangList().add(khMoi);
-        taiDuLieuVaoBang();
-        resetForm();
-        JOptionPane.showMessageDialog(this, "Thêm thành công! ID khách hàng là: " + idMoi);
+        boolean success = quanLyKhachHang.themKhachHang(khMoi);
+        if (success) {
+            taiDuLieuVaoBang();
+            resetForm();
+            JOptionPane.showMessageDialog(this, "Thêm thành công! ID khách hàng là: " + idMoi);
+        } else {
+            JOptionPane.showMessageDialog(this, "Lỗi khi thêm khách hàng vào Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void suaKhachHang() {
@@ -137,21 +133,21 @@ public class BangDieuKhienKhachHang extends JPanel {
             return;
         }
 
-        String id = truongID.getText().trim();
-        // Tìm khách hàng trong danh sách của controller
-        for (KhachHang kh : quanLyKhachHang.getKhachHangList()) {
-            if (kh.getID().equals(id)) {
-                kh.setHoTen(truongHoTen.getText().trim());
-                kh.setGioiTinh((String) hopChonGioiTinh.getSelectedItem());
-                kh.setNamSinh(truongNamSinh.getText().trim());
-                kh.setSdt(truongSDT.getText().trim());
-                kh.setDiaChi(truongDiaChi.getText().trim());
-                break;
-            }
-        }
+        KhachHang khMoi = new KhachHang();
+        khMoi.setID(truongID.getText().trim());
+        khMoi.setHoTen(truongHoTen.getText().trim());
+        khMoi.setGioiTinh((String) hopChonGioiTinh.getSelectedItem());
+        khMoi.setNamSinh(truongNamSinh.getText().trim());
+        khMoi.setSdt(truongSDT.getText().trim());
+        khMoi.setDiaChi(truongDiaChi.getText().trim());
 
-        taiDuLieuVaoBang();
-        JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+        boolean success = quanLyKhachHang.suaKhachHang(khMoi);
+        if (success) {
+            taiDuLieuVaoBang();
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật khách hàng vào Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void xoaKhachHang() {
@@ -165,11 +161,14 @@ public class BangDieuKhienKhachHang extends JPanel {
         int confirm = JOptionPane.showConfirmDialog(this, "Xóa khách hàng " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // Sử dụng logic xóa từ controller
-            quanLyKhachHang.getKhachHangList().removeIf(kh -> kh.getID().equals(id));
-            taiDuLieuVaoBang();
-            resetForm();
-            JOptionPane.showMessageDialog(this, "Đã xóa khách hàng.");
+            boolean success = quanLyKhachHang.xoaKhachHang(id);
+            if (success) {
+                taiDuLieuVaoBang();
+                resetForm();
+                JOptionPane.showMessageDialog(this, "Đã xóa khách hàng (Soft Delete).");
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa khách hàng trong Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

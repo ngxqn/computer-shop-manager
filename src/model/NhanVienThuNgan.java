@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Scanner;
+
 
 public class NhanVienThuNgan extends NhanVien{ // Giữ nguyên tên Interface
 	private float doanhThu; // Đổi tên thuộc tính
@@ -18,11 +18,7 @@ public class NhanVienThuNgan extends NhanVien{ // Giữ nguyên tên Interface
 	    super.setChucVu("Thu Ngan"); 
 	}
 	
-	@Override
-	public StringBuilder getDataString() { 
-		StringBuilder sb = super.getDataString();
-		return sb;
-	}
+
 	    
 	public NhanVienThuNgan() {
 		super.setChucVu("Thu Ngan"); 
@@ -33,13 +29,4 @@ public class NhanVienThuNgan extends NhanVien{ // Giữ nguyên tên Interface
         return (LuongCoBan * super.heSoXepLoai() * super.heSoCa());
     }
 
-	@Override
-	public void nhap(Scanner sc) {
-		super.nhap(sc);
-	}
-	
-	@Override
-	public void xuat() {
-		super.xuat();
-	}
 }
