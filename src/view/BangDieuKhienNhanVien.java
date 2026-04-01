@@ -5,7 +5,6 @@ import controller.QuanLyNhanVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.text.DecimalFormat;
 
@@ -159,7 +158,7 @@ public class BangDieuKhienNhanVien extends JPanel {
 
     // --- CÁC PHƯƠNG THỨC KHÁC GIỮ NGUYÊN ---
     private void taiDuLieuVaoBang() {
-        quanLyNhanVien.docFileTXT();
+        quanLyNhanVien.refreshData();
         moHinhBang.setRowCount(0);
         for (NhanVien nv : quanLyNhanVien.getNhanVienList()) {
             moHinhBang.addRow(new Object[]{
@@ -174,7 +173,6 @@ public class BangDieuKhienNhanVien extends JPanel {
         NhanVien nvMoi = taoNhanVienTuForm();
         if (nvMoi == null) return;
         quanLyNhanVien.getNhanVienList().add(nvMoi);
-        quanLyNhanVien.ghiFileTXT();
         taiDuLieuVaoBang();
         resetForm();
         JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
@@ -191,7 +189,6 @@ public class BangDieuKhienNhanVien extends JPanel {
         if (nvMoi == null) return;
         int index = quanLyNhanVien.getNhanVienList().indexOf(nvCu);
         quanLyNhanVien.getNhanVienList().set(index, nvMoi);
-        quanLyNhanVien.ghiFileTXT();
         taiDuLieuVaoBang();
         JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
     }
@@ -206,7 +203,6 @@ public class BangDieuKhienNhanVien extends JPanel {
         int xacNhan = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION) {
             quanLyNhanVien.getNhanVienList().remove(nv);
-            quanLyNhanVien.ghiFileTXT();
             taiDuLieuVaoBang();
             resetForm();
             JOptionPane.showMessageDialog(this, "Đã xóa nhân viên!");

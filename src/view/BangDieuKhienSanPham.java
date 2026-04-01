@@ -98,7 +98,7 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     public void taiDuLieuVaoBang() {
-        quanLySanPham.docFileTXT(); // Gọi hàm này để reload từ DB (vì Controller đã refactor sang DB)
+        quanLySanPham.refreshData(); // Gọi hàm này để reload từ DB
         dienDuLieuVaoBang(quanLySanPham.getSanPhamList());
     }
 

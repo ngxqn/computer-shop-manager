@@ -1,5 +1,4 @@
 package controller;
-import dao.LuuTruDuLieu;
 
 import model.Kho;
 import model.SanPham;
@@ -7,13 +6,30 @@ import model.HoaDon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuanLyKho extends LuuTruDuLieu {
+public class QuanLyKho {
     private List<Kho> danhSachKho = new ArrayList<>();
     private QuanLySanPham qlSanPham;
 
     public QuanLyKho(QuanLySanPham qlSanPham) {
         this.qlSanPham = qlSanPham;
-        docFileTXT();
+        napDuLieuTuHT();
+    }
+
+    private void napDuLieuTuHT() {
+        if (danhSachKho.isEmpty()) {
+            Kho khoChinh = new Kho("K01", "Kho Tong");
+            if (qlSanPham != null) {
+                for (SanPham sp : qlSanPham.getSanPhamList()) {
+                    SanPham spKho = new SanPham(
+                        sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 
+                        sp.getMaNCC(), sp.getGiaBan(), sp.getTgBaoHanh(), 
+                        sp.getTrangThai()
+                    );
+                    khoChinh.themSanPham(spKho);
+                }
+            }
+            danhSachKho.add(khoChinh);
+        }
     }
 
     // NGHIỆP VỤ XUẤT KHO NỘI BỘ: Đã được stub lại để tương thích với kiến trúc mới
@@ -44,26 +60,4 @@ public class QuanLyKho extends LuuTruDuLieu {
                 .findFirst().orElse(null);
     }
 
-    @Override
-    public void docFileTXT() {
-        if (danhSachKho.isEmpty()) {
-            Kho khoChinh = new Kho("K01", "Kho Tong");
-            if (qlSanPham != null) {
-                for (SanPham sp : qlSanPham.getSanPhamList()) {
-                    // Cập nhật Constructor SanPham mới phù hợp Phase 5
-                    SanPham spKho = new SanPham(
-                        sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), 
-                        sp.getMaNCC(), sp.getGiaBan(), sp.getTgBaoHanh(), 
-                        sp.getTrangThai()
-                    );
-                    khoChinh.themSanPham(spKho);
-                }
-            }
-            danhSachKho.add(khoChinh);
-        }
-    }
-
-    @Override public void ghiFileTXT() {
-        // Stub: Chuyển sang JDBC
-    }
 }

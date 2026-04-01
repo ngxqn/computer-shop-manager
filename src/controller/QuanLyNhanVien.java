@@ -1,32 +1,26 @@
 package controller;
 
-import dao.LuuTruDuLieu;
 import dao.NhanVienDAO;
 import model.NhanVien;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class QuanLyNhanVien extends LuuTruDuLieu { 
+public class QuanLyNhanVien { 
     private List<NhanVien> danhSachNhanVien = new ArrayList<>(); 
     private NhanVienDAO nhanVienDAO = new NhanVienDAO();
+    
+    public QuanLyNhanVien() {
+        refreshData();
+    }
+
+    public void refreshData() {
+        this.danhSachNhanVien = nhanVienDAO.getAll();
+    }
     
     public List<NhanVien> getNhanVienList(){ 
         return this.danhSachNhanVien;
     }
 
-    @Override
-    public void docFileTXT() {
-        // Chuyển sang JDBC: Nạp dữ liệu từ Database
-        this.danhSachNhanVien = nhanVienDAO.getAll();
-        System.out.println("✅ Đã nạp danh sách nhân viên từ Database.");
-    }
-
-    @Override
-    public void ghiFileTXT() { 
-        // Đã chuyển sang JDBC Database, không còn lưu File TXT
-        System.out.println("Ghi nhận: Dữ liệu nhân viên hiện tại được quản lý bởi Database.");
-    }
 
     // Hàm hỗ trợ phát sinh ID tự động
     public String phatSinhIDTuDong() {
@@ -61,18 +55,6 @@ public class QuanLyNhanVien extends LuuTruDuLieu {
         return null;
     }
 
-    public void themNhanVien(Scanner sc) { 
-        // Triển khai logic GUI tương ứng sẽ cần nạp JDBC thêm mới
-        System.out.println("Tính năng thêm nhân viên hiện chưa được chuyển sang INSERT JDBC hoàn toàn.");
-    }
-
-    public void suaNhanVien(Scanner sc) { 
-        // Triển khai logic GUI tương ứng
-    }
-
-    public void xoaNhanVien(Scanner sc) { 
-        // Triển khai logic GUI tương ứng
-    }
 
     public void xuatDanhSachNhanVien() { 
         if (danhSachNhanVien.isEmpty()) { 

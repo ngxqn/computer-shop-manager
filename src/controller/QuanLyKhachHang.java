@@ -1,33 +1,26 @@
 package controller;
 
-import dao.LuuTruDuLieu;
 import dao.KhachHangDAO;
 import model.KhachHang;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class QuanLyKhachHang extends LuuTruDuLieu {
+public class QuanLyKhachHang {
     private List<KhachHang> danhSachKhachHang = new ArrayList<>();
     private KhachHangDAO khachHangDAO = new KhachHangDAO();
-    private final Scanner sc = new Scanner(System.in);
+
+    public QuanLyKhachHang() {
+        refreshData();
+    }
+
+    public void refreshData() {
+        this.danhSachKhachHang = khachHangDAO.getAll();
+    }
 
     public List<KhachHang> getKhachHangList(){
         return this.danhSachKhachHang;
     }
 
-    @Override
-    public void docFileTXT() {
-        // Chuyển sang JDBC: Nạp dữ liệu từ Database
-        this.danhSachKhachHang = khachHangDAO.getAll();
-        System.out.println("✅ Đã nạp danh sách khách hàng từ Database.");
-    }
-
-    @Override
-    public void ghiFileTXT() {
-        // Đã chuyển toàn bộ sang JDBC Database, không còn lưu File TXT
-        System.out.println("ℹ️ Thông tin khách hàng hiện tại được đồng bộ với Database.");
-    }
 
     // --- LOGIC TÌM KIẾM ---
 
@@ -41,12 +34,6 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
         return ketQua;
     }
 
-    private KhachHang timChinhXacTheoID(String id) {
-        for (KhachHang kh : danhSachKhachHang) {
-            if (kh.getID().equalsIgnoreCase(id)) return kh;
-        }
-        return null;
-    }
 
     public String phatSinhIDTuDong() {
         if (danhSachKhachHang.isEmpty()) return "KH001";
@@ -60,9 +47,6 @@ public class QuanLyKhachHang extends LuuTruDuLieu {
         return String.format("KH%03d", maxID + 1);
     }
 
-    public void themKhachHang(Scanner sc) {
-        System.out.println("Tính năng thêm khách hàng mới chưa được chuyển hoàn toàn sang JDBC INSERT.");
-    }
 
     public void suaKhachHang(String id) {
         // Triển khai logic GUI tương ứng

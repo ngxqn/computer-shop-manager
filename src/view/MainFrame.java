@@ -93,9 +93,9 @@ public class MainFrame extends JFrame {
             } else if (titleTab.equals("Bán Hàng & Hóa Đơn")) {
                 hoaDonPanel.taiDuLieu();
             } else if (titleTab.equals("Quản Lý Nhân Viên")) {
-                qlnv.docFileTXT();
+                qlnv.refreshData();
             } else if (titleTab.equals("Quản Lý Khách Hàng")) {
-                qlkh.docFileTXT();
+                qlkh.refreshData();
             } else if (titleTab.equals("Báo Cáo Doanh Thu")) {
                 baoCaoPanel.taiDuLieu();
             }

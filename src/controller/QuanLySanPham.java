@@ -1,18 +1,21 @@
 package controller;
 
-import dao.LuuTruDuLieu;
 import dao.SanPhamDAO;
 import model.SanPham;
 import model.HoaDon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuanLySanPham extends LuuTruDuLieu {
+public class QuanLySanPham {
     private List<SanPham> danhSachSanPham = new ArrayList<>();
     private SanPhamDAO sanPhamDAO = new SanPhamDAO();
 
     public QuanLySanPham() {
-        docFileTXT();
+        refreshData();
+    }
+
+    public void refreshData() {
+        this.danhSachSanPham = sanPhamDAO.getAll();
     }
 
     // --- CÁC HÀM NGHIỆP VỤ BÁN HÀNG ---
@@ -48,7 +51,6 @@ public class QuanLySanPham extends LuuTruDuLieu {
     public boolean themSanPham(SanPham sp) {
         if (timSanPhamTheoID(sp.getMaSP()) == null) {
             danhSachSanPham.add(sp);
-            ghiFileTXT(); // Trong JDBC thực tế có thể gọi DAO.them()
             return true;
         }
         return false;
@@ -58,7 +60,6 @@ public class QuanLySanPham extends LuuTruDuLieu {
         SanPham sp = timSanPhamTheoID(id);
         if (sp != null) {
             danhSachSanPham.remove(sp);
-            ghiFileTXT(); // Trong JDBC thực tế có thể gọi DAO.xoa()
             return true;
         }
         return false;
@@ -74,23 +75,9 @@ public class QuanLySanPham extends LuuTruDuLieu {
             sp.setTenSP(tenMoi);
             sp.setLoaiSP(loaiMoi);
             sp.setGiaBan(giaMoi);
-            ghiFileTXT();
             return true;
         }
         return false;
     }
 
-    // --- CÁC HÀM ĐỌC/GHI DATA ---
-
-    @Override
-    public void docFileTXT() {
-        // Chuyển sang JDBC: Nạp dữ liệu từ Database
-        this.danhSachSanPham = sanPhamDAO.getAll();
-    }
-
-    @Override
-    public void ghiFileTXT() {
-        // Đã chuyển sang JDBC, logic lưu trữ trực tiếp đã do Repository/DAO đảm nhận khi thực hiện nghiệp vụ
-        System.out.println("Ghi nhận: Dữ liệu Sản phẩm hiện đã được đồng bộ với Database.");
-    }
 }

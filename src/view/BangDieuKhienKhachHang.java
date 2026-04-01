@@ -125,7 +125,6 @@ public class BangDieuKhienKhachHang extends JPanel {
         khMoi.setDiaChi(truongDiaChi.getText().trim());
 
         quanLyKhachHang.getKhachHangList().add(khMoi);
-        quanLyKhachHang.ghiFileTXT();
         taiDuLieuVaoBang();
         resetForm();
         JOptionPane.showMessageDialog(this, "Thêm thành công! ID khách hàng là: " + idMoi);
@@ -151,7 +150,6 @@ public class BangDieuKhienKhachHang extends JPanel {
             }
         }
 
-        quanLyKhachHang.ghiFileTXT();
         taiDuLieuVaoBang();
         JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
     }
@@ -169,7 +167,6 @@ public class BangDieuKhienKhachHang extends JPanel {
         if (confirm == JOptionPane.YES_OPTION) {
             // Sử dụng logic xóa từ controller
             quanLyKhachHang.getKhachHangList().removeIf(kh -> kh.getID().equals(id));
-            quanLyKhachHang.ghiFileTXT();
             taiDuLieuVaoBang();
             resetForm();
             JOptionPane.showMessageDialog(this, "Đã xóa khách hàng.");
@@ -197,7 +194,7 @@ public class BangDieuKhienKhachHang extends JPanel {
     }
 
     private void taiDuLieuVaoBang() {
-        quanLyKhachHang.docFileTXT();
+        quanLyKhachHang.refreshData();
         dienDuLieuVaoBang(quanLyKhachHang.getKhachHangList());
     }
 
