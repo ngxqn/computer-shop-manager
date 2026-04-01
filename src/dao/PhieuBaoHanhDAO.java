@@ -47,9 +47,6 @@ public class PhieuBaoHanhDAO {
      */
     public boolean taoPhieuBaoHanh(PhieuBaoHanh pbh) {
         Connection conn = null;
-        PreparedStatement psPhieu = null;
-        PreparedStatement psSeri = null;
-
         try {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
@@ -57,39 +54,96 @@ public class PhieuBaoHanhDAO {
             // 1. Thêm phiếu bảo hành
             String sqlPhieu = "INSERT INTO PHIEUBAOHANH (MaPBH, MaSeri, MaKH, MaNV, NgayTiepNhan, NgayTraDuKien, MoTaLoi, TinhTrang, ChiPhi) " +
                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            psPhieu = conn.prepareStatement(sqlPhieu);
-            psPhieu.setString(1, pbh.getMaPBH());
-            psPhieu.setString(2, pbh.getMaSeri());
-            psPhieu.setString(3, pbh.getMaKH());
-            psPhieu.setString(4, pbh.getMaNV());
-            psPhieu.setTimestamp(5, new Timestamp(pbh.getNgayTiepNhan().getTime()));
-            psPhieu.setTimestamp(6, pbh.getNgayTraDuKien() != null ? new Timestamp(pbh.getNgayTraDuKien().getTime()) : null);
-            psPhieu.setString(7, pbh.getMoTaLoi());
-            psPhieu.setString(8, pbh.getTinhTrang());
-            psPhieu.setDouble(9, pbh.getChiPhi());
-            psPhieu.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(sqlPhieu)) {
+                ps.setString(1, pbh.getMaPBH());
+                ps.setString(2, pbh.getMaSeri());
+                ps.setString(3, pbh.getMaKH());
+                ps.setString(4, pbh.getMaNV());
+                ps.setTimestamp(5, new Timestamp(pbh.getNgayTiepNhan().getTime()));
+                ps.setTimestamp(6, pbh.getNgayTraDuKien() != null ? new Timestamp(pbh.getNgayTraDuKien().getTime()) : null);
+                ps.setString(7, pbh.getMoTaLoi());
+                ps.setString(8, pbh.getTinhTrang());
+                ps.setDouble(9, pbh.getChiPhi());
+                ps.executeUpdate();
+            }
 
             // 2. Cập nhật trạng thái Serial
             String sqlSeri = "UPDATE SERISANPHAM SET TinhTrang = 'Đang bảo hành' WHERE MaSeri = ?";
-            psSeri = conn.prepareStatement(sqlSeri);
-            psSeri.setString(1, pbh.getMaSeri());
-            psSeri.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(sqlSeri)) {
+                ps.setString(1, pbh.getMaSeri());
+                ps.executeUpdate();
+            }
 
             conn.commit();
             return true;
 
         } catch (SQLException | ClassNotFoundException e) {
-            if (conn != null) {
-                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             e.printStackTrace();
             return false;
         } finally {
-            try {
-                if (psPhieu != null) psPhieu.close();
-                if (psSeri != null) psSeri.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    public List<PhieuBaoHanh> getAll() {
+        List<PhieuBaoHanh> ds = new ArrayList<>();
+        String sql = "SELECT * FROM PHIEUBAOHANH ORDER BY NgayTiepNhan DESC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                PhieuBaoHanh pbh = new PhieuBaoHanh(
+                    rs.getString("MaPBH"),
+                    rs.getString("MaSeri"),
+                    rs.getString("MaKH"),
+                    rs.getString("MaNV"),
+                    rs.getTimestamp("NgayTiepNhan"),
+                    rs.getTimestamp("NgayTraDuKien"),
+                    rs.getString("MoTaLoi"),
+                    rs.getString("TinhTrang"),
+                    rs.getDouble("ChiPhi")
+                );
+                ds.add(pbh);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ds;
+    }
+
+    public boolean capNhatPhieu(String maPBH, String maSeri, String trangThai, double chiPhi) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            // 1. Cập nhật phiếu bảo hành
+            String sqlPhieu = "UPDATE PHIEUBAOHANH SET TinhTrang = ?, ChiPhi = ? WHERE MaPBH = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sqlPhieu)) {
+                ps.setString(1, trangThai);
+                ps.setDouble(2, chiPhi);
+                ps.setString(3, maPBH);
+                ps.executeUpdate();
+            }
+
+            // 2. Nếu trả khách, cập nhật lại trạng thái Serial
+            if (trangThai.equalsIgnoreCase("Đã trả khách")) {
+                String sqlSeri = "UPDATE SERISANPHAM SET TinhTrang = 'Đã bán' WHERE MaSeri = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sqlSeri)) {
+                    ps.setString(1, maSeri);
+                    ps.executeUpdate();
+                }
+            }
+
+            conn.commit();
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 }

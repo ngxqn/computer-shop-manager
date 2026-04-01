@@ -15,8 +15,9 @@ public class MainFrame extends JFrame {
     private BangDieuKhienSanPham sanPhamPanel;
     private BangDieuKhienGiaoDich giaoDichPanel;
     private BangDieuKhienHoaDon hoaDonPanel;
-    private BangDieuKhienNhanVien nhanVienPanel; //
-    private BangDieuKhienKhachHang khachHangPanel; //
+    private BangDieuKhienNhanVien nhanVienPanel;
+    private BangDieuKhienKhachHang khachHangPanel;
+    private BangDieuKhienBaoHanh baoHanhPanel; // MỚI
 
     public MainFrame(String title) {
         super(title);
@@ -31,24 +32,17 @@ public class MainFrame extends JFrame {
         JTabbedPane tabs = new JTabbedPane();
 
         // 3. Khởi tạo các Panel và truyền đúng Controller vào
-        // Tab Kho: Chuyên trách nhập/xuất nội bộ và báo cáo tồn kho
         giaoDichPanel = new BangDieuKhienGiaoDich(qlk, qlsp);
-
-        // Tab Hóa Đơn: Chuyên trách lập hóa đơn bán hàng và hiển thị lịch sử
         hoaDonPanel = new BangDieuKhienHoaDon(qlsp);
-
-        // Tab Sản Phẩm: Quản lý danh mục sản phẩm tại cửa hàng
         sanPhamPanel = new BangDieuKhienSanPham(qlsp);
-
-        // Tab Nhân Viên: Quản lý thông tin và lương nhân sự
         nhanVienPanel = new BangDieuKhienNhanVien(qlnv);
-
-        // Tab Khách Hàng: Quản lý thông tin khách hàng thân thiết
         khachHangPanel = new BangDieuKhienKhachHang(qlkh);
+        baoHanhPanel = new BangDieuKhienBaoHanh(); // MỚI
 
         // --- 4. Thêm các Tab vào JTabbedPane ---
         tabs.addTab("Kho Nội Bộ", giaoDichPanel);
         tabs.addTab("Bán Hàng & Hóa Đơn", hoaDonPanel);
+        tabs.addTab("Quản Lý Bảo Hành", baoHanhPanel); // MỚI
         tabs.addTab("Sản Phẩm Cửa Hàng", sanPhamPanel);
         tabs.addTab("Quản Lý Nhân Viên", nhanVienPanel);
         tabs.addTab("Quản Lý Khách Hàng", khachHangPanel);
