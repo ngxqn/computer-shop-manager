@@ -42,7 +42,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
         txtHanBH = new JTextField(); txtHanBH.setEditable(false);
         txtTinhTrang = new JTextField(); txtTinhTrang.setEditable(false);
         txtMaKH = new JTextField(); txtMaKH.setEditable(false);
-        txtMaNV = new JTextField("NV001"); // Mặc định hoặc lấy từ session
+        txtMaNV = new JTextField("NV01"); // Mặc định hoặc lấy từ session
         txtChiPhi = new JTextField("0");
         
         areaMoTa = new JTextArea(3, 20);
