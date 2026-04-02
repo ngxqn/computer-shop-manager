@@ -5,23 +5,18 @@ package model;
 abstract public class NhanVien extends Nguoi {
     public final int LuongCoBan = 5000000;
     protected int soNgayNghi;
-    protected String caLamViec;
     protected String chucVu;
 
     public String getChucVu() { return chucVu; }
     public int getLuongCoBan() { return LuongCoBan; }
     public int getSoNgayNghi() { return this.soNgayNghi; }
-    public String getCaLamViec() { return this.caLamViec; }
 
     public void setChucVu(String chucVu) { this.chucVu = chucVu; }
     public void setSoNgayNghi(int soNgayNghi) { this.soNgayNghi = soNgayNghi; }
-    public void setCaLamViec(String caLamViec) { this.caLamViec = caLamViec; }
 
-    public NhanVien(String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi, String caLamViec) {
+    public NhanVien(String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi) {
         super(id, hoTen, gioiTinh, namSinh, sdt, diaChi);
         this.soNgayNghi = soNgayNghi;
-        this.caLamViec = caLamViec;
-        this.kiemTraCaLamViec();
     }
 
     public NhanVien() {}
@@ -41,16 +36,6 @@ abstract public class NhanVien extends Nguoi {
             case 'D': return 0.5f;
             default: return 0.0f;
         }
-    }
-
-    public void kiemTraCaLamViec() {
-        if (!caLamViec.equalsIgnoreCase("Sang") && !caLamViec.equalsIgnoreCase("Toi")) {
-            this.caLamViec = "Sang";
-        }
-    }
-
-    public float heSoCa() {
-        return caLamViec.equalsIgnoreCase("Toi") ? 1.2f : 1.0f;
     }
 
     public abstract float tinhLuong();

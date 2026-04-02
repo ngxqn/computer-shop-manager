@@ -5,8 +5,8 @@ package model;
 public class NhanVienBanHang extends NhanVien  { // Giữ nguyên tên Interface
 	
 	// SỬA: Constructor 11 đối số
-	public NhanVienBanHang (String chucVu, String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi, String caLamViec) {
-	    super(id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+	public NhanVienBanHang (String chucVu, String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi) {
+	    super(id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
 	    super.setChucVu("Ban Hang"); 
 	}
 
@@ -16,8 +16,8 @@ public class NhanVienBanHang extends NhanVien  { // Giữ nguyên tên Interface
 
     @Override
     public float tinhLuong() {
-        // Công thức mới: Lương cơ bản nhân với các hệ số trước, sau đó mới cộng thưởng
-        return (LuongCoBan * super.heSoXepLoai() * super.heSoCa());
+        // Công thức mới: Lương cơ bản nhân hệ số xếp loại (nhân viên full-time)
+        return (LuongCoBan * super.heSoXepLoai());
     }
 	
 }

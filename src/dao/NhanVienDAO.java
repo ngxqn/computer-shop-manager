@@ -16,7 +16,7 @@ public class NhanVienDAO {
     public List<NhanVien> getAll() {
         List<NhanVien> ds = new ArrayList<>();
         // SELECT bổ sung các cột còn thiếu so với Java Model để đảm bảo tính năng tính lương, liên lạc
-        String sql = "SELECT MaNV, HoTen, GioiTinh, NamSinh, SDT, DiaChi, ChucVu, SoNgayNghi, CaLamViec FROM NHANVIEN WHERE TrangThai = 'Đang làm việc'";
+        String sql = "SELECT MaNV, HoTen, GioiTinh, NamSinh, SDT, DiaChi, ChucVu, SoNgayNghi FROM NHANVIEN WHERE TrangThai = 'Đang làm việc'";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -31,16 +31,15 @@ public class NhanVienDAO {
                 String sdt = rs.getString("SDT");
                 String diaChi = rs.getString("DiaChi");
                 int soNgayNghi = rs.getInt("SoNgayNghi");
-                String caLamViec = rs.getString("CaLamViec");
 
                 NhanVien nv = null;
                 if (chucVu != null) {
                     if (chucVu.equalsIgnoreCase("Thu Ngan")) {
-                        nv = new NhanVienThuNgan(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                        nv = new NhanVienThuNgan(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
                     } else if (chucVu.contains("Kho")) {
-                        nv = new NhanVienQuanLyKho(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                        nv = new NhanVienQuanLyKho(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
                     } else {
-                        nv = new NhanVienBanHang(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                        nv = new NhanVienBanHang(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
                     }
                 }
                 
@@ -53,7 +52,7 @@ public class NhanVienDAO {
     }
 
     public boolean insert(NhanVien nv) {
-        String sql = "INSERT INTO NHANVIEN (MaNV, HoTen, GioiTinh, NamSinh, SDT, DiaChi, ChucVu, SoNgayNghi, CaLamViec) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO NHANVIEN (MaNV, HoTen, GioiTinh, NamSinh, SDT, DiaChi, ChucVu, SoNgayNghi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nv.getID());
@@ -64,7 +63,6 @@ public class NhanVienDAO {
             ps.setString(6, nv.getDiaChi());
             ps.setString(7, nv.getChucVu());
             ps.setInt(8, nv.getSoNgayNghi());
-            ps.setString(9, nv.getCaLamViec());
             return ps.executeUpdate() > 0;
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi insert NhanVien: " + e.getMessage());
@@ -73,7 +71,7 @@ public class NhanVienDAO {
     }
 
     public boolean update(NhanVien nv) {
-        String sql = "UPDATE NHANVIEN SET HoTen = ?, GioiTinh = ?, NamSinh = ?, SDT = ?, DiaChi = ?, ChucVu = ?, SoNgayNghi = ?, CaLamViec = ? WHERE MaNV = ?";
+        String sql = "UPDATE NHANVIEN SET HoTen = ?, GioiTinh = ?, NamSinh = ?, SDT = ?, DiaChi = ?, ChucVu = ?, SoNgayNghi = ? WHERE MaNV = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nv.getHoTen());
@@ -83,8 +81,7 @@ public class NhanVienDAO {
             ps.setString(5, nv.getDiaChi());
             ps.setString(6, nv.getChucVu());
             ps.setInt(7, nv.getSoNgayNghi());
-            ps.setString(8, nv.getCaLamViec());
-            ps.setString(9, nv.getID());
+            ps.setString(8, nv.getID());
             return ps.executeUpdate() > 0;
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Lỗi update NhanVien: " + e.getMessage());
@@ -120,15 +117,14 @@ public class NhanVienDAO {
                     String sdt = rs.getString("SDT");
                     String diaChi = rs.getString("DiaChi");
                     int soNgayNghi = rs.getInt("SoNgayNghi");
-                    String caLamViec = rs.getString("CaLamViec");
 
                     if (chucVu != null) {
                         if (chucVu.equalsIgnoreCase("Thu Ngan")) {
-                            return new NhanVienThuNgan(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                            return new NhanVienThuNgan(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
                         } else if (chucVu.contains("Kho")) {
-                            return new NhanVienQuanLyKho(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                            return new NhanVienQuanLyKho(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
                         } else {
-                            return new NhanVienBanHang(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                            return new NhanVienBanHang(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
                         }
                     }
                 }

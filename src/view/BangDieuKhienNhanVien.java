@@ -17,11 +17,10 @@ public class BangDieuKhienNhanVien extends JPanel {
 
     private JTextField truongID, truongHoTen, truongNamSinh, truongSoNgayNghi;
     private JTextField truongSDT, truongDiaChi, truongTimKiem;
-    private JComboBox<String> hopChonGioiTinh, hopChonCaLamViec, hopChonChucVu;
+    private JComboBox<String> hopChonGioiTinh, hopChonChucVu;
 
     private final String[] DANH_SACH_CHUC_VU = {"Ban Hang", "Thu Ngan", "Quan Li Kho"};
     private final String[] DANH_SACH_GIOI_TINH = {"Nam", "Nu"};
-    private final String[] DANH_SACH_CA_LAM = {"Sang", "Toi"};
 
     public BangDieuKhienNhanVien(QuanLyNhanVien quanLyNhanVien) {
         this.quanLyNhanVien = quanLyNhanVien;
@@ -72,7 +71,6 @@ public class BangDieuKhienNhanVien extends JPanel {
         truongDiaChi = new JTextField(15);
         hopChonChucVu = new JComboBox<>(DANH_SACH_CHUC_VU);
         truongSoNgayNghi = new JTextField(15);
-        hopChonCaLamViec = new JComboBox<>(DANH_SACH_CA_LAM);
 
         themVaoForm(bang, new JLabel("ID (Tự động):"), 0, 0, gbc);
         themVaoForm(bang, truongID, 1, 0, gbc);
@@ -91,8 +89,6 @@ public class BangDieuKhienNhanVien extends JPanel {
 
         themVaoForm(bang, new JLabel("Chức Vụ:"), 0, 3, gbc);
         themVaoForm(bang, hopChonChucVu, 1, 3, gbc);
-        themVaoForm(bang, new JLabel("Ca Làm Việc:"), 2, 3, gbc);
-        themVaoForm(bang, hopChonCaLamViec, 3, 3, gbc);
 
         themVaoForm(bang, new JLabel("Số Ngày Nghỉ:"), 0, 4, gbc);
         themVaoForm(bang, truongSoNgayNghi, 1, 4, gbc);
@@ -234,9 +230,7 @@ public class BangDieuKhienNhanVien extends JPanel {
             truongNamSinh.setText(nv.getNamSinh());
             truongSDT.setText(nv.getSdt());
             truongDiaChi.setText(nv.getDiaChi());
-            hopChonChucVu.setSelectedItem(nv.getChucVu());
             truongSoNgayNghi.setText(String.valueOf(nv.getSoNgayNghi()));
-            hopChonCaLamViec.setSelectedItem(nv.getCaLamViec());
         }
     }
 
@@ -258,12 +252,11 @@ public class BangDieuKhienNhanVien extends JPanel {
             String sdt = truongSDT.getText().trim();
             String dc = truongDiaChi.getText().trim();
             String cv = (String) hopChonChucVu.getSelectedItem();
-            String ca = (String) hopChonCaLamViec.getSelectedItem();
             int nghi = Integer.parseInt(truongSoNgayNghi.getText().trim());
             if (ten.isEmpty()) throw new Exception("Tên không được để trống!");
-            if (cv.equals("Ban Hang")) return new NhanVienBanHang(cv, id, ten, gt, ns, sdt, dc, nghi, ca);
-            if (cv.equals("Thu Ngan")) return new NhanVienThuNgan(cv, id, ten, gt, ns, sdt, dc, nghi, ca);
-            return new NhanVienQuanLyKho(cv, id, ten, gt, ns, sdt, dc, nghi, ca);
+            if (cv.equals("Ban Hang")) return new NhanVienBanHang(cv, id, ten, gt, ns, sdt, dc, nghi);
+            if (cv.equals("Thu Ngan")) return new NhanVienThuNgan(cv, id, ten, gt, ns, sdt, dc, nghi);
+            return new NhanVienQuanLyKho(cv, id, ten, gt, ns, sdt, dc, nghi);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi dữ liệu: " + e.getMessage());
             return null;

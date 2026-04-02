@@ -13,8 +13,8 @@ public class NhanVienThuNgan extends NhanVien{ // Giữ nguyên tên Interface
 	}
 	
 	// SỬA: Constructor 11 đối số
-	public NhanVienThuNgan(String chucVu, String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi,String caLamViec) {
-	    super(id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+	public NhanVienThuNgan(String chucVu, String id, String hoTen, String gioiTinh, String namSinh, String sdt, String diaChi, int soNgayNghi) {
+	    super(id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi);
 	    super.setChucVu("Thu Ngan"); 
 	}
 	
@@ -26,7 +26,7 @@ public class NhanVienThuNgan extends NhanVien{ // Giữ nguyên tên Interface
 
     @Override
     public float tinhLuong() {
-        return (LuongCoBan * super.heSoXepLoai() * super.heSoCa());
+        return (LuongCoBan * super.heSoXepLoai());
     }
 
 }
