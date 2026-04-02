@@ -21,6 +21,11 @@ public class ChiTietBaoHanhDialog extends JDialog {
         super(owner, "Chi tiết xử lý bảo hành: " + pbh.getMaPBH(), ModalityType.APPLICATION_MODAL);
         this.pbh = pbh;
         thietLapGiaoDien();
+        
+        // --- UX: Đóng bằng phím ESC ---
+        this.getRootPane().registerKeyboardAction(e -> dispose(), 
+            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0), 
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
     private void thietLapGiaoDien() {

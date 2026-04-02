@@ -17,6 +17,7 @@ public class BangDieuKhienSanPham extends JPanel {
     private JTextField fieldID, fieldTen, fieldGiaBan, fieldBaoHanh;
     private JComboBox<String> hopChonLoai;
     private JTextField fieldSearch;
+    private javax.swing.table.TableRowSorter<DefaultTableModel> boLoc;
 
     private final String[] DANH_SACH_LOAI = {"Laptop", "Desktop", "Linh kiện", "Màn hình", "Chuột & Bàn phím", "Khác"};
 
@@ -48,6 +49,10 @@ public class BangDieuKhienSanPham extends JPanel {
         tableSanPham = new JTable(moHinhBang);
         tableSanPham.setRowHeight(25);
         tableSanPham.setAutoCreateRowSorter(true);
+        
+        // --- UX: Thiết lập bộ lọc thời gian thực ---
+        boLoc = new javax.swing.table.TableRowSorter<>(moHinhBang);
+        tableSanPham.setRowSorter(boLoc);
 
         tableSanPham.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && tableSanPham.getSelectedRow() != -1) {
@@ -99,7 +104,26 @@ public class BangDieuKhienSanPham extends JPanel {
         JButton btnRefresh = new JButton("↻ Làm mới");
         
         fieldSearch = new JTextField(15);
-        JButton btnSearch = new JButton("🔍 Tìm theo ID");
+        fieldSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên sản phẩm...");
+        
+        // --- UX: Lắng nghe thay đổi trên ô tìm kiếm để lọc ngay lập tức ---
+        fieldSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
+            
+            private void thucHienLoc() {
+                String text = fieldSearch.getText().trim();
+                if (text.isEmpty()) {
+                    boLoc.setRowFilter(null);
+                } else {
+                    // Lọc không phân biệt hoa thường (?i) trên các cột ID (0) và Tên (1)
+                    boLoc.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + text, 0, 1));
+                }
+            }
+        });
+
+        JButton btnSearch = new JButton("🔍 Tìm kiếm");
 
         btnCreate.addActionListener(e -> themSanPham());
         btnUpdate.addActionListener(e -> suaSanPham());

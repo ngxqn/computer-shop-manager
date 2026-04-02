@@ -22,21 +22,27 @@ import java.util.Vector;
 public class TaoHoaDonDialog extends JDialog {
     private JTextField txtMaHD, txtSerial;
     private JComboBox<KhachHang> cbKH;
-    private JLabel lblNV;
-    private JTable bang;
+    private JTable bangGioHang;
     private DefaultTableModel model;
-    private JLabel lblTongTien;
+    private JLabel lblNV, lblTongTien;
     
     private double tongTienGiaoDich = 0.0;
     private SeriSanPhamDAO seriDAO = new SeriSanPhamDAO();
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private KhachHangDAO khDAO = new KhachHangDAO();
-    
     private List<ChiTietHoaDon> danhSachChiTiet = new ArrayList<>();
 
     public TaoHoaDonDialog(Window owner) {
-        super(owner, "LẬP HÓA ĐƠN BÁN HÀNG", ModalityType.APPLICATION_MODAL);
+        super(owner, "Lập hóa đơn bán hàng (POS)", ModalityType.APPLICATION_MODAL);
         thietLapGiaoDien();
+        
+        // --- UX 1: Đóng bằng phím ESC ---
+        this.getRootPane().registerKeyboardAction(e -> dispose(), 
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), 
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+            
+        // --- UX 2: Tự động focus vào ô quét sêri ---
+        SwingUtilities.invokeLater(() -> txtSerial.requestFocusInWindow());
     }
 
     private void thietLapGiaoDien() {
@@ -82,8 +88,8 @@ public class TaoHoaDonDialog extends JDialog {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
-        bang = new JTable(model);
-        pnlCenter.add(new JScrollPane(bang), BorderLayout.CENTER);
+        bangGioHang = new JTable(model);
+        pnlCenter.add(new JScrollPane(bangGioHang), BorderLayout.CENTER);
 
         // --- 3. Panel Dưới (Tổng tiền & Chốt đơn) ---
         JPanel pnlBot = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
@@ -144,6 +150,10 @@ public class TaoHoaDonDialog extends JDialog {
 
         tongTienGiaoDich += giaBan;
         lblTongTien.setText("Tổng Tiền: " + DinhDang.tien(tongTienGiaoDich));
+        
+        // UX: Xóa trắng và focus lại để quét tiếp
+        txtSerial.setText("");
+        txtSerial.requestFocusInWindow();
     }
 
     private void thucHienThanhToan() {

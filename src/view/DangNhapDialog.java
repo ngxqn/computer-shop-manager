@@ -6,6 +6,7 @@ import model.NhanVien;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class DangNhapDialog extends JDialog {
     private JTextField txtMaNV;
@@ -17,6 +18,12 @@ public class DangNhapDialog extends JDialog {
     public DangNhapDialog(Frame parent) {
         super(parent, "Đăng nhập hệ thống", true);
         thietLapGiaoDien();
+        
+        // --- UX: Thoát bằng phím ESC ---
+        this.getRootPane().registerKeyboardAction(e -> {
+            thanhCong = false;
+            dispose();
+        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
     private void thietLapGiaoDien() {

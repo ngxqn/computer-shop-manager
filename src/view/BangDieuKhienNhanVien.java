@@ -16,6 +16,7 @@ public class BangDieuKhienNhanVien extends JPanel {
 
     private JTextField fieldID, fieldHoTen, fieldNamSinh, fieldSoNgayNghi;
     private JTextField fieldSDT, fieldDiaChi, fieldTimKiem;
+    private javax.swing.table.TableRowSorter<DefaultTableModel> sorter;
     private JComboBox<String> hopChonGioiTinh, hopChonChucVu;
 
     private final String[] DANH_SACH_CHUC_VU = {"Ban Hang", "Thu Ngan", "Quan Li Kho"};
@@ -47,6 +48,11 @@ public class BangDieuKhienNhanVien extends JPanel {
         tableNhanVien = new JTable(moHinhBang);
         tableNhanVien.setRowHeight(25);
         tableNhanVien.setAutoCreateRowSorter(true);
+        
+        // --- UX: Thiết lập bộ lọc thời gian thực ---
+        sorter = new javax.swing.table.TableRowSorter<>(moHinhBang);
+        tableNhanVien.setRowSorter(sorter);
+
         tableNhanVien.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && tableNhanVien.getSelectedRow() != -1) {
                 hienThiNhanVienDuocChon();
@@ -108,6 +114,25 @@ public class BangDieuKhienNhanVien extends JPanel {
         JButton nutReset = new JButton("↻ Làm mới");
 
         fieldTimKiem = new JTextField(15);
+        fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên nhân viên...");
+        
+        // --- UX: Lọc thời gian thực ---
+        fieldTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { loc(); }
+            
+            private void loc() {
+                String val = fieldTimKiem.getText().trim();
+                if (val.isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    // Lọc trên cột ID (0) và Họ tên (1)
+                    sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + val, 0, 1));
+                }
+            }
+        });
+
         JButton nutTimKiem = new JButton("🔍 Tìm kiếm");
 
         nutThem.addActionListener(e -> themNhanVien());

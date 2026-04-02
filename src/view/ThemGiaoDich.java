@@ -31,6 +31,11 @@ public class ThemGiaoDich extends JDialog {
         this.quanLiKho = qlk;
         this.qlSanPham = qlsp;
         thietLapGiaoDien();
+        
+        // --- UX: Đóng bằng phím ESC ---
+        this.getRootPane().registerKeyboardAction(e -> dispose(), 
+            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0), 
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
     private void thietLapGiaoDien() {
