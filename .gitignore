@@ -7,3 +7,11 @@
 /lib/mysql-connector-j-9.6.0/README
 
 docs/archive
+
+# Build outputs
+bin/
+out/
+
+# IDE configurations
+.vscode/
+.idea/
