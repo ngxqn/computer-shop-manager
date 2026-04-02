@@ -2,8 +2,11 @@ package view;
 
 import dao.HoaDonDAO;
 import dao.SeriSanPhamDAO;
+import dao.KhachHangDAO;
 import model.ChiTietHoaDon;
 import model.HoaDon;
+import model.KhachHang;
+import controller.AppSession;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,9 +17,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Vector;
 
 public class TaoHoaDonDialog extends JDialog {
-    private JTextField txtMaHD, txtKH, txtNV, txtSerial;
+    private JTextField txtMaHD, txtSerial;
+    private JComboBox<KhachHang> cbKH;
+    private JLabel lblNV;
     private JTable bang;
     private DefaultTableModel model;
     private JLabel lblTongTien;
@@ -25,6 +31,7 @@ public class TaoHoaDonDialog extends JDialog {
     private DecimalFormat dinhDangTien = new DecimalFormat("###,###,### VNĐ");
     private SeriSanPhamDAO seriDAO = new SeriSanPhamDAO();
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
+    private KhachHangDAO khDAO = new KhachHangDAO();
     
     private List<ChiTietHoaDon> danhSachChiTiet = new ArrayList<>();
 
@@ -44,11 +51,12 @@ public class TaoHoaDonDialog extends JDialog {
         txtMaHD.setEditable(false);
         pnlTop.add(new JLabel("Mã Hóa Đơn:")); pnlTop.add(txtMaHD);
 
-        txtKH = new JTextField("Khách vãng lai");
-        pnlTop.add(new JLabel("Tên/Mã Khách Hàng:")); pnlTop.add(txtKH);
+        cbKH = new JComboBox<>(new Vector<>(khDAO.getAll()));
+        pnlTop.add(new JLabel("Chọn Khách Hàng:")); pnlTop.add(cbKH);
 
-        txtNV = new JTextField("NV01"); // Mặc định hoặc truyền từ Session
-        pnlTop.add(new JLabel("Mã NV Thu Ngân:")); pnlTop.add(txtNV);
+        String curNVStr = AppSession.getInstance().getMaNV() + " - " + AppSession.getInstance().getTenNV();
+        lblNV = new JLabel(curNVStr);
+        pnlTop.add(new JLabel("Nhân Viên Lập:")); pnlTop.add(lblNV);
         
         // --- 2. Panel Giữa (Khu vực Scan Serial & Giỏ Hàng) ---
         JPanel pnlCenter = new JPanel(new BorderLayout(5, 5));
@@ -105,7 +113,6 @@ public class TaoHoaDonDialog extends JDialog {
     private void xuLyQuetSerial(String maSeri) {
         if (maSeri.isEmpty()) return;
 
-        // Check trùng lặp trên giao diện giỏ hàng
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0).toString().equalsIgnoreCase(maSeri)) {
                 JOptionPane.showMessageDialog(this, "⚠️ Serial này đã được quét vào giỏ hàng!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
@@ -113,7 +120,6 @@ public class TaoHoaDonDialog extends JDialog {
             }
         }
 
-        // Gọi DB DAO để tra cứu Serial
         Object[] thongTinSP = seriDAO.traCuuSerialBanHang(maSeri);
         if (thongTinSP == null) {
             JOptionPane.showMessageDialog(this, "❌ Không tìm thấy mã Serial này trong hệ thống!", "Lỗi tra cứu", JOptionPane.ERROR_MESSAGE);
@@ -126,18 +132,14 @@ public class TaoHoaDonDialog extends JDialog {
             return;
         }
 
-        // Success: Lấy thông tin & thêm vào giỏ hàng
         String tenSP = (String) thongTinSP[1];
         double giaBan = (Double) thongTinSP[2];
 
-        // Tạo chi tiết Hóa Đơn và lưu vào List
         ChiTietHoaDon ct = new ChiTietHoaDon();
         ct.setMaSeri(maSeri);
         ct.setDonGiaBan(giaBan);
-        // (MaHD sẽ được gắn gán lúc thanh toán)
         danhSachChiTiet.add(ct);
 
-        // Hiển thị lên UI
         String giaFormatted = dinhDangTien.format(giaBan);
         model.addRow(new Object[]{maSeri, tenSP, giaFormatted});
 
@@ -151,26 +153,30 @@ public class TaoHoaDonDialog extends JDialog {
             return;
         }
 
+        KhachHang kh = (KhachHang) cbKH.getSelectedItem();
+        if (kh == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng!");
+            return;
+        }
+
         HoaDon hd = new HoaDon();
         hd.setMaHD(txtMaHD.getText());
-        hd.setMaKH(txtKH.getText());
-        hd.setMaNV(txtNV.getText());
-        hd.setNgayLap(new java.util.Date()); // Hiện tại
+        hd.setMaKH(kh.getMaKH());
+        hd.setMaNV(AppSession.getInstance().getMaNV());
+        hd.setNgayLap(new java.util.Date());
 
-        // Gắn MaHD vào tất cả ChiTiet
         for (ChiTietHoaDon ct : danhSachChiTiet) {
             ct.setMaHD(hd.getMaHD());
         }
 
-        // Gọi DAO lưu toàn phần
         boolean success = hoaDonDAO.taoHoaDon(hd, danhSachChiTiet);
         if (success) {
             JOptionPane.showMessageDialog(this, "✅ Lập hóa đơn và Checkout thành công!\n" +
-                                                "Tổng tiển: " + dinhDangTien.format(tongTienGiaoDich), 
-                                                "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                                                 "Tổng tiển: " + dinhDangTien.format(tongTienGiaoDich), 
+                                                 "Thành công", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "❌ Lỗi khi commit Hóa Đơn vào Database. Vui lòng thử lại!", "Lỗi hệ thống", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "❌ Lỗi khi commit Hóa Đơn vào Database!", "Lỗi hệ thống", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

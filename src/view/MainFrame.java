@@ -33,7 +33,7 @@ public class MainFrame extends JFrame {
 
         // 3. Khởi tạo các Panel và truyền đúng Controller vào
         giaoDichPanel = new BangDieuKhienGiaoDich(qlk, qlsp);
-        hoaDonPanel = new BangDieuKhienHoaDon(qlsp);
+        hoaDonPanel = new BangDieuKhienHoaDon();
         sanPhamPanel = new BangDieuKhienSanPham(qlsp);
         nhanVienPanel = new BangDieuKhienNhanVien(qlnv);
         khachHangPanel = new BangDieuKhienKhachHang(qlkh);
@@ -113,7 +113,16 @@ public class MainFrame extends JFrame {
         }
 
         SwingUtilities.invokeLater(() -> {
-            new MainFrame("HỆ THỐNG QUẢN LÝ SIÊU THỊ MINI - TEAM 03");
+            DangNhapDialog login = new DangNhapDialog(null);
+            login.setVisible(true);
+            
+            if (login.isThanhCong()) {
+                String name = controller.AppSession.getInstance().getTenNV();
+                MainFrame frame = new MainFrame("HỆ THỐNG QUẢN LÝ CỬA HÀNG MÁY TÍNH - [Xin chào: " + name + "]");
+                frame.setVisible(true);
+            } else {
+                System.exit(0);
+            }
         });
     }
 }

@@ -103,4 +103,39 @@ public class NhanVienDAO {
             return false;
         }
     }
+
+    public NhanVien dangNhap(String maNV, String matKhau) {
+        String sql = "SELECT * FROM NHANVIEN WHERE MaNV = ? AND MatKhau = ? AND TrangThai = 'Đang làm việc'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, maNV);
+            ps.setString(2, matKhau);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String chucVu = rs.getString("ChucVu");
+                    String id = rs.getString("MaNV");
+                    String hoTen = rs.getString("HoTen");
+                    String gioiTinh = rs.getString("GioiTinh");
+                    String namSinh = rs.getString("NamSinh");
+                    String sdt = rs.getString("SDT");
+                    String diaChi = rs.getString("DiaChi");
+                    int soNgayNghi = rs.getInt("SoNgayNghi");
+                    String caLamViec = rs.getString("CaLamViec");
+
+                    if (chucVu != null) {
+                        if (chucVu.equalsIgnoreCase("Thu Ngan")) {
+                            return new NhanVienThuNgan(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                        } else if (chucVu.contains("Kho")) {
+                            return new NhanVienQuanLyKho(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                        } else {
+                            return new NhanVienBanHang(chucVu, id, hoTen, gioiTinh, namSinh, sdt, diaChi, soNgayNghi, caLamViec);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Lỗi dangNhap: " + e.getMessage());
+        }
+        return null;
+    }
 }

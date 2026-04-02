@@ -17,5 +17,12 @@ public class KhachHang extends Nguoi { // Giữ nguyên tên Class KhachHang
 	public KhachHang() {
 		super();
 	}
-	
+
+    public String getMaKH() { return getID(); }
+    public void setMaKH(String maKH) { setID(maKH); }
+
+    @Override
+    public String toString() {
+        return id + " - " + hoTen;
+    }
 }

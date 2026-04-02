@@ -1,6 +1,5 @@
 package view;
 
-import controller.QuanLySanPham;
 import dao.HoaDonDAO;
 import model.HoaDon;
 
@@ -14,12 +13,10 @@ import java.util.List;
 public class BangDieuKhienHoaDon extends JPanel {
     private JTable bangHoaDon;
     private DefaultTableModel moHinhBang;
-    private QuanLySanPham quanLySanPham;
     private DecimalFormat dinhDangTien = new DecimalFormat("###,###,### VNĐ");
     private SimpleDateFormat dinhDangNgay = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public BangDieuKhienHoaDon(QuanLySanPham qlsp) {
-        this.quanLySanPham = qlsp;
+    public BangDieuKhienHoaDon() {
         this.setLayout(new BorderLayout(10, 10));
 
         // 1. Panel chứa nút thao tác phía trên

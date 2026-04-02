@@ -13,7 +13,8 @@ CREATE TABLE NHANVIEN (
     ChucVu NVARCHAR(50),
     SoNgayNghi INT DEFAULT 0,
     CaLamViec NVARCHAR(50),
-    TrangThai NVARCHAR(50) DEFAULT 'Đang làm việc'
+    TrangThai NVARCHAR(50) DEFAULT 'Đang làm việc',
+    MatKhau VARCHAR(50) DEFAULT '123'
 );
 
 CREATE TABLE KHACHHANG (

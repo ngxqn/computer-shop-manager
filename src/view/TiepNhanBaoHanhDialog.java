@@ -2,6 +2,7 @@ package view;
 
 import dao.PhieuBaoHanhDAO;
 import model.PhieuBaoHanh;
+import controller.AppSession;
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -42,14 +43,17 @@ public class TiepNhanBaoHanhDialog extends JDialog {
         txtHanBH = new JTextField(); txtHanBH.setEditable(false);
         txtTinhTrang = new JTextField(); txtTinhTrang.setEditable(false);
         txtMaKH = new JTextField(); txtMaKH.setEditable(false);
-        txtMaNV = new JTextField("NV01"); // Mặc định hoặc lấy từ session
+        
+        // Cập nhật: Lấy từ AppSession
+        txtMaNV = new JTextField(AppSession.getInstance().getMaNV());
+        txtMaNV.setEditable(false);
+        
         txtChiPhi = new JTextField("0");
         
         areaMoTa = new JTextArea(3, 20);
         spinNgayTra = new JSpinner(new SpinnerDateModel());
         JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(spinNgayTra, "dd/MM/yyyy");
         spinNgayTra.setEditor(dateEditor);
-        // Set ngày trả dự kiến là +7 ngày từ hôm nay
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 7);
         spinNgayTra.setValue(cal.getTime());
@@ -59,7 +63,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
         pnlCenter.add(new JLabel("Hạn bảo hành:")); pnlCenter.add(txtHanBH);
         pnlCenter.add(new JLabel("Tình trạng máy:")); pnlCenter.add(txtTinhTrang);
         pnlCenter.add(new JLabel("Mã Khách hàng:")); pnlCenter.add(txtMaKH);
-        pnlCenter.add(new JLabel("Mã NV Tiếp nhận:")); pnlCenter.add(txtMaNV);
+        pnlCenter.add(new JLabel("Nhân viên tiếp nhận:")); pnlCenter.add(txtMaNV);
         pnlCenter.add(new JLabel("Ngày trả dự kiến:")); pnlCenter.add(spinNgayTra);
         pnlCenter.add(new JLabel("Chi phí (nếu có):")); pnlCenter.add(txtChiPhi);
 
@@ -79,7 +83,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
         pnlSouth.add(btnThoat);
         this.add(pnlSouth, BorderLayout.SOUTH);
 
-        // --- XỬ LÝ SỰ KIỆN ---
+        // --- SỰ KIỆN ---
         btnTraCuu.addActionListener(e -> traCuuAction());
         btnLapPhieu.addActionListener(e -> lapPhieuAction());
         btnThoat.addActionListener(e -> this.dispose());
@@ -99,17 +103,12 @@ public class TiepNhanBaoHanhDialog extends JDialog {
             return;
         }
 
-        // measurement: {TenSP, NgayMua, NgayHetHan, TinhTrang, MaKH}
         txtTenSP.setText(String.valueOf(measurements[0]));
         txtNgayMua.setText(measurements[1] != null ? sdf.format((Date)measurements[1]) : "N/A");
-        
         Date ngayHetHan = (Date)measurements[2];
         txtHanBH.setText(ngayHetHan != null ? sdf.format(ngayHetHan) : "N/A");
-        
-        String tinhTrangHienTai = String.valueOf(measurements[3]);
         txtMaKH.setText(String.valueOf(measurements[4]));
 
-        // Kiểm tra hạn
         if (ngayHetHan != null && new Date().after(ngayHetHan)) {
             txtTinhTrang.setText("HẾT HẠN BẢO HÀNH");
             txtTinhTrang.setForeground(Color.RED);
@@ -120,18 +119,16 @@ public class TiepNhanBaoHanhDialog extends JDialog {
             txtTinhTrang.setText("CÒN HẠN BẢO HÀNH");
             txtTinhTrang.setForeground(new Color(0, 153, 51));
         }
-        
-        btnLapPhieu.setEnabled(ngayHetHan != null); // Chỉ cho lập phiếu nếu máy đã bán
+        btnLapPhieu.setEnabled(ngayHetHan != null);
     }
 
     private void lapPhieuAction() {
         try {
             PhieuBaoHanh pbh = new PhieuBaoHanh();
-            // Tự phát sinh mã phiếu
             pbh.setMaPBH("PBH" + System.currentTimeMillis() % 1000000);
             pbh.setMaSeri(txtSerial.getText().trim());
             pbh.setMaKH(txtMaKH.getText());
-            pbh.setMaNV(txtMaNV.getText().trim());
+            pbh.setMaNV(AppSession.getInstance().getMaNV());
             pbh.setNgayTiepNhan(new Date());
             pbh.setNgayTraDuKien((Date)spinNgayTra.getValue());
             pbh.setMoTaLoi(areaMoTa.getText());
