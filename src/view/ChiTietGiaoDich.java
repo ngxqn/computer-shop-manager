@@ -5,16 +5,14 @@ import model.SanPham;
 import model.HoaDon;
 import javax.swing.*;
 import java.awt.*;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.List;
+import util.DinhDang;
 
 public class ChiTietGiaoDich extends JDialog {
 
     private final SimpleDateFormat dinhDangNgay = new SimpleDateFormat("dd/MM/yyyy");
-    private final NumberFormat dinhDangVN = NumberFormat.getInstance(Locale.of("vi", "VN"));
 
     // Thuộc tính hiển thị
     private String maGD, loaiGD, nhanDoiTac, maDoiTac;
@@ -93,14 +91,14 @@ public class ChiTietGiaoDich extends JDialog {
         panelThongTin.add(new JLabel(dinhDangNgay.format(ngayGD)));
 
         panelThongTin.add(new JLabel("Tổng Giá Trị Hàng:"));
-        panelThongTin.add(new JLabel(dinhDangVN.format(tongGiaTri) + " VNĐ"));
+        panelThongTin.add(new JLabel(DinhDang.tien(tongGiaTri)));
 
         if (tienGiam > 0) {
             panelThongTin.add(new JLabel("Chiết Khấu/Giảm Giá:"));
-            panelThongTin.add(new JLabel("- " + dinhDangVN.format(tienGiam) + " VNĐ"));
+            panelThongTin.add(new JLabel("- " + DinhDang.tien(tienGiam)));
 
             panelThongTin.add(new JLabel("<html><font color='red'>THỰC THU:</font></html>"));
-            panelThongTin.add(new JLabel("<html><b><font color='red'>" + dinhDangVN.format(tongGiaTri - tienGiam) + " VNĐ</font></b></html>"));
+            panelThongTin.add(new JLabel("<html><b><font color='red'>" + DinhDang.tien(tongGiaTri - tienGiam) + "</font></b></html>"));
         }
 
         return panelThongTin;
@@ -119,7 +117,7 @@ public class ChiTietGiaoDich extends JDialog {
                 double thanhTien = sp.getGiaBan();
                 sb.append(String.format(" %-12s %-25s %-8d %-15s %-15s%n",
                         sp.getMaSP(), sp.getTenSP(), soLuong,
-                        dinhDangVN.format(sp.getGiaBan()), dinhDangVN.format(thanhTien)));
+                        DinhDang.tien(sp.getGiaBan()), DinhDang.tien(thanhTien)));
             }
         } else {
             sb.append(" [Chi tiết sản phẩm sẽ được nạp từ Database trong phiên bản tới]%n");

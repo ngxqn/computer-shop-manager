@@ -4,16 +4,14 @@ import dao.HoaDonDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Map;
+import util.DinhDang;
 
 public class BangDieuKhienBaoCao extends JPanel {
     private JTable bangBaoCao;
     private DefaultTableModel moHinhBang;
     private JLabel lblTongCong;
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
-    private NumberFormat ndTien = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
 
     public BangDieuKhienBaoCao() {
         this.setLayout(new BorderLayout(10, 10));
@@ -24,7 +22,7 @@ public class BangDieuKhienBaoCao extends JPanel {
         lblTitle.setForeground(new Color(0, 102, 204));
         this.add(lblTitle, BorderLayout.NORTH);
 
-        String[] tenCot = {"Tháng / Năm", "Tổng Doanh Thu (VNĐ)"};
+        String[] tenCot = {"Tháng / Năm", "Tổng Doanh Thu"};
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
             public boolean isCellEditable(int row, int col) { return false; }
@@ -35,7 +33,7 @@ public class BangDieuKhienBaoCao extends JPanel {
         this.add(new JScrollPane(bangBaoCao), BorderLayout.CENTER);
 
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        lblTongCong = new JLabel("Tổng doanh thu: 0 VNĐ");
+        lblTongCong = new JLabel("Tổng doanh thu: 0");
         lblTongCong.setFont(new Font("Arial", Font.BOLD, 16));
         JButton btnRefresh = new JButton("Tải lại báo cáo");
         
@@ -56,11 +54,11 @@ public class BangDieuKhienBaoCao extends JPanel {
         for (Map.Entry<String, Double> entry : data.entrySet()) {
             moHinhBang.addRow(new Object[]{
                 entry.getKey(),
-                ndTien.format(entry.getValue())
+                DinhDang.tien(entry.getValue())
             });
             tong += entry.getValue();
         }
         
-        lblTongCong.setText("Tổng cộng toàn thời gian: " + ndTien.format(tong));
+        lblTongCong.setText("Tổng cộng toàn thời gian: " + DinhDang.tien(tong));
     }
 }

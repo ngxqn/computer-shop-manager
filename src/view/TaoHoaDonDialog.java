@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.DecimalFormat;
+import util.DinhDang;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +28,6 @@ public class TaoHoaDonDialog extends JDialog {
     private JLabel lblTongTien;
     
     private double tongTienGiaoDich = 0.0;
-    private DecimalFormat dinhDangTien = new DecimalFormat("###,###,### VNĐ");
     private SeriSanPhamDAO seriDAO = new SeriSanPhamDAO();
     private HoaDonDAO hoaDonDAO = new HoaDonDAO();
     private KhachHangDAO khDAO = new KhachHangDAO();
@@ -88,7 +87,7 @@ public class TaoHoaDonDialog extends JDialog {
 
         // --- 3. Panel Dưới (Tổng tiền & Chốt đơn) ---
         JPanel pnlBot = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
-        lblTongTien = new JLabel("Tổng Tiền: 0 VNĐ");
+        lblTongTien = new JLabel("Tổng Tiền: 0");
         lblTongTien.setFont(new Font("Arial", Font.BOLD, 18));
         lblTongTien.setForeground(Color.RED);
         
@@ -140,11 +139,11 @@ public class TaoHoaDonDialog extends JDialog {
         ct.setDonGiaBan(giaBan);
         danhSachChiTiet.add(ct);
 
-        String giaFormatted = dinhDangTien.format(giaBan);
+        String giaFormatted = DinhDang.tien(giaBan);
         model.addRow(new Object[]{maSeri, tenSP, giaFormatted});
 
         tongTienGiaoDich += giaBan;
-        lblTongTien.setText("Tổng Tiền: " + dinhDangTien.format(tongTienGiaoDich));
+        lblTongTien.setText("Tổng Tiền: " + DinhDang.tien(tongTienGiaoDich));
     }
 
     private void thucHienThanhToan() {
@@ -172,7 +171,7 @@ public class TaoHoaDonDialog extends JDialog {
         boolean success = hoaDonDAO.taoHoaDon(hd, danhSachChiTiet);
         if (success) {
             JOptionPane.showMessageDialog(this, "✅ Lập hóa đơn và Checkout thành công!\n" +
-                                                 "Tổng tiển: " + dinhDangTien.format(tongTienGiaoDich), 
+                                                 "Tổng tiền: " + DinhDang.tien(tongTienGiaoDich), 
                                                  "Thành công", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } else {

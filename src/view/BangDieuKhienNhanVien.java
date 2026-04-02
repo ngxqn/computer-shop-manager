@@ -6,14 +6,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import java.text.DecimalFormat;
+import util.DinhDang;
 
 public class BangDieuKhienNhanVien extends JPanel {
 
     private QuanLyNhanVien quanLyNhanVien;
     private JTable bangNhanVien;
     private DefaultTableModel moHinhBang;
-    private DecimalFormat dinhDangLuong = new DecimalFormat("###,###,###");
 
     private JTextField truongID, truongHoTen, truongNamSinh, truongSoNgayNghi;
     private JTextField truongSDT, truongDiaChi, truongTimKiem;
@@ -143,7 +142,7 @@ public class BangDieuKhienNhanVien extends JPanel {
                 moHinhBang.addRow(new Object[]{
                         nv.getID(), nv.getHoTen(), nv.getGioiTinh(), nv.getNamSinh(),
                         nv.getSdt(), nv.getDiaChi(), nv.getChucVu(), nv.xepLoai(),
-                        dinhDangLuong.format(nv.tinhLuong())
+                        DinhDang.tien(nv.tinhLuong())
                 });
             }
         } else {
@@ -160,7 +159,7 @@ public class BangDieuKhienNhanVien extends JPanel {
             moHinhBang.addRow(new Object[]{
                     nv.getID(), nv.getHoTen(), nv.getGioiTinh(), nv.getNamSinh(),
                     nv.getSdt(), nv.getDiaChi(), nv.getChucVu(), nv.xepLoai(),
-                    dinhDangLuong.format(nv.tinhLuong())
+                    DinhDang.tien(nv.tinhLuong())
             });
         }
     }

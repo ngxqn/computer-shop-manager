@@ -7,7 +7,9 @@ import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import util.DinhDang;
 
 public class ChiTietBaoHanhDialog extends JDialog {
     private PhieuBaoHanh pbh;
@@ -103,7 +105,7 @@ public class ChiTietBaoHanhDialog extends JDialog {
             writer.write("------------------------------------------\n");
             writer.write("Nội dung lỗi: " + pbh.getMoTaLoi() + "\n");
             writer.write("------------------------------------------\n");
-            writer.write("CHI PHÍ BẢO TRÌ: " + String.format("%,.0f VNĐ", cost) + "\n");
+            writer.write("CHI PHÍ BẢO TRÌ: " + DinhDang.tien(cost) + "\n");
             writer.write("==========================================\n");
             writer.write("          CẢM ƠN QUÝ KHÁCH!               \n");
             

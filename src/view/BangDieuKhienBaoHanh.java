@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import util.DinhDang;
 
 public class BangDieuKhienBaoHanh extends JPanel {
     private PhieuBaoHanhDAO pbhDAO = new PhieuBaoHanhDAO();
@@ -72,7 +73,7 @@ public class BangDieuKhienBaoHanh extends JPanel {
                 sdf.format(p.getNgayTiepNhan()),
                 p.getNgayTraDuKien() != null ? sdf.format(p.getNgayTraDuKien()) : "N/A",
                 p.getTinhTrang(),
-                String.format("%,.0f VNĐ", p.getChiPhi())
+                DinhDang.tien(p.getChiPhi())
             });
         }
     }

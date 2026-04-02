@@ -6,14 +6,13 @@ import model.HoaDon;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import util.DinhDang;
 
 public class BangDieuKhienHoaDon extends JPanel {
     private JTable bangHoaDon;
     private DefaultTableModel moHinhBang;
-    private DecimalFormat dinhDangTien = new DecimalFormat("###,###,### VNĐ");
     private SimpleDateFormat dinhDangNgay = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public BangDieuKhienHoaDon() {
@@ -61,7 +60,7 @@ public class BangDieuKhienHoaDon extends JPanel {
             List<HoaDon> danhSach = dao.getAllHoaDon();
             
             for (HoaDon hd : danhSach) {
-                String tienFormatted = dinhDangTien.format(hd.getTongTien());
+                String tienFormatted = DinhDang.tien(hd.getTongTien());
                 String ngayFormatted = hd.getNgayLap() != null ? dinhDangNgay.format(hd.getNgayLap()) : "";
                 
                 moHinhBang.addRow(new Object[]{

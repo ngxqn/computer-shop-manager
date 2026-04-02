@@ -6,9 +6,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.ArrayList;
+import util.DinhDang;
 
 public class BangDieuKhienSanPham extends JPanel {
 
@@ -20,7 +19,6 @@ public class BangDieuKhienSanPham extends JPanel {
     private JTextField truongTimKiem;
 
     private final String[] DANH_SACH_LOAI = {"Laptop", "PC", "Linh kiện", "Màn hình", "Chuột & Bàn phím", "Khác"};
-    private final NumberFormat dinhDangTien = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
 
     public BangDieuKhienSanPham(QuanLySanPham qlsp) {
         this.quanLySanPham = qlsp;
@@ -70,7 +68,7 @@ public class BangDieuKhienSanPham extends JPanel {
         bang.add(new JLabel("Mã Sản Phẩm:")); bang.add(truongID);
         bang.add(new JLabel("Tên Sản Phẩm:")); bang.add(truongTen);
         bang.add(new JLabel("Loại SP:")); bang.add(hopChonLoai);
-        bang.add(new JLabel("Giá Bán (VNĐ):")); bang.add(truongGiaBan);
+        bang.add(new JLabel("Giá Bán:")); bang.add(truongGiaBan);
         bang.add(new JLabel("Bảo Hành (Tháng):")); bang.add(truongBaoHanh);
 
         return bang;
@@ -109,7 +107,7 @@ public class BangDieuKhienSanPham extends JPanel {
                     sanPham.getMaSP(),
                     sanPham.getTenSP(),
                     sanPham.getLoaiSP(),
-                    dinhDangTien.format(sanPham.getGiaBan()),
+                    DinhDang.tien(sanPham.getGiaBan()),
                     sanPham.getTgBaoHanh(),
                     sanPham.getTrangThai()
             };

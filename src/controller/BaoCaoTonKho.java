@@ -4,9 +4,8 @@ import model.SanPham;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
+import util.DinhDang;
 
 public class BaoCaoTonKho extends JDialog {
     public BaoCaoTonKho(Window owner, QuanLyKho qlKho) {
@@ -20,7 +19,6 @@ public class BaoCaoTonKho extends JDialog {
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
 
-        NumberFormat nf = NumberFormat.getInstance(Locale.of("vi", "VN"));
         double tongGiaTri = 0;
 
         List<SanPham> dssp = qlKho.getQlSanPham().getSanPhamList();
@@ -31,12 +29,12 @@ public class BaoCaoTonKho extends JDialog {
             tongGiaTri += giaTri;
             model.addRow(new Object[]{
                     sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(),
-                    soLuong, nf.format(giaTri) + " VNĐ"
+                    soLuong, DinhDang.tien(giaTri)
             });
         }
 
         // 2. Panel tổng cộng
-        JLabel lblTong = new JLabel("TỔNG GIÁ TRỊ TỒN (ƯỚC TÍNH): " + nf.format(tongGiaTri) + " VNĐ  ");
+        JLabel lblTong = new JLabel("TỔNG GIÁ TRỊ TỒN (ƯỚC TÍNH): " + DinhDang.tien(tongGiaTri) + "  ");
         lblTong.setFont(new Font("Arial", Font.BOLD, 16));
         lblTong.setHorizontalAlignment(SwingConstants.RIGHT);
 
