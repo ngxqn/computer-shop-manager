@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import util.DinhDang;
 
 public class BangDieuKhienGiaoDich extends JPanel {
     private QuanLyKho quanLiKho;
@@ -20,16 +21,17 @@ public class BangDieuKhienGiaoDich extends JPanel {
         this.quanLiSanPham = qlsp;
         setLayout(new BorderLayout(10, 10));
 
-        model = new DefaultTableModel(new String[]{"Mã SP", "Tên SP", "Loại", "Tồn Kho", "Giá Gốc"}, 0);
+        model = new DefaultTableModel(new String[]{"Mã sp", "Tên sp", "Loại", "Tồn kho", "Giá gốc"}, 0);
         bang = new JTable(model);
+        bang.setRowHeight(25);
+        bang.setAutoCreateRowSorter(true);
         add(new JScrollPane(bang), BorderLayout.CENTER);
 
         JPanel pnlNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        JButton btnNhapXuat = new JButton("Thực Hiện Nhập/Xuất Kho");
-        JButton btnBaoCao = new JButton("In Báo Cáo Tồn Kho");
+        JButton btnNhapKho = new JButton("Thực hiện nhập kho");
+        JButton btnBaoCao = new JButton("In báo cáo tồn kho");
 
-        // FIX LỖI TẠI ĐÂY: Gọi đúng Constructor 3 tham số
-        btnNhapXuat.addActionListener(e -> {
+        btnNhapKho.addActionListener(e -> {
             ThemGiaoDich dialog = new ThemGiaoDich(SwingUtilities.getWindowAncestor(this), quanLiKho, quanLiSanPham);
             dialog.setVisible(true);
             taiDuLieuVaoBang();
@@ -39,7 +41,7 @@ public class BangDieuKhienGiaoDich extends JPanel {
             new BaoCaoTonKho(SwingUtilities.getWindowAncestor(this), quanLiKho).setVisible(true);
         });
 
-        pnlNut.add(btnNhapXuat); pnlNut.add(btnBaoCao);
+        pnlNut.add(btnNhapKho); pnlNut.add(btnBaoCao);
         add(pnlNut, BorderLayout.SOUTH);
         taiDuLieuVaoBang();
     }
@@ -55,7 +57,7 @@ public class BangDieuKhienGiaoDich extends JPanel {
                 sp.getTenSP(), 
                 sp.getLoaiSP(), 
                 tonKho, 
-                sp.getGiaBan()
+                DinhDang.tien(sp.getGiaBan())
             });
         }
     }

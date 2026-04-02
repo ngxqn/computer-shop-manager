@@ -22,14 +22,14 @@ public class BangDieuKhienBaoCao extends JPanel {
         lblTitle.setForeground(new Color(0, 102, 204));
         this.add(lblTitle, BorderLayout.NORTH);
 
-        String[] tenCot = {"Tháng / Năm", "Tổng Doanh Thu"};
+        String[] tenCot = {"Tháng/năm", "Tổng doanh thu"};
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
             public boolean isCellEditable(int row, int col) { return false; }
         };
         bangBaoCao = new JTable(moHinhBang);
         bangBaoCao.setRowHeight(30);
-        bangBaoCao.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        bangBaoCao.getTableHeader().setFont(bangBaoCao.getTableHeader().getFont().deriveFont(Font.BOLD));
         this.add(new JScrollPane(bangBaoCao), BorderLayout.CENTER);
 
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));

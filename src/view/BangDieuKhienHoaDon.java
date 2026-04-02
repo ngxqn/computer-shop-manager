@@ -20,35 +20,37 @@ public class BangDieuKhienHoaDon extends JPanel {
 
         // 1. Panel chứa nút thao tác phía trên
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        JButton nutLapHoaDon = new JButton("Lập Hóa Đơn Bán Hàng (POS)");
-        nutLapHoaDon.setFont(new Font("Arial", Font.BOLD, 14));
-        nutLapHoaDon.setBackground(new Color(0, 120, 215));
-        nutLapHoaDon.setForeground(Color.WHITE);
         
-        nutLapHoaDon.addActionListener(e -> {
+        JButton btnLapHoaDon = new JButton("+ Lập hóa đơn bán hàng");
+        btnLapHoaDon.setFont(new Font("Inter", Font.BOLD, 14));
+        btnLapHoaDon.setBackground(new Color(0, 120, 215));
+        btnLapHoaDon.setForeground(Color.WHITE);
+        btnLapHoaDon.addActionListener(e -> {
             TaoHoaDonDialog dialog = new TaoHoaDonDialog(SwingUtilities.getWindowAncestor(this));
             dialog.setVisible(true);
             taiDuLieu(); // Cập nhật lại danh sách ngay sau khi lập hóa đơn
         });
 
-        panelTop.add(nutLapHoaDon);
+        JButton btnRefresh = new JButton("↻ Làm mới");
+        btnRefresh.setFont(new Font("Inter", Font.PLAIN, 14));
+        btnRefresh.addActionListener(e -> taiDuLieu());
+
+        panelTop.add(btnLapHoaDon);
+        panelTop.add(btnRefresh);
         this.add(panelTop, BorderLayout.NORTH);
 
         // 2. Thiết lập bảng Hóa Đơn
-        String[] columns = {"Mã HD", "Ngày Giờ", "Khách Hàng", "Nhân Viên", "Tổng Tiền"};
+        String[] columns = {"Mã hoá đơn", "Thời gian", "Khách hàng", "Nhân viên", "Tổng tiền"};
         moHinhBang = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
         bangHoaDon = new JTable(moHinhBang);
+        bangHoaDon.setRowHeight(25);
+        bangHoaDon.setAutoCreateRowSorter(true);
         this.add(new JScrollPane(bangHoaDon), BorderLayout.CENTER);
 
-        // 3. Nút làm mới ở dưới
-        JButton nutLamMoi = new JButton("Làm Mới Lịch Sử");
-        nutLamMoi.addActionListener(e -> taiDuLieu());
-        this.add(nutLamMoi, BorderLayout.SOUTH);
-
-        // 4. Tải dữ liệu từ DB
+        // 3. Tải dữ liệu từ DB
         taiDuLieu();
     }
 

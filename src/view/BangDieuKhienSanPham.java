@@ -12,13 +12,13 @@ import util.DinhDang;
 public class BangDieuKhienSanPham extends JPanel {
 
     private QuanLySanPham quanLySanPham;
-    private JTable bangSanPham;
+    private JTable tableSanPham;
     private DefaultTableModel moHinhBang;
-    private JTextField truongID, truongTen, truongGiaBan, truongBaoHanh;
+    private JTextField fieldID, fieldTen, fieldGiaBan, fieldBaoHanh;
     private JComboBox<String> hopChonLoai;
-    private JTextField truongTimKiem;
+    private JTextField fieldSearch;
 
-    private final String[] DANH_SACH_LOAI = {"Laptop", "PC", "Linh kiện", "Màn hình", "Chuột & Bàn phím", "Khác"};
+    private final String[] DANH_SACH_LOAI = {"Laptop", "Desktop", "Linh kiện", "Màn hình", "Chuột & Bàn phím", "Khác"};
 
     public BangDieuKhienSanPham(QuanLySanPham qlsp) {
         this.quanLySanPham = qlsp;
@@ -33,64 +33,85 @@ public class BangDieuKhienSanPham extends JPanel {
         JPanel bangNut = thietLapBangNut();
         bangDieuKhien.add(bangNut, BorderLayout.SOUTH);
 
-        this.add(new JScrollPane(bangSanPham), BorderLayout.NORTH);
-        this.add(bangDieuKhien, BorderLayout.CENTER);
+        this.add(new JScrollPane(tableSanPham), BorderLayout.CENTER);
+        this.add(bangDieuKhien, BorderLayout.SOUTH);
 
         taiDuLieuVaoBang();
     }
 
     private void thietLapBang() {
-        String[] tenCot = {"Mã SP", "Tên Sản Phẩm", "Loại", "Giá Bán", "Bảo Hành (Tháng)", "Trạng Thái"};
+        String[] tenCot = {"Mã SP", "Tên sản phẩm", "Loại", "Giá bán", "Bảo hành (tháng)", "Trạng thái"};
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
-        bangSanPham = new JTable(moHinhBang);
-        bangSanPham.setFont(new Font("Arial", Font.PLAIN, 12));
-        bangSanPham.setRowHeight(25);
-        bangSanPham.setAutoCreateRowSorter(true);
+        tableSanPham = new JTable(moHinhBang);
+        tableSanPham.setRowHeight(25);
+        tableSanPham.setAutoCreateRowSorter(true);
 
-        bangSanPham.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && bangSanPham.getSelectedRow() != -1) {
+        tableSanPham.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tableSanPham.getSelectedRow() != -1) {
                 hienThiSanPhamDuocChon();
             }
         });
     }
 
     private JPanel thietLapBangForm() {
-        JPanel bang = new JPanel(new GridLayout(3, 4, 10, 10));
-        truongID = new JTextField(15);
-        truongTen = new JTextField(15);
-        truongGiaBan = new JTextField(15);
-        truongBaoHanh = new JTextField(15);
+        JPanel bang = new JPanel(new GridBagLayout());
+        bang.setBorder(BorderFactory.createTitledBorder("Thông tin chi tiết"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 10, 5, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+
+        fieldID = new JTextField(15);
+        fieldTen = new JTextField(15);
+        fieldGiaBan = new JTextField(15);
+        fieldBaoHanh = new JTextField(15);
         hopChonLoai = new JComboBox<>(DANH_SACH_LOAI);
 
-        bang.add(new JLabel("Mã Sản Phẩm:")); bang.add(truongID);
-        bang.add(new JLabel("Tên Sản Phẩm:")); bang.add(truongTen);
-        bang.add(new JLabel("Loại SP:")); bang.add(hopChonLoai);
-        bang.add(new JLabel("Giá Bán:")); bang.add(truongGiaBan);
-        bang.add(new JLabel("Bảo Hành (Tháng):")); bang.add(truongBaoHanh);
+        themVaoForm(bang, new JLabel("Mã sản phẩm:"), 0, 0, gbc);
+        themVaoForm(bang, fieldID, 1, 0, gbc);
+        themVaoForm(bang, new JLabel("Tên sản phẩm:"), 2, 0, gbc);
+        themVaoForm(bang, fieldTen, 3, 0, gbc);
+
+        themVaoForm(bang, new JLabel("Loại sản phẩm:"), 0, 1, gbc);
+        themVaoForm(bang, hopChonLoai, 1, 1, gbc);
+        themVaoForm(bang, new JLabel("Giá bán:"), 2, 1, gbc);
+        themVaoForm(bang, fieldGiaBan, 3, 1, gbc);
+
+        themVaoForm(bang, new JLabel("Bảo hành (tháng):"), 0, 2, gbc);
+        themVaoForm(bang, fieldBaoHanh, 1, 2, gbc);
 
         return bang;
     }
 
+    private void themVaoForm(JPanel p, JComponent c, int x, int y, GridBagConstraints gbc) {
+        gbc.gridx = x; gbc.gridy = y;
+        p.add(c, gbc);
+    }
+
     private JPanel thietLapBangNut() {
-        JPanel bang = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton nutThem = new JButton("Thêm SP (Danh mục)");
-        JButton nutSua = new JButton("Sửa SP (Danh mục)");
-        JButton nutXoa = new JButton("Xóa SP (Danh mục)");
-        JButton nutReset = new JButton("Làm mới UI");
-        truongTimKiem = new JTextField(15);
-        JButton nutTimKiem = new JButton("Tìm ID");
+        JPanel bang = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JButton btnCreate = new JButton("+ Thêm mới");
+        JButton btnUpdate = new JButton("✎ Cập nhật");
+        JButton btnDelete = new JButton("🗑 Xóa");
+        JButton btnRefresh = new JButton("↻ Làm mới");
+        
+        fieldSearch = new JTextField(15);
+        JButton btnSearch = new JButton("🔍 Tìm theo ID");
 
-        nutThem.addActionListener(e -> themSanPham());
-        nutSua.addActionListener(e -> suaSanPham());
-        nutXoa.addActionListener(e -> xoaSanPham());
-        nutReset.addActionListener(e -> resetForm());
-        nutTimKiem.addActionListener(e -> timKiemSanPham(truongTimKiem.getText()));
+        btnCreate.addActionListener(e -> themSanPham());
+        btnUpdate.addActionListener(e -> suaSanPham());
+        btnDelete.addActionListener(e -> xoaSanPham());
+        btnRefresh.addActionListener(e -> resetForm());
+        btnSearch.addActionListener(e -> timKiemSanPham(fieldSearch.getText()));
 
-        bang.add(nutThem); bang.add(nutSua); bang.add(nutXoa);
-        bang.add(nutReset); bang.add(truongTimKiem); bang.add(nutTimKiem);
+        bang.add(btnCreate); bang.add(btnUpdate); bang.add(btnDelete);
+        bang.add(btnRefresh); 
+        bang.add(new JLabel("|"));
+        bang.add(new JLabel("Tìm kiếm:")); 
+        bang.add(fieldSearch); bang.add(btnSearch);
 
         return bang;
     }
@@ -116,28 +137,28 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void hienThiSanPhamDuocChon() {
-        int dongDuocChon = bangSanPham.getSelectedRow();
+        int dongDuocChon = tableSanPham.getSelectedRow();
         if (dongDuocChon == -1) return;
 
-        String id = (String) bangSanPham.getValueAt(bangSanPham.convertRowIndexToModel(dongDuocChon), 0);
+        String id = (String) tableSanPham.getValueAt(tableSanPham.convertRowIndexToModel(dongDuocChon), 0);
         SanPham sanPham = quanLySanPham.timSanPhamTheoID(id);
 
         if (sanPham != null) {
-            truongID.setText(sanPham.getMaSP());
-            truongTen.setText(sanPham.getTenSP());
+            fieldID.setText(sanPham.getMaSP());
+            fieldTen.setText(sanPham.getTenSP());
             hopChonLoai.setSelectedItem(sanPham.getLoaiSP());
-            truongGiaBan.setText(String.format("%.0f", sanPham.getGiaBan()));
-            truongBaoHanh.setText(String.valueOf(sanPham.getTgBaoHanh()));
-            truongID.setEditable(false);
+            fieldGiaBan.setText(String.format("%.0f", sanPham.getGiaBan()));
+            fieldBaoHanh.setText(String.valueOf(sanPham.getTgBaoHanh()));
+            fieldID.setEditable(false);
         }
     }
 
     private void themSanPham() {
-        String id = truongID.getText().trim();
-        String ten = truongTen.getText().trim();
+        String id = fieldID.getText().trim();
+        String ten = fieldTen.getText().trim();
         String loai = (String) hopChonLoai.getSelectedItem();
-        String giaBanStr = truongGiaBan.getText().trim();
-        String baoHanhStr = truongBaoHanh.getText().trim();
+        String giaBanStr = fieldGiaBan.getText().trim();
+        String baoHanhStr = fieldBaoHanh.getText().trim();
 
         if (id.isEmpty() || ten.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã và Tên sản phẩm.");
@@ -161,13 +182,13 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void suaSanPham() {
-        String id = truongID.getText().trim();
-        if (truongID.isEditable()) return;
+        String id = fieldID.getText().trim();
+        if (fieldID.isEditable()) return;
 
         try {
-            String ten = truongTen.getText().trim();
+            String ten = fieldTen.getText().trim();
             String loai = (String) hopChonLoai.getSelectedItem();
-            double giaBan = Double.parseDouble(truongGiaBan.getText().trim());
+            double giaBan = Double.parseDouble(fieldGiaBan.getText().trim());
             // Gọi hàm suaSanPham đã refactor (loại bỏ tham số số lượng)
             if (quanLySanPham.suaSanPham(id, ten, loai, giaBan)) {
                 taiDuLieuVaoBang();
@@ -180,8 +201,8 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void xoaSanPham() {
-        String id = truongID.getText().trim();
-        if (truongID.isEditable()) return;
+        String id = fieldID.getText().trim();
+        if (fieldID.isEditable()) return;
 
         int xacNhan = JOptionPane.showConfirmDialog(this, "Xóa danh mục sản phẩm " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION && quanLySanPham.xoaSanPham(id)) {
@@ -200,13 +221,13 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void resetForm() {
-        truongID.setText(""); 
-        truongTen.setText("");
-        truongGiaBan.setText(""); 
-        truongBaoHanh.setText("");
+        fieldID.setText(""); 
+        fieldTen.setText("");
+        fieldGiaBan.setText(""); 
+        fieldBaoHanh.setText("");
         hopChonLoai.setSelectedIndex(0);
-        truongID.setEditable(true);
-        bangSanPham.clearSelection();
+        fieldID.setEditable(true);
+        tableSanPham.clearSelection();
         taiDuLieuVaoBang();
     }
 }

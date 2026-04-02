@@ -25,7 +25,7 @@ public class ChiTietGiaoDich extends JDialog {
         super(owner, "Chi Tiết Hóa Đơn: " + hd.getMaHD(), ModalityType.APPLICATION_MODAL);
         this.maGD = hd.getMaHD();
         this.loaiGD = "HÓA ĐƠN XUẤT KHO (BÁN HÀNG)";
-        this.nhanDoiTac = "Mã Khách Hàng:";
+        this.nhanDoiTac = "Mã khách hàng:";
         this.maDoiTac = hd.getMaKH();
         this.ngayGD = hd.getNgayLap();
         this.dssp = new java.util.ArrayList<>(); // Đã chuyển sang quản lý qua ChiTietHoaDonDAO
@@ -35,10 +35,10 @@ public class ChiTietGiaoDich extends JDialog {
 
     // CONSTRUCTOR 2: Xử lý Phiếu Nhập Kho
     public ChiTietGiaoDich(Window owner, PhieuNhapKho pnk) {
-        super(owner, "Chi Tiết Phiếu Nhập: " + pnk.getMaPN(), ModalityType.APPLICATION_MODAL);
+        super(owner, "Chi tiết phiếu nhập: " + pnk.getMaPN(), ModalityType.APPLICATION_MODAL);
         this.maGD = pnk.getMaPN();
         this.loaiGD = "PHIẾU NHẬP KHO (BỔ SUNG)";
-        this.nhanDoiTac = "Mã Nhân Viên:";
+        this.nhanDoiTac = "Mã nhân viên:";
         this.maDoiTac = pnk.getMaNV();
         this.ngayGD = pnk.getNgayNhap();
         this.tongGiaTri = pnk.getTongTien();
@@ -67,7 +67,7 @@ public class ChiTietGiaoDich extends JDialog {
         this.add(new JScrollPane(vungChiTiet), BorderLayout.CENTER);
 
         // Footer: Nút đóng
-        JButton nutDong = new JButton("Đóng Cửa Sổ");
+        JButton nutDong = new JButton("Đóng cửa sổ");
         nutDong.addActionListener(e -> dispose());
         JPanel panelNut = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelNut.add(nutDong);
@@ -76,28 +76,28 @@ public class ChiTietGiaoDich extends JDialog {
 
     private JPanel taoPanelThongTinChung() {
         JPanel panelThongTin = new JPanel(new GridLayout(0, 2, 10, 8));
-        panelThongTin.setBorder(BorderFactory.createTitledBorder("Thông Tin Chứng Từ"));
+        panelThongTin.setBorder(BorderFactory.createTitledBorder("Thông tin chứng từ"));
 
-        panelThongTin.add(new JLabel("Loại Giao Dịch:"));
+        panelThongTin.add(new JLabel("Loại giao dịch:"));
         panelThongTin.add(new JLabel("<html><b>" + loaiGD + "</b></html>"));
 
-        panelThongTin.add(new JLabel("Mã Giao Dịch:"));
+        panelThongTin.add(new JLabel("Mã giao dịch:"));
         panelThongTin.add(new JLabel(maGD));
 
         panelThongTin.add(new JLabel(nhanDoiTac));
         panelThongTin.add(new JLabel(maDoiTac));
 
-        panelThongTin.add(new JLabel("Ngày Thực Hiện:"));
+        panelThongTin.add(new JLabel("Ngày thực hiện:"));
         panelThongTin.add(new JLabel(dinhDangNgay.format(ngayGD)));
 
-        panelThongTin.add(new JLabel("Tổng Giá Trị Hàng:"));
+        panelThongTin.add(new JLabel("Tổng giá trị hàng:"));
         panelThongTin.add(new JLabel(DinhDang.tien(tongGiaTri)));
 
         if (tienGiam > 0) {
-            panelThongTin.add(new JLabel("Chiết Khấu/Giảm Giá:"));
+            panelThongTin.add(new JLabel("Chiết khấu/Giảm giá:"));
             panelThongTin.add(new JLabel("- " + DinhDang.tien(tienGiam)));
 
-            panelThongTin.add(new JLabel("<html><font color='red'>THỰC THU:</font></html>"));
+            panelThongTin.add(new JLabel("<html><font color='red'>Thực thu:</font></html>"));
             panelThongTin.add(new JLabel("<html><b><font color='red'>" + DinhDang.tien(tongGiaTri - tienGiam) + "</font></b></html>"));
         }
 

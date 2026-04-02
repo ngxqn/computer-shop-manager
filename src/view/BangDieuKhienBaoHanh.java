@@ -18,25 +18,36 @@ public class BangDieuKhienBaoHanh extends JPanel {
     public BangDieuKhienBaoHanh() {
         setLayout(new BorderLayout(10, 10));
 
-        // 1. Table
-        String[] columns = {"Mã Phiếu", "Serial", "Mã KH", "Ngày Tiếp Nhận", "Ngày Hẹn Trả", "Trạng Thái", "Chi Phí"};
+        // 1. Buttons
+        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JButton btnLapPhieu = new JButton("+ Lập phiếu tiếp nhận");
+        btnLapPhieu.setFont(new Font("Inter", Font.BOLD, 14));
+        btnLapPhieu.setBackground(new Color(0, 120, 200));
+        btnLapPhieu.setForeground(Color.WHITE);
+        
+        JButton btnXuLy = new JButton("⛭ Xử lý & trả máy");
+        btnXuLy.setFont(new Font("Inter", Font.BOLD, 14));
+        btnXuLy.setBackground(new Color(235, 215, 0));
+        btnXuLy.setForeground(Color.BLACK);
+        
+        JButton btnRefresh = new JButton("↻ Làm mới");
+        btnRefresh.setFont(new Font("Inter", Font.PLAIN, 14));
+
+        panelTop.add(btnLapPhieu);
+        panelTop.add(btnXuLy);
+        panelTop.add(btnRefresh);
+        add(panelTop, BorderLayout.NORTH);
+
+        // 2. Table
+        String[] columns = {"Mã phiếu", "Mã sêri", "Mã KH", "Ngày tiếp nhận", "Ngày hẹn trả", "Trạng thái", "Chi phí"};
         model = new DefaultTableModel(columns, 0);
         bang = new JTable(model);
+        bang.setRowHeight(25);
+        bang.setAutoCreateRowSorter(true);
         add(new JScrollPane(bang), BorderLayout.CENTER);
 
-        // 2. Buttons
-        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        JButton btnThem = new JButton("Lập Phiếu Tiếp Nhận");
-        JButton btnXuLy = new JButton("Xử Lý & Trả Máy");
-        JButton btnLamMoi = new JButton("Làm Mới");
-
-        pnlButtons.add(btnThem);
-        pnlButtons.add(btnXuLy);
-        pnlButtons.add(btnLamMoi);
-        add(pnlButtons, BorderLayout.SOUTH);
-
         // 3. Events
-        btnThem.addActionListener(e -> {
+        btnLapPhieu.addActionListener(e -> {
             TiepNhanBaoHanhDialog dialog = new TiepNhanBaoHanhDialog((Frame) SwingUtilities.getWindowAncestor(this));
             dialog.setVisible(true);
             taiDuLieu();
@@ -57,7 +68,7 @@ public class BangDieuKhienBaoHanh extends JPanel {
             }
         });
 
-        btnLamMoi.addActionListener(e -> taiDuLieu());
+        btnRefresh.addActionListener(e -> taiDuLieu());
 
         taiDuLieu();
     }

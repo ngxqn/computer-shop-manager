@@ -55,15 +55,15 @@ public class TaoHoaDonDialog extends JDialog {
 
         String curNVStr = AppSession.getInstance().getMaNV() + " - " + AppSession.getInstance().getTenNV();
         lblNV = new JLabel(curNVStr);
-        pnlTop.add(new JLabel("Nhân Viên Lập:")); pnlTop.add(lblNV);
+        pnlTop.add(new JLabel("Nhân viên lập:")); pnlTop.add(lblNV);
         
-        // --- 2. Panel Giữa (Khu vực Scan Serial & Giỏ Hàng) ---
+        // --- 2. Panel Giữa (Khu vực Scan sêri & Giỏ Hàng) ---
         JPanel pnlCenter = new JPanel(new BorderLayout(5, 5));
         
         JPanel pnlScan = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnlScan.add(new JLabel("🔍 Quét Mã Serial:"));
+        pnlScan.add(new JLabel("🔍 Quét Mã sêri:"));
         txtSerial = new JTextField(20);
-        txtSerial.setToolTipText("Nhập mã Serial và nhấn Enter để truy vấn");
+        txtSerial.setToolTipText("Nhập mã sêri và nhấn Enter để truy vấn");
         pnlScan.add(txtSerial);
         
         txtSerial.addKeyListener(new KeyAdapter() {
@@ -114,14 +114,14 @@ public class TaoHoaDonDialog extends JDialog {
 
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0).toString().equalsIgnoreCase(maSeri)) {
-                JOptionPane.showMessageDialog(this, "⚠️ Serial này đã được quét vào giỏ hàng!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "⚠️ Sêri này đã được quét vào giỏ hàng!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         }
 
         Object[] thongTinSP = seriDAO.traCuuSerialBanHang(maSeri);
         if (thongTinSP == null) {
-            JOptionPane.showMessageDialog(this, "❌ Không tìm thấy mã Serial này trong hệ thống!", "Lỗi tra cứu", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "❌ Không tìm thấy mã sêri này trong hệ thống!", "Lỗi tra cứu", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

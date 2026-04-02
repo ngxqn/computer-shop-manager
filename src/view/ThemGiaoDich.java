@@ -27,7 +27,7 @@ public class ThemGiaoDich extends JDialog {
     private JLabel lblCount;
 
     public ThemGiaoDich(Window owner, QuanLyKho qlk, QuanLySanPham qlsp) {
-        super(owner, "NHẬP HÀNG MỚI (PHÂN LOẠI SERIAL)", ModalityType.APPLICATION_MODAL);
+        super(owner, "NHẬP HÀNG MỚI (PHÂN LOẠI SÊRI)", ModalityType.APPLICATION_MODAL);
         this.quanLiKho = qlk;
         this.qlSanPham = qlsp;
         thietLapGiaoDien();
@@ -73,7 +73,7 @@ public class ThemGiaoDich extends JDialog {
 
         // --- Panel Serial (Right) ---
         JPanel pnlRight = new JPanel(new BorderLayout(5, 5));
-        pnlRight.setBorder(BorderFactory.createTitledBorder("Danh sách Serial (Tối đa 100)"));
+        pnlRight.setBorder(BorderFactory.createTitledBorder("Danh sách sêri (Tối đa 100)"));
         txtSeris = new JTextArea(15, 20);
         lblCount = new JLabel("Số lượng: 0 cái");
         pnlRight.add(new JScrollPane(txtSeris), BorderLayout.CENTER);
@@ -120,7 +120,7 @@ public class ThemGiaoDich extends JDialog {
             return;
         }
 
-        // 2. Xử lý danh sách Serial
+        // 2. Xử lý danh sách sêri
         List<String> listSeri = Arrays.stream(serisRaw.split("\n"))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
@@ -128,14 +128,14 @@ public class ThemGiaoDich extends JDialog {
                 .collect(Collectors.toList());
 
         if (listSeri.size() > 100) {
-            JOptionPane.showMessageDialog(this, "Lỗi: Số lượng Serial vượt quá giới hạn 100 cái (Hiện có: " + listSeri.size() + ")", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi: Số lượng sêri vượt quá giới hạn 100 cái (Hiện có: " + listSeri.size() + ")", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 3. Kiểm tra mã Serial tồn tại
+        // 3. Kiểm tra mã sêri tồn tại
         for (String s : listSeri) {
             if (seriDAO.kiemTraTonTai(s)) {
-                JOptionPane.showMessageDialog(this, "Lỗi: Mã Serial [" + s + "] đã tồn tại trong hệ thống!", "Trùng Serial", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lỗi: Mã sêri [" + s + "] đã tồn tại trong hệ thống!", "Trùng sêri", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }

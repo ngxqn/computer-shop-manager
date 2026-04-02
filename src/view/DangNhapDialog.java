@@ -15,7 +15,7 @@ public class DangNhapDialog extends JDialog {
     private boolean thanhCong = false;
 
     public DangNhapDialog(Frame parent) {
-        super(parent, "ĐĂNG NHẬP HỆ THỐNG", true);
+        super(parent, "Đăng nhập hệ thống", true);
         thietLapGiaoDien();
     }
 
@@ -25,8 +25,8 @@ public class DangNhapDialog extends JDialog {
         this.setLocationRelativeTo(null);
 
         // Header
-        JLabel lblHeader = new JLabel("COMPUTER SHOP MANAGER", SwingConstants.CENTER);
-        lblHeader.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel lblHeader = new JLabel("Computer Shop Manager", SwingConstants.CENTER);
+        lblHeader.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         lblHeader.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(lblHeader, BorderLayout.NORTH);
 
@@ -36,11 +36,11 @@ public class DangNhapDialog extends JDialog {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0; gbc.gridy = 0; pnlCenter.add(new JLabel("Mã Nhân Viên:"), gbc);
+        gbc.gridx = 0; gbc.gridy = 0; pnlCenter.add(new JLabel("Mã nhân viên:"), gbc);
         txtMaNV = new JTextField(15);
         gbc.gridx = 1; pnlCenter.add(txtMaNV, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 1; pnlCenter.add(new JLabel("Mật Khẩu:"), gbc);
+        gbc.gridx = 0; gbc.gridy = 1; pnlCenter.add(new JLabel("Mật khẩu:"), gbc);
         txtMatKhau = new JPasswordField(15);
         gbc.gridx = 1; pnlCenter.add(txtMatKhau, gbc);
 
@@ -48,11 +48,11 @@ public class DangNhapDialog extends JDialog {
 
         // Buttons
         JPanel pnlSouth = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
-        btnDangNhap = new JButton("Đăng Nhập");
         btnThoat = new JButton("Thoát");
+        btnDangNhap = new JButton("Đăng nhập");
         
-        pnlSouth.add(btnDangNhap);
         pnlSouth.add(btnThoat);
+        pnlSouth.add(btnDangNhap);
         add(pnlSouth, BorderLayout.SOUTH);
 
         // Events
@@ -78,7 +78,7 @@ public class DangNhapDialog extends JDialog {
             thanhCong = true;
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Mã NV hoặc Mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Mã NV hoặc mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
         }
     }
 

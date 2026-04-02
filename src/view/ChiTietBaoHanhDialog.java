@@ -7,7 +7,6 @@ import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import util.DinhDang;
 
@@ -19,7 +18,7 @@ public class ChiTietBaoHanhDialog extends JDialog {
     private JTextArea areaLoi;
 
     public ChiTietBaoHanhDialog(Window owner, PhieuBaoHanh pbh) {
-        super(owner, "Chi Tiết Xử Lý Bảo Hành: " + pbh.getMaPBH(), ModalityType.APPLICATION_MODAL);
+        super(owner, "Chi tiết xử lý bảo hành: " + pbh.getMaPBH(), ModalityType.APPLICATION_MODAL);
         this.pbh = pbh;
         thietLapGiaoDien();
     }
@@ -32,32 +31,32 @@ public class ChiTietBaoHanhDialog extends JDialog {
         JPanel pnlMain = new JPanel(new GridLayout(6, 2, 5, 5));
         pnlMain.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        pnlMain.add(new JLabel("Mã Phiếu:"));
+        pnlMain.add(new JLabel("Mã phiếu:"));
         pnlMain.add(new JLabel(pbh.getMaPBH()));
 
-        pnlMain.add(new JLabel("Mã Serial:"));
+        pnlMain.add(new JLabel("Mã sêri:"));
         pnlMain.add(new JLabel(pbh.getMaSeri()));
 
-        pnlMain.add(new JLabel("Mã Khách Hàng:"));
+        pnlMain.add(new JLabel("Mã khách hàng:"));
         pnlMain.add(new JLabel(pbh.getMaKH()));
 
-        pnlMain.add(new JLabel("Trạng Thái:"));
+        pnlMain.add(new JLabel("Trạng thái:"));
         cbTrangThai = new JComboBox<>(new String[]{"Đang xử lý", "Đã xong", "Đã trả khách"});
         cbTrangThai.setSelectedItem(pbh.getTinhTrang());
         pnlMain.add(cbTrangThai);
 
-        pnlMain.add(new JLabel("Chi Phí Phát Sinh:"));
+        pnlMain.add(new JLabel("Chi phí phát sinh:"));
         txtChiPhi = new JTextField(String.valueOf(pbh.getChiPhi()));
         pnlMain.add(txtChiPhi);
 
-        pnlMain.add(new JLabel("Mô Tả Lỗi Ban Đầu:"));
-        areaLoi = new JTextArea(3, 20);
+        pnlMain.add(new JLabel("Mô tả lỗi ban đầu:"));
+        areaLoi = new JTextArea(6, 20);
         areaLoi.setText(pbh.getMoTaLoi());
         areaLoi.setEditable(false);
         pnlMain.add(new JScrollPane(areaLoi));
 
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnLuu = new JButton("Cập Nhật & Lưu");
+        JButton btnLuu = new JButton("Cập nhật & lưu");
         JButton btnHuy = new JButton("Hủy");
 
         btnLuu.addActionListener(e -> capNhatAction());
@@ -82,7 +81,7 @@ public class ChiTietBaoHanhDialog extends JDialog {
                 JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Lỗi cập nhật Database!");
+                JOptionPane.showMessageDialog(this, "Lỗi cập nhật database!");
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Chi phí không hợp lệ!");
@@ -97,11 +96,11 @@ public class ChiTietBaoHanhDialog extends JDialog {
             writer.write("==========================================\n");
             writer.write("       BIÊN NHẬN TRẢ MÁY BẢO HÀNH        \n");
             writer.write("==========================================\n");
-            writer.write("Mã Phiếu: " + pbh.getMaPBH() + "\n");
-            writer.write("Ngày Trả: " + sdf.format(new Date()) + "\n");
-            writer.write("Mã Serial: " + pbh.getMaSeri() + "\n");
-            writer.write("Mã Khách Hàng: " + pbh.getMaKH() + "\n");
-            writer.write("Tình Trạng: " + status + "\n");
+            writer.write("Mã phiếu: " + pbh.getMaPBH() + "\n");
+            writer.write("Ngày trả: " + sdf.format(new Date()) + "\n");
+            writer.write("Mã sêri: " + pbh.getMaSeri() + "\n");
+            writer.write("Mã khách hàng: " + pbh.getMaKH() + "\n");
+            writer.write("Tình trạng: " + status + "\n");
             writer.write("------------------------------------------\n");
             writer.write("Nội dung lỗi: " + pbh.getMoTaLoi() + "\n");
             writer.write("------------------------------------------\n");

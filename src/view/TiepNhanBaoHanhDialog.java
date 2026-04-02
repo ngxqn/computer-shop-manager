@@ -19,7 +19,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public TiepNhanBaoHanhDialog(Frame parent) {
-        super(parent, "Tiếp Nhận & Tra Cứu Bảo Hành", true);
+        super(parent, "Tiếp nhận & tra cứu bảo hành", true);
         this.setSize(600, 500);
         this.setLayout(new BorderLayout(10, 10));
         this.setLocationRelativeTo(parent);
@@ -27,7 +27,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
         // --- PANEL TRA CỨU (NORTH) ---
         JPanel pnlNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlNorth.setBorder(BorderFactory.createTitledBorder("Nhập thông tin tra cứu"));
-        pnlNorth.add(new JLabel("Mã Serial: "));
+        pnlNorth.add(new JLabel("Mã sêri: "));
         txtSerial = new JTextField(20);
         btnTraCuu = new JButton("Tra cứu");
         pnlNorth.add(txtSerial);
@@ -76,7 +76,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
 
         // --- PANEL NÚT (SOUTH) ---
         JPanel pnlSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnLapPhieu = new JButton("Lập Phiếu Bảo Hành");
+        btnLapPhieu = new JButton("Lập phiếu bảo hành");
         btnLapPhieu.setEnabled(false);
         btnThoat = new JButton("Thoát");
         pnlSouth.add(btnLapPhieu);
@@ -92,13 +92,13 @@ public class TiepNhanBaoHanhDialog extends JDialog {
     private void traCuuAction() {
         String serial = txtSerial.getText().trim();
         if (serial.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số Serial.");
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số sêri.");
             return;
         }
 
         Object[] measurements = baoHanhDAO.traCuuBaoHanh(serial);
         if (measurements == null) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin cho Serial này.");
+            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin cho sêri này.");
             resetFields();
             return;
         }
