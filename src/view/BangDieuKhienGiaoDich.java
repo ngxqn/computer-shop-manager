@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import util.DinhDang;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class BangDieuKhienGiaoDich extends JPanel {
     private QuanLyKho quanLyKho;
@@ -25,7 +26,7 @@ public class BangDieuKhienGiaoDich extends JPanel {
 
         initComponents();
         initEvents();
-        
+
         taiDuLieuVaoBang();
     }
 
@@ -34,14 +35,14 @@ public class BangDieuKhienGiaoDich extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // --- Table Section ---
-        model = new DefaultTableModel(new String[]{
-            "Mã SP", "Tên sản phẩm", "Loại", "Tồn kho", "Giá bán"
+        model = new DefaultTableModel(new String[] {
+                "Mã SP", "Tên sản phẩm", "Loại", "Tồn kho", "Giá bán"
         }, 0);
-        
+
         tblShow = new JTable(model);
         tblShow.setRowHeight(30);
         tblShow.getTableHeader().setReorderingAllowed(false);
-        
+
         sorter = new javax.swing.table.TableRowSorter<>(model);
         tblShow.setRowSorter(sorter);
 
@@ -49,17 +50,19 @@ public class BangDieuKhienGiaoDich extends JPanel {
 
         // --- Search Section (North) ---
         JPanel panelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        
+
         txtTimKiem = new JTextField(25);
         txtTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên sản phẩm để lọc nhanh...");
-        
+
         btnNhapHang = new JButton("Nhập hàng");
+        btnNhapHang.setIcon(new FlatSVGIcon("resources/icons/plus-circle.svg", 16, 16));
         btnNhapHang.setFont(btnNhapHang.getFont().deriveFont(Font.BOLD));
-        btnNhapHang.setBackground(new Color(0, 120, 215));
-        btnNhapHang.setIcon(UIManager.getIcon("FileView.floppyDriveIcon")); // Placeholder/Default icon if needed
+        btnNhapHang.setBackground(new Color(0, 122, 255)); // Apple Blue Primary
+        btnNhapHang.setForeground(Color.WHITE);
 
         btnBaoCao = new JButton("Báo cáo tồn kho");
-        
+        btnBaoCao.setIcon(new FlatSVGIcon("resources/icons/file-text.svg", 16, 16));
+
         panelHeader.add(btnNhapHang);
         panelHeader.add(btnBaoCao);
         panelHeader.add(new JLabel(" | "));
@@ -71,10 +74,18 @@ public class BangDieuKhienGiaoDich extends JPanel {
     private void initEvents() {
         // --- Real-time Filter ---
         txtTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
             private void loc() {
                 String val = txtTimKiem.getText().trim();
                 if (val.isEmpty()) {
@@ -89,10 +100,9 @@ public class BangDieuKhienGiaoDich extends JPanel {
         // --- New Inventory ---
         btnNhapHang.addActionListener(e -> {
             ThemGiaoDich dialog = new ThemGiaoDich(
-                SwingUtilities.getWindowAncestor(this), 
-                quanLyKho, 
-                quanLySanPham
-            );
+                    SwingUtilities.getWindowAncestor(this),
+                    quanLyKho,
+                    quanLySanPham);
             dialog.setVisible(true);
             taiDuLieuVaoBang();
         });
@@ -100,24 +110,23 @@ public class BangDieuKhienGiaoDich extends JPanel {
         // --- Report ---
         btnBaoCao.addActionListener(e -> {
             new BaoCaoTonKho(
-                SwingUtilities.getWindowAncestor(this), 
-                quanLyKho
-            ).setVisible(true);
+                    SwingUtilities.getWindowAncestor(this),
+                    quanLyKho).setVisible(true);
         });
     }
 
     public void taiDuLieuVaoBang() {
         model.setRowCount(0);
         List<SanPham> dssp = quanLySanPham.getSanPhamList();
-        
+
         for (SanPham sp : dssp) {
             int tonKho = quanLyKho.layTonKhoThucTe(sp.getMaSP());
-            model.addRow(new Object[]{
-                sp.getMaSP(), 
-                sp.getTenSP(), 
-                sp.getLoaiSP(), 
-                tonKho, 
-                DinhDang.tien(sp.getGiaBan())
+            model.addRow(new Object[] {
+                    sp.getMaSP(),
+                    sp.getTenSP(),
+                    sp.getLoaiSP(),
+                    tonKho,
+                    DinhDang.tien(sp.getGiaBan())
             });
         }
     }

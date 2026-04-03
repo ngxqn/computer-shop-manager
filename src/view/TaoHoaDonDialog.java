@@ -50,14 +50,14 @@ public class TaoHoaDonDialog extends JDialog {
         
         // --- 1. Panel Trên (Thông tin cơ bản) ---
         JPanel pnlTop = new JPanel(new GridLayout(0, 2, 5, 5));
-        pnlTop.setBorder(BorderFactory.createTitledBorder("Thông tin Hóa Đơn & Nhân viên"));
+        pnlTop.setBorder(BorderFactory.createTitledBorder("Thông tin hóa đơn & nhân viên"));
 
         txtMaHD = new JTextField(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         txtMaHD.setEditable(false);
-        pnlTop.add(new JLabel("Mã Hóa Đơn:")); pnlTop.add(txtMaHD);
+        pnlTop.add(new JLabel("Mã hóa đơn:")); pnlTop.add(txtMaHD);
 
         cbKH = new JComboBox<>(new Vector<>(khDAO.getAll()));
-        pnlTop.add(new JLabel("Chọn Khách Hàng:")); pnlTop.add(cbKH);
+        pnlTop.add(new JLabel("Chọn khách hàng:")); pnlTop.add(cbKH);
 
         String curNVStr = AppSession.getInstance().getMaNV() + " - " + AppSession.getInstance().getTenNV();
         lblNV = new JLabel(curNVStr);
@@ -67,7 +67,7 @@ public class TaoHoaDonDialog extends JDialog {
         JPanel pnlCenter = new JPanel(new BorderLayout(5, 5));
         
         JPanel pnlScan = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pnlScan.add(new JLabel("🔍 Quét Mã sêri:"));
+        pnlScan.add(new JLabel("🔍 Quét mã sêri:"));
         txtSerial = new JTextField(20);
         txtSerial.setToolTipText("Nhập mã sêri và nhấn Enter để truy vấn");
         pnlScan.add(txtSerial);
@@ -84,7 +84,7 @@ public class TaoHoaDonDialog extends JDialog {
 
         pnlCenter.add(pnlScan, BorderLayout.NORTH);
 
-        model = new DefaultTableModel(new String[]{"Mã Seri", "Tên Sản Phẩm", "Đơn Giá Bán"}, 0) {
+        model = new DefaultTableModel(new String[]{"Mã sêri", "Tên sản phẩm", "Đơn giá bán"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
@@ -93,13 +93,13 @@ public class TaoHoaDonDialog extends JDialog {
 
         // --- 3. Panel Dưới (Tổng tiền & Chốt đơn) ---
         JPanel pnlBot = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
-        lblTongTien = new JLabel("Tổng Tiền: 0");
+        lblTongTien = new JLabel("Tổng tiền: 0");
         lblTongTien.setFont(lblTongTien.getFont().deriveFont(Font.BOLD, 18f));
         lblTongTien.setForeground(Color.RED);
         
-        JButton btnThanhToan = new JButton("THANH TOÁN");
+        JButton btnThanhToan = new JButton("Thanh toán");
         btnThanhToan.setFont(btnThanhToan.getFont().deriveFont(Font.BOLD, 14f));
-        btnThanhToan.setBackground(new Color(0, 150, 0));
+        btnThanhToan.setBackground(new Color(0, 122, 255));
         btnThanhToan.setForeground(Color.WHITE);
         
         btnThanhToan.addActionListener(e -> thucHienThanhToan());
@@ -180,7 +180,7 @@ public class TaoHoaDonDialog extends JDialog {
 
         boolean success = hoaDonDAO.taoHoaDon(hd, danhSachChiTiet);
         if (success) {
-            JOptionPane.showMessageDialog(this, "✅ Lập hóa đơn và Checkout thành công!\n" +
+            JOptionPane.showMessageDialog(this, "✅ Lập hóa đơn và checkout thành công!\n" +
                                                  "Tổng tiền: " + DinhDang.tien(tongTienGiaoDich), 
                                                  "Thành công", JOptionPane.INFORMATION_MESSAGE);
             dispose();

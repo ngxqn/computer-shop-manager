@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class BangDieuKhienKhachHang extends JPanel {
 
@@ -16,18 +17,18 @@ public class BangDieuKhienKhachHang extends JPanel {
 
     private JTextField fieldID, fieldHoTen, fieldNamSinh, fieldSDT, fieldDiaChi;
     private JComboBox<String> hopChonGioiTinh;
-    private final String[] DANH_SACH_GIOI_TINH = {"Nam", "Nữ"};
+    private final String[] DANH_SACH_GIOI_TINH = { "Nam", "Nữ" };
     private JTextField fieldTimKiem;
     private javax.swing.table.TableRowSorter<DefaultTableModel> sorter;
 
     public BangDieuKhienKhachHang(QuanLyKhachHang quanLyKhachHang) {
         this.quanLyKhachHang = quanLyKhachHang;
-        
+
         initComponents();
         initEvents();
-        
+
         taiDuLieuVaoBang();
-        resetForm(); 
+        resetForm();
     }
 
     private void initComponents() {
@@ -46,15 +47,17 @@ public class BangDieuKhienKhachHang extends JPanel {
     }
 
     private void thietLapBang() {
-        String[] tenCot = {"ID", "Họ tên", "Giới tính", "Năm sinh", "Sđt", "Địa chỉ"};
+        String[] tenCot = { "ID", "Họ tên", "Giới tính", "Năm sinh", "Sđt", "Địa chỉ" };
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
         tableKhachHang = new JTable(moHinhBang);
         tableKhachHang.setRowHeight(30);
         tableKhachHang.getTableHeader().setReorderingAllowed(false);
-        
+
         // --- UX: Thiết lập bộ lọc thời gian thực ---
         sorter = new javax.swing.table.TableRowSorter<>(moHinhBang);
         tableKhachHang.setRowSorter(sorter);
@@ -101,7 +104,8 @@ public class BangDieuKhienKhachHang extends JPanel {
     }
 
     private void themVaoForm(JPanel p, JComponent c, int x, int y, GridBagConstraints gbc) {
-        gbc.gridx = x; gbc.gridy = y;
+        gbc.gridx = x;
+        gbc.gridy = y;
         p.add(c, gbc);
     }
 
@@ -109,19 +113,26 @@ public class BangDieuKhienKhachHang extends JPanel {
         JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
         JButton nutThem = new JButton("Thêm mới");
+        nutThem.setIcon(new FlatSVGIcon("resources/icons/plus.svg", 16, 16));
+
         JButton nutSua = new JButton("Cập nhật");
+        nutSua.setIcon(new FlatSVGIcon("resources/icons/edit-3.svg", 16, 16));
+
         JButton nutXoa = new JButton("Xóa");
+        nutXoa.setIcon(new FlatSVGIcon("resources/icons/trash-2.svg", 16, 16));
+
         JButton nutReset = new JButton("Làm mới");
-        
+        nutReset.setIcon(new FlatSVGIcon("resources/icons/refresh-cw.svg", 16, 16));
+
         fieldTimKiem = new JTextField(25);
         fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên khách hàng để lọc nhanh...");
-        
-        bangNut.add(nutThem); 
-        bangNut.add(nutSua); 
+
+        bangNut.add(nutThem);
+        bangNut.add(nutSua);
         bangNut.add(nutXoa);
-        bangNut.add(nutReset); 
+        bangNut.add(nutReset);
         bangNut.add(new JLabel(" | "));
-        bangNut.add(new JLabel("Tìm kiếm: ")); 
+        bangNut.add(new JLabel("Tìm kiếm: "));
         bangNut.add(fieldTimKiem);
 
         // Action Listeners
@@ -129,17 +140,25 @@ public class BangDieuKhienKhachHang extends JPanel {
         nutSua.addActionListener(e -> suaKhachHang());
         nutXoa.addActionListener(e -> xoaKhachHang());
         nutReset.addActionListener(e -> resetForm());
-        
+
         return bangNut;
     }
 
     private void initEvents() {
         // --- UX: Lọc thời gian thực ---
         fieldTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
             private void loc() {
                 String val = fieldTimKiem.getText().trim();
                 if (val.isEmpty()) {
@@ -164,7 +183,7 @@ public class BangDieuKhienKhachHang extends JPanel {
         }
 
         KhachHang khMoi = new KhachHang();
-        String idMoi = quanLyKhachHang.phatSinhIDTuDong(); 
+        String idMoi = quanLyKhachHang.phatSinhIDTuDong();
 
         khMoi.setID(idMoi);
         khMoi.setHoTen(fieldHoTen.getText().trim());
@@ -179,7 +198,8 @@ public class BangDieuKhienKhachHang extends JPanel {
             resetForm();
             JOptionPane.showMessageDialog(this, "Thêm thành công! ID khách hàng là: " + idMoi);
         } else {
-            JOptionPane.showMessageDialog(this, "Lỗi khi thêm khách hàng vào database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi khi thêm khách hàng vào database!", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -203,7 +223,8 @@ public class BangDieuKhienKhachHang extends JPanel {
             taiDuLieuVaoBang();
             JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
         } else {
-            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật khách hàng vào database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật khách hàng vào database!", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -215,7 +236,8 @@ public class BangDieuKhienKhachHang extends JPanel {
         }
 
         String id = (String) tableKhachHang.getValueAt(row, 0);
-        int confirm = JOptionPane.showConfirmDialog(this, "Xóa khách hàng " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Xóa khách hàng " + id + "?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = quanLyKhachHang.xoaKhachHang(id);
@@ -224,16 +246,16 @@ public class BangDieuKhienKhachHang extends JPanel {
                 resetForm();
                 JOptionPane.showMessageDialog(this, "Đã xóa khách hàng (soft delete).");
             } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi xóa khách hàng trong database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa khách hàng trong database!", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-
     private void dienDuLieuVaoBang(List<KhachHang> danhSach) {
         moHinhBang.setRowCount(0);
         for (KhachHang kh : danhSach) {
-            moHinhBang.addRow(new Object[]{
+            moHinhBang.addRow(new Object[] {
                     kh.getID(), kh.getHoTen(), kh.getGioiTinh(),
                     kh.getNamSinh(), kh.getSdt(), kh.getDiaChi()
             });

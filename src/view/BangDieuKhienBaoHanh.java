@@ -8,6 +8,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import util.DinhDang;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class BangDieuKhienBaoHanh extends JPanel {
     private PhieuBaoHanhDAO pbhDAO = new PhieuBaoHanhDAO();
@@ -30,21 +31,25 @@ public class BangDieuKhienBaoHanh extends JPanel {
 
         // --- Top Panel (Actions & Search) ---
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        
+
         btnLapPhieu = new JButton("Lập phiếu tiếp nhận");
+        btnLapPhieu.setIcon(new FlatSVGIcon("resources/icons/plus-circle.svg", 16, 16));
         btnLapPhieu.setFont(btnLapPhieu.getFont().deriveFont(Font.BOLD));
-        btnLapPhieu.setBackground(new Color(0, 120, 200));
-        
+        btnLapPhieu.setBackground(new Color(0, 122, 255));
+        btnLapPhieu.setForeground(Color.WHITE);
+
         btnXuLy = new JButton("Xử lý & Trả máy");
+        btnXuLy.setIcon(new FlatSVGIcon("resources/icons/check-circle.svg", 16, 16));
         btnXuLy.setFont(btnXuLy.getFont().deriveFont(Font.BOLD));
-        btnXuLy.setBackground(new Color(235, 215, 0));
+        btnXuLy.setBackground(new Color(48, 209, 88));
         btnXuLy.setForeground(Color.BLACK);
-        
+
         btnRefresh = new JButton("Làm mới");
+        btnRefresh.setIcon(new FlatSVGIcon("resources/icons/refresh-cw.svg", 14, 14));
 
         txtSearch = new JTextField(20);
         txtSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã phiếu hoặc sêri...");
-        
+
         panelTop.add(btnLapPhieu);
         panelTop.add(btnXuLy);
         panelTop.add(new JLabel(" | "));
@@ -54,16 +59,19 @@ public class BangDieuKhienBaoHanh extends JPanel {
         add(panelTop, BorderLayout.NORTH);
 
         // --- Table Section ---
-        String[] columns = {"Mã phiếu", "Mã sêri", "Mã KH", "Ngày tiếp nhận", "Ngày hẹn trả", "Trạng thái", "Chi phí"};
+        String[] columns = { "Mã phiếu", "Mã sêri", "Mã KH", "Ngày tiếp nhận", "Ngày hẹn trả", "Trạng thái",
+                "Chi phí" };
         model = new DefaultTableModel(columns, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
-        
+
         tblShow = new JTable(model);
         tblShow.setRowHeight(30);
         tblShow.getTableHeader().setReorderingAllowed(false);
-        
+
         sorter = new javax.swing.table.TableRowSorter<>(model);
         tblShow.setRowSorter(sorter);
 
@@ -73,10 +81,18 @@ public class BangDieuKhienBaoHanh extends JPanel {
     private void initEvents() {
         // --- Real-time Filter ---
         txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
             private void loc() {
                 String val = txtSearch.getText().trim();
                 if (val.isEmpty()) {
@@ -104,7 +120,8 @@ public class BangDieuKhienBaoHanh extends JPanel {
             String maPBH = (String) model.getValueAt(modelRow, 0);
             PhieuBaoHanh selectedPBH = timPhieuTrongDanhSach(maPBH);
             if (selectedPBH != null) {
-                ChiTietBaoHanhDialog dialog = new ChiTietBaoHanhDialog((Frame) SwingUtilities.getWindowAncestor(this), selectedPBH);
+                ChiTietBaoHanhDialog dialog = new ChiTietBaoHanhDialog((Frame) SwingUtilities.getWindowAncestor(this),
+                        selectedPBH);
                 dialog.setVisible(true);
                 taiDuLieu();
             }
@@ -117,14 +134,14 @@ public class BangDieuKhienBaoHanh extends JPanel {
         model.setRowCount(0);
         List<PhieuBaoHanh> ds = pbhDAO.getAll();
         for (PhieuBaoHanh p : ds) {
-            model.addRow(new Object[]{
-                p.getMaPBH(),
-                p.getMaSeri(),
-                p.getMaKH(),
-                sdf.format(p.getNgayTiepNhan()),
-                p.getNgayTraDuKien() != null ? sdf.format(p.getNgayTraDuKien()) : "N/A",
-                p.getTinhTrang(),
-                DinhDang.tien(p.getChiPhi())
+            model.addRow(new Object[] {
+                    p.getMaPBH(),
+                    p.getMaSeri(),
+                    p.getMaKH(),
+                    sdf.format(p.getNgayTiepNhan()),
+                    p.getNgayTraDuKien() != null ? sdf.format(p.getNgayTraDuKien()) : "N/A",
+                    p.getTinhTrang(),
+                    DinhDang.tien(p.getChiPhi())
             });
         }
     }

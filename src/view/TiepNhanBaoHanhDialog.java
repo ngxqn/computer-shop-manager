@@ -97,7 +97,7 @@ public class TiepNhanBaoHanhDialog extends JDialog {
     private void traCuuAction() {
         String serial = txtSerial.getText().trim();
         if (serial.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số sêri.");
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã sêri.");
             return;
         }
 

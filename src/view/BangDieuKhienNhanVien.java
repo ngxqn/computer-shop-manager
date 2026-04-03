@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import util.DinhDang;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class BangDieuKhienNhanVien extends JPanel {
 
@@ -18,15 +19,15 @@ public class BangDieuKhienNhanVien extends JPanel {
     private javax.swing.table.TableRowSorter<DefaultTableModel> sorter;
     private JComboBox<String> hopChonGioiTinh, hopChonChucVu;
 
-    private final String[] DANH_SACH_CHUC_VU = {"Ban Hang", "Thu Ngan", "Quan Li Kho"};
-    private final String[] DANH_SACH_GIOI_TINH = {"Nam", "Nu"};
+    private final String[] DANH_SACH_CHUC_VU = { "Bán hàng", "Thu ngân", "Quản lý kho" };
+    private final String[] DANH_SACH_GIOI_TINH = { "Nam", "Nữ" };
 
     public BangDieuKhienNhanVien(QuanLyNhanVien quanLyNhanVien) {
         this.quanLyNhanVien = quanLyNhanVien;
-        
+
         initComponents();
         initEvents();
-        
+
         taiDuLieuVaoBang();
         fieldID.setText(quanLyNhanVien.phatSinhIDTuDong());
     }
@@ -47,15 +48,18 @@ public class BangDieuKhienNhanVien extends JPanel {
     }
 
     private void thietLapBang() {
-        String[] tenCot = {"ID", "Họ tên", "Giới tính", "Năm sinh", "SĐT", "Địa chỉ", "Chức vụ", "Xếp loại", "Tổng lương"};
+        String[] tenCot = { "ID", "Họ tên", "Giới tính", "Năm sinh", "SĐT", "Địa chỉ", "Chức vụ", "Xếp loại",
+                "Tổng lương" };
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
         tableNhanVien = new JTable(moHinhBang);
         tableNhanVien.setRowHeight(30);
         tableNhanVien.getTableHeader().setReorderingAllowed(false);
-        
+
         // --- UX: Thiết lập bộ lọc thời gian thực ---
         sorter = new javax.swing.table.TableRowSorter<>(moHinhBang);
         tableNhanVien.setRowSorter(sorter);
@@ -109,27 +113,35 @@ public class BangDieuKhienNhanVien extends JPanel {
     }
 
     private void themVaoForm(JPanel p, JComponent c, int x, int y, GridBagConstraints gbc) {
-        gbc.gridx = x; gbc.gridy = y;
+        gbc.gridx = x;
+        gbc.gridy = y;
         p.add(c, gbc);
     }
 
     private JPanel thietLapBangNut() {
         JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        
+
         JButton nutThem = new JButton("Thêm mới");
+        nutThem.setIcon(new FlatSVGIcon("resources/icons/plus.svg", 16, 16));
+
         JButton nutSua = new JButton("Cập nhật");
+        nutSua.setIcon(new FlatSVGIcon("resources/icons/edit-3.svg", 16, 16));
+
         JButton nutXoa = new JButton("Xóa");
+        nutXoa.setIcon(new FlatSVGIcon("resources/icons/trash-2.svg", 16, 16));
+
         JButton nutReset = new JButton("Làm mới");
+        nutReset.setIcon(new FlatSVGIcon("resources/icons/refresh-cw.svg", 16, 16));
 
         fieldTimKiem = new JTextField(25);
         fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên nhân viên để lọc nhanh...");
-        
-        bangNut.add(nutThem); 
-        bangNut.add(nutSua); 
+
+        bangNut.add(nutThem);
+        bangNut.add(nutSua);
         bangNut.add(nutXoa);
-        bangNut.add(nutReset); 
+        bangNut.add(nutReset);
         bangNut.add(new JLabel(" | "));
-        bangNut.add(new JLabel("Tìm kiếm: ")); 
+        bangNut.add(new JLabel("Tìm kiếm: "));
         bangNut.add(fieldTimKiem);
 
         // Action Listeners
@@ -144,10 +156,18 @@ public class BangDieuKhienNhanVien extends JPanel {
     private void initEvents() {
         // --- UX: Lọc thời gian thực ---
         fieldTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { loc(); }
-            
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                loc();
+            }
+
             private void loc() {
                 String val = fieldTimKiem.getText().trim();
                 if (val.isEmpty()) {
@@ -172,7 +192,7 @@ public class BangDieuKhienNhanVien extends JPanel {
         quanLyNhanVien.refreshData();
         moHinhBang.setRowCount(0);
         for (NhanVien nv : quanLyNhanVien.getNhanVienList()) {
-            moHinhBang.addRow(new Object[]{
+            moHinhBang.addRow(new Object[] {
                     nv.getID(), nv.getHoTen(), nv.getGioiTinh(), nv.getNamSinh(),
                     nv.getSdt(), nv.getDiaChi(), nv.getChucVu(), nv.xepLoai(),
                     DinhDang.tien(nv.tinhLuong())
@@ -182,15 +202,17 @@ public class BangDieuKhienNhanVien extends JPanel {
 
     private void themNhanVien() {
         NhanVien nvMoi = taoNhanVienTuForm();
-        if (nvMoi == null) return;
-        
+        if (nvMoi == null)
+            return;
+
         boolean success = quanLyNhanVien.themNhanVien(nvMoi);
         if (success) {
             taiDuLieuVaoBang();
             resetForm();
             JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
         } else {
-            JOptionPane.showMessageDialog(this, "Lỗi khi thêm nhân viên vào Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi khi thêm nhân viên vào Database!", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -202,14 +224,16 @@ public class BangDieuKhienNhanVien extends JPanel {
             return;
         }
         NhanVien nvMoi = taoNhanVienTuForm();
-        if (nvMoi == null) return;
-        
+        if (nvMoi == null)
+            return;
+
         boolean success = quanLyNhanVien.suaNhanVien(nvMoi);
         if (success) {
             taiDuLieuVaoBang();
             JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
         } else {
-            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật nhân viên vào Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật nhân viên vào Database!", "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -220,7 +244,8 @@ public class BangDieuKhienNhanVien extends JPanel {
             JOptionPane.showMessageDialog(this, "Hãy chọn nhân viên cần xóa trong bảng!");
             return;
         }
-        int xacNhan = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        int xacNhan = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên " + id + "?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION) {
             boolean success = quanLyNhanVien.xoaNhanVien(id);
             if (success) {
@@ -228,14 +253,16 @@ public class BangDieuKhienNhanVien extends JPanel {
                 resetForm();
                 JOptionPane.showMessageDialog(this, "Đã xóa nhân viên (Soft Delete)!");
             } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi xóa nhân viên trong Database!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Lỗi khi xóa nhân viên trong Database!", "Lỗi",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void hienThiNhanVienDuocChon() {
         int row = tableNhanVien.getSelectedRow();
-        if (row == -1) return;
+        if (row == -1)
+            return;
         String id = (String) tableNhanVien.getValueAt(row, 0);
         NhanVien nv = quanLyNhanVien.timNhanVienTheoID(id);
         if (nv != null) {
@@ -251,9 +278,12 @@ public class BangDieuKhienNhanVien extends JPanel {
 
     private void resetForm() {
         fieldID.setText(quanLyNhanVien.phatSinhIDTuDong());
-        fieldHoTen.setText(""); fieldNamSinh.setText("");
-        fieldSDT.setText(""); fieldDiaChi.setText("");
-        fieldSoNgayNghi.setText(""); fieldTimKiem.setText("");
+        fieldHoTen.setText("");
+        fieldNamSinh.setText("");
+        fieldSDT.setText("");
+        fieldDiaChi.setText("");
+        fieldSoNgayNghi.setText("");
+        fieldTimKiem.setText("");
         tableNhanVien.clearSelection();
         taiDuLieuVaoBang();
     }
@@ -268,9 +298,12 @@ public class BangDieuKhienNhanVien extends JPanel {
             String dc = fieldDiaChi.getText().trim();
             String cv = (String) hopChonChucVu.getSelectedItem();
             int nghi = Integer.parseInt(fieldSoNgayNghi.getText().trim());
-            if (ten.isEmpty()) throw new Exception("Tên không được để trống!");
-            if (cv.equals("Ban Hang")) return new NhanVienBanHang(cv, id, ten, gt, ns, sdt, dc, nghi);
-            if (cv.equals("Thu Ngan")) return new NhanVienThuNgan(cv, id, ten, gt, ns, sdt, dc, nghi);
+            if (ten.isEmpty())
+                throw new Exception("Tên không được để trống!");
+            if (cv.equals("Ban Hang"))
+                return new NhanVienBanHang(cv, id, ten, gt, ns, sdt, dc, nghi);
+            if (cv.equals("Thu Ngan"))
+                return new NhanVienThuNgan(cv, id, ten, gt, ns, sdt, dc, nghi);
             return new NhanVienQuanLyKho(cv, id, ten, gt, ns, sdt, dc, nghi);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi dữ liệu: " + e.getMessage());

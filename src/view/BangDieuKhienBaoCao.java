@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Map;
 import util.DinhDang;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class BangDieuKhienBaoCao extends JPanel {
     private JTable bangBaoCao;
@@ -43,6 +44,7 @@ public class BangDieuKhienBaoCao extends JPanel {
         lblTongCong = new JLabel("Tổng doanh thu: 0");
         lblTongCong.setFont(lblTongCong.getFont().deriveFont(Font.BOLD, 14f));
         btnRefresh = new JButton("Làm mới");
+        btnRefresh.setIcon(new FlatSVGIcon("resources/icons/refresh-cw.svg", 14, 14));
         
         pnlBottom.add(lblTongCong);
         pnlBottom.add(btnRefresh);

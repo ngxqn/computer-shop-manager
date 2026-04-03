@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import util.DinhDang;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class BangDieuKhienSanPham extends JPanel {
 
@@ -18,14 +19,15 @@ public class BangDieuKhienSanPham extends JPanel {
     private JTextField fieldSearch;
     private javax.swing.table.TableRowSorter<DefaultTableModel> boLoc;
 
-    private final String[] DANH_SACH_LOAI = {"Laptop", "Desktop", "Linh kiện", "Màn hình", "Chuột & Bàn phím", "Khác"};
+    private final String[] DANH_SACH_LOAI = { "Laptop", "Desktop", "Linh kiện", "Màn hình", "Chuột & Bàn phím",
+            "Khác" };
 
     public BangDieuKhienSanPham(QuanLySanPham qlsp) {
         this.quanLySanPham = qlsp;
-        
+
         initComponents();
         initEvents();
-        
+
         taiDuLieuVaoBang();
     }
 
@@ -45,15 +47,17 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void thietLapBang() {
-        String[] tenCot = {"Mã SP", "Tên sản phẩm", "Loại", "Giá bán", "Bảo hành (tháng)", "Trạng thái"};
+        String[] tenCot = { "Mã SP", "Tên sản phẩm", "Loại", "Giá bán", "Bảo hành (tháng)", "Trạng thái" };
         moHinhBang = new DefaultTableModel(tenCot, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
         tableSanPham = new JTable(moHinhBang);
         tableSanPham.setRowHeight(30);
         tableSanPham.getTableHeader().setReorderingAllowed(false);
-        
+
         // --- UX: Thiết lập bộ lọc thời gian thực ---
         boLoc = new javax.swing.table.TableRowSorter<>(moHinhBang);
         tableSanPham.setRowSorter(boLoc);
@@ -96,27 +100,35 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private void themVaoForm(JPanel p, JComponent c, int x, int y, GridBagConstraints gbc) {
-        gbc.gridx = x; gbc.gridy = y;
+        gbc.gridx = x;
+        gbc.gridy = y;
         p.add(c, gbc);
     }
 
     private JPanel thietLapBangNut() {
         JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        
+
         JButton btnCreate = new JButton("Thêm mới");
+        btnCreate.setIcon(new FlatSVGIcon("resources/icons/plus.svg", 16, 16));
+
         JButton btnUpdate = new JButton("Cập nhật");
+        btnUpdate.setIcon(new FlatSVGIcon("resources/icons/edit-3.svg", 16, 16));
+
         JButton btnDelete = new JButton("Xóa");
+        btnDelete.setIcon(new FlatSVGIcon("resources/icons/trash-2.svg", 16, 16));
+
         JButton btnRefresh = new JButton("Làm mới");
-        
+        btnRefresh.setIcon(new FlatSVGIcon("resources/icons/refresh-cw.svg", 16, 16));
+
         fieldSearch = new JTextField(25);
         fieldSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên sản phẩm để lọc nhanh...");
-        
-        bangNut.add(btnCreate); 
-        bangNut.add(btnUpdate); 
+
+        bangNut.add(btnCreate);
+        bangNut.add(btnUpdate);
         bangNut.add(btnDelete);
-        bangNut.add(btnRefresh); 
+        bangNut.add(btnRefresh);
         bangNut.add(new JLabel(" | "));
-        bangNut.add(new JLabel("Tìm kiếm: ")); 
+        bangNut.add(new JLabel("Tìm kiếm: "));
         bangNut.add(fieldSearch);
 
         // Action Listeners
@@ -131,10 +143,18 @@ public class BangDieuKhienSanPham extends JPanel {
     private void initEvents() {
         // --- UX: Lắng nghe thay đổi trên ô tìm kiếm để lọc ngay lập tức ---
         fieldSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
-            
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                thucHienLoc();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                thucHienLoc();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                thucHienLoc();
+            }
+
             private void thucHienLoc() {
                 String text = fieldSearch.getText().trim();
                 if (text.isEmpty()) {
@@ -174,7 +194,8 @@ public class BangDieuKhienSanPham extends JPanel {
 
     private void hienThiSanPhamDuocChon() {
         int dongDuocChon = tableSanPham.getSelectedRow();
-        if (dongDuocChon == -1) return;
+        if (dongDuocChon == -1)
+            return;
 
         String id = (String) tableSanPham.getValueAt(tableSanPham.convertRowIndexToModel(dongDuocChon), 0);
         SanPham sanPham = quanLySanPham.timSanPhamTheoID(id);
@@ -219,7 +240,8 @@ public class BangDieuKhienSanPham extends JPanel {
 
     private void suaSanPham() {
         String id = fieldID.getText().trim();
-        if (fieldID.isEditable()) return;
+        if (fieldID.isEditable())
+            return;
 
         try {
             String ten = fieldTen.getText().trim();
@@ -238,9 +260,11 @@ public class BangDieuKhienSanPham extends JPanel {
 
     private void xoaSanPham() {
         String id = fieldID.getText().trim();
-        if (fieldID.isEditable()) return;
+        if (fieldID.isEditable())
+            return;
 
-        int xacNhan = JOptionPane.showConfirmDialog(this, "Xóa danh mục sản phẩm " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        int xacNhan = JOptionPane.showConfirmDialog(this, "Xóa danh mục sản phẩm " + id + "?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
         if (xacNhan == JOptionPane.YES_OPTION && quanLySanPham.xoaSanPham(id)) {
             taiDuLieuVaoBang();
             resetForm();
@@ -248,11 +272,10 @@ public class BangDieuKhienSanPham extends JPanel {
         }
     }
 
-
     private void resetForm() {
-        fieldID.setText(""); 
+        fieldID.setText("");
         fieldTen.setText("");
-        fieldGiaBan.setText(""); 
+        fieldGiaBan.setText("");
         fieldBaoHanh.setText("");
         hopChonLoai.setSelectedIndex(0);
         fieldID.setEditable(true);
