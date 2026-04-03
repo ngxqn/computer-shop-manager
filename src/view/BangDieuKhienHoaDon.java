@@ -13,6 +13,7 @@ import util.DinhDang;
 public class BangDieuKhienHoaDon extends JPanel {
     private JTable bangHoaDon;
     private DefaultTableModel moHinhBang;
+    private JTextField fieldSearch;
     private SimpleDateFormat dinhDangNgay = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public BangDieuKhienHoaDon() {
@@ -31,11 +32,22 @@ public class BangDieuKhienHoaDon extends JPanel {
             taiDuLieu(); // Cập nhật lại danh sách ngay sau khi lập hóa đơn
         });
 
+        fieldSearch = new JTextField(15);
+        fieldSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hóa đơn...");
+        JButton btnSearch = new JButton("Tìm");
+        btnSearch.addActionListener(e -> {
+            String id = fieldSearch.getText().trim();
+            if(!id.isEmpty()) taiHoaDonTheoID(id);
+            else taiDuLieu();
+        });
         JButton btnRefresh = new JButton("↻ Làm mới");
         btnRefresh.setFont(new Font("Inter", Font.PLAIN, 14));
         btnRefresh.addActionListener(e -> taiDuLieu());
 
         panelTop.add(btnLapHoaDon);
+        panelTop.add(new JLabel(" | "));
+        panelTop.add(fieldSearch);
+        panelTop.add(btnSearch);
         panelTop.add(btnRefresh);
         this.add(panelTop, BorderLayout.NORTH);
 
@@ -52,6 +64,25 @@ public class BangDieuKhienHoaDon extends JPanel {
 
         // 3. Tải dữ liệu từ DB
         taiDuLieu();
+    }
+
+    private void taiHoaDonTheoID(String maHD) {
+        moHinhBang.setRowCount(0);
+        HoaDon hd = new HoaDonDAO().layHoaDonTheoID(maHD);
+        if (hd != null) {
+            String tienFormatted = DinhDang.tien(hd.getTongTien());
+            String ngayFormatted = hd.getNgayLap() != null ? dinhDangNgay.format(hd.getNgayLap()) : "";
+            moHinhBang.addRow(new Object[]{
+                hd.getMaHD(),
+                ngayFormatted,
+                hd.getMaKH(),
+                hd.getMaNV(),
+                tienFormatted
+            });
+        } else {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy hóa đơn này!");
+            taiDuLieu();
+        }
     }
 
     public void taiDuLieu() {

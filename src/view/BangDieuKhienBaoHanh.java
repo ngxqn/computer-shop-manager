@@ -11,6 +11,8 @@ import util.DinhDang;
 
 public class BangDieuKhienBaoHanh extends JPanel {
     private PhieuBaoHanhDAO pbhDAO = new PhieuBaoHanhDAO();
+    private JTextField txtSearch;
+    private javax.swing.table.TableRowSorter<DefaultTableModel> sorter;
     private JTable bang;
     private DefaultTableModel model;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -33,8 +35,26 @@ public class BangDieuKhienBaoHanh extends JPanel {
         JButton btnRefresh = new JButton("↻ Làm mới");
         btnRefresh.setFont(new Font("Inter", Font.PLAIN, 14));
 
+        txtSearch = new JTextField(15);
+        txtSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã phiếu hoặc sêri...");
+        
+        // --- UX: Lọc thời gian thực ---
+        txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { loc(); }
+            
+            private void loc() {
+                String val = txtSearch.getText().trim();
+                if (val.isEmpty()) sorter.setRowFilter(null);
+                else sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + val, 0, 1));
+            }
+        });
+
         panelTop.add(btnLapPhieu);
         panelTop.add(btnXuLy);
+        panelTop.add(new JLabel(" | "));
+        panelTop.add(txtSearch);
         panelTop.add(btnRefresh);
         add(panelTop, BorderLayout.NORTH);
 
@@ -44,6 +64,11 @@ public class BangDieuKhienBaoHanh extends JPanel {
         bang = new JTable(model);
         bang.setRowHeight(25);
         bang.setAutoCreateRowSorter(true);
+        
+        // --- UX: Lọc thời gian thực ---
+        sorter = new javax.swing.table.TableRowSorter<>(model);
+        bang.setRowSorter(sorter);
+
         add(new JScrollPane(bang), BorderLayout.CENTER);
 
         // 3. Events

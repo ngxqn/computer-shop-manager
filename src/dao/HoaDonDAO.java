@@ -107,6 +107,33 @@ public class HoaDonDAO {
     }
 
     /**
+     * Tìm kiếm 1 hóa đơn cụ thể theo mã ID.
+     */
+    public HoaDon layHoaDonTheoID(String maHD) {
+        String sql = "SELECT MaHD, MaNV, MaKH, NgayLap, TongTien FROM HOADON WHERE MaHD = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maHD);
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    HoaDon hd = new HoaDon();
+                    hd.setMaHD(rs.getString("MaHD"));
+                    hd.setMaNV(rs.getString("MaNV"));
+                    hd.setMaKH(rs.getString("MaKH"));
+                    java.sql.Timestamp ts = rs.getTimestamp("NgayLap");
+                    if (ts != null) hd.setNgayLap(new java.util.Date(ts.getTime()));
+                    hd.setTongTien(rs.getDouble("TongTien"));
+                    return hd;
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * Lấy toàn bộ Hóa Đơn từ Database để hiển thị trên bảng lịch sử
      */
     public List<HoaDon> getAllHoaDon() {

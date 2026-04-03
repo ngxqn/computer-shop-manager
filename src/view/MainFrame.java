@@ -17,7 +17,8 @@ public class MainFrame extends JFrame {
     private BangDieuKhienHoaDon hoaDonPanel;
     private BangDieuKhienNhanVien nhanVienPanel;
     private BangDieuKhienKhachHang khachHangPanel;
-    private BangDieuKhienBaoHanh baoHanhPanel; // MỚI
+    private BangDieuKhienBaoHanh baoHanhPanel; 
+    private JLabel lblStatus, lblUser, lblTime;
 
     public MainFrame(String title) {
         super(title);
@@ -115,10 +116,14 @@ public class MainFrame extends JFrame {
 
         this.setJMenuBar(menuBar);
 
-        // --- 6. BỘ LẮNG NGHE SỰ KIỆN TỰ ĐỘNG LÀM MỚI (REFRESH) ---
+        this.add(tabs, BorderLayout.CENTER);
+        this.add(taoStatusBar(), BorderLayout.SOUTH);
+
+        // --- 7. CẬP NHẬT STATUS BAR KHI ĐỔI TAB ---
         tabs.addChangeListener(e -> {
             int selectedIndex = tabs.getSelectedIndex();
             String titleTab = tabs.getTitleAt(selectedIndex);
+            lblStatus.setText("✪ Đang xem: " + titleTab);
 
             if (titleTab.equals("Danh mục sản phẩm")) {
                 sanPhamPanel.taiDuLieuVaoBang();
@@ -135,8 +140,35 @@ public class MainFrame extends JFrame {
             }
         });
 
-        this.add(tabs);
         this.setVisible(true);
+    }
+
+    private JPanel taoStatusBar() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+        panel.setPreferredSize(new Dimension(this.getWidth(), 30));
+
+        lblStatus = new JLabel("✪ Hệ thống sẵn sàng");
+        lblStatus.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+        String name = controller.AppSession.getInstance().getTenNV();
+        lblUser = new JLabel("👤 Nhân viên: " + name);
+        lblUser.setHorizontalAlignment(SwingConstants.CENTER);
+
+        lblTime = new JLabel();
+        lblTime.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        
+        // Timer cập nhật đồng hồ mỗi giây
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss | dd/MM/yyyy");
+        Timer timer = new Timer(1000, e -> lblTime.setText(sdf.format(new java.util.Date())));
+        timer.start();
+        lblTime.setText(sdf.format(new java.util.Date()));
+
+        panel.add(lblStatus, BorderLayout.WEST);
+        panel.add(lblUser, BorderLayout.CENTER);
+        panel.add(lblTime, BorderLayout.EAST);
+
+        return panel;
     }
 
     public static void main(String[] args) {
