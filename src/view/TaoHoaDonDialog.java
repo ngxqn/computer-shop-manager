@@ -94,11 +94,11 @@ public class TaoHoaDonDialog extends JDialog {
         // --- 3. Panel Dưới (Tổng tiền & Chốt đơn) ---
         JPanel pnlBot = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
         lblTongTien = new JLabel("Tổng Tiền: 0");
-        lblTongTien.setFont(new Font("Arial", Font.BOLD, 18));
+        lblTongTien.setFont(lblTongTien.getFont().deriveFont(Font.BOLD, 18f));
         lblTongTien.setForeground(Color.RED);
         
         JButton btnThanhToan = new JButton("THANH TOÁN");
-        btnThanhToan.setFont(new Font("Arial", Font.BOLD, 14));
+        btnThanhToan.setFont(btnThanhToan.getFont().deriveFont(Font.BOLD, 14f));
         btnThanhToan.setBackground(new Color(0, 150, 0));
         btnThanhToan.setForeground(Color.WHITE);
         

@@ -22,24 +22,27 @@ public class BangDieuKhienKhachHang extends JPanel {
 
     public BangDieuKhienKhachHang(QuanLyKhachHang quanLyKhachHang) {
         this.quanLyKhachHang = quanLyKhachHang;
-        this.setLayout(new BorderLayout(10, 10));
-
-        // Khởi tạo Table trước để các hàm sau không bị NullPointerException
-        thietLapBang();
-
-        JPanel bangDieuKhien = new JPanel(new BorderLayout(10, 10));
-        bangDieuKhien.add(thietLapBangForm(), BorderLayout.CENTER);
-        bangDieuKhien.add(thietLapBangNut(), BorderLayout.SOUTH);
-
-        // CENTER: Bảng hiển thị
-        JScrollPane scrollPane = new JScrollPane(tableKhachHang);
-        this.add(scrollPane, BorderLayout.CENTER);
-
-        // SOUTH: Form và Nút
-        this.add(bangDieuKhien, BorderLayout.SOUTH);
-
+        
+        initComponents();
+        initEvents();
+        
         taiDuLieuVaoBang();
-        resetForm(); // Để thiết lập trạng thái ban đầu cho ô ID
+        resetForm(); 
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // --- Table Section (Center) ---
+        thietLapBang();
+        add(new JScrollPane(tableKhachHang), BorderLayout.CENTER);
+
+        // --- Control Section (South) ---
+        JPanel pnlControl = new JPanel(new BorderLayout(10, 10));
+        pnlControl.add(thietLapBangForm(), BorderLayout.CENTER);
+        pnlControl.add(thietLapBangNut(), BorderLayout.SOUTH);
+        add(pnlControl, BorderLayout.SOUTH);
     }
 
     private void thietLapBang() {
@@ -49,8 +52,8 @@ public class BangDieuKhienKhachHang extends JPanel {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tableKhachHang = new JTable(moHinhBang);
-        tableKhachHang.setRowHeight(25);
-        tableKhachHang.setAutoCreateRowSorter(true);
+        tableKhachHang.setRowHeight(30);
+        tableKhachHang.getTableHeader().setReorderingAllowed(false);
         
         // --- UX: Thiết lập bộ lọc thời gian thực ---
         sorter = new javax.swing.table.TableRowSorter<>(moHinhBang);
@@ -103,16 +106,34 @@ public class BangDieuKhienKhachHang extends JPanel {
     }
 
     private JPanel thietLapBangNut() {
-        JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        JButton nutThem = new JButton("+ Thêm mới");
-        JButton nutSua = new JButton("✎ Cập nhật");
-        JButton nutXoa = new JButton("🗑 Xóa");
-        JButton nutReset = new JButton("↻ Làm mới");
+        JButton nutThem = new JButton("Thêm mới");
+        JButton nutSua = new JButton("Cập nhật");
+        JButton nutXoa = new JButton("Xóa");
+        JButton nutReset = new JButton("Làm mới");
         
-        fieldTimKiem = new JTextField(15);
-        fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên khách hàng...");
+        fieldTimKiem = new JTextField(25);
+        fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên khách hàng để lọc nhanh...");
         
+        bangNut.add(nutThem); 
+        bangNut.add(nutSua); 
+        bangNut.add(nutXoa);
+        bangNut.add(nutReset); 
+        bangNut.add(new JLabel(" | "));
+        bangNut.add(new JLabel("Tìm kiếm: ")); 
+        bangNut.add(fieldTimKiem);
+
+        // Action Listeners
+        nutThem.addActionListener(e -> themKhachHang());
+        nutSua.addActionListener(e -> suaKhachHang());
+        nutXoa.addActionListener(e -> xoaKhachHang());
+        nutReset.addActionListener(e -> resetForm());
+        
+        return bangNut;
+    }
+
+    private void initEvents() {
         // --- UX: Lọc thời gian thực ---
         fieldTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
@@ -124,27 +145,16 @@ public class BangDieuKhienKhachHang extends JPanel {
                 if (val.isEmpty()) {
                     sorter.setRowFilter(null);
                 } else {
-                    // Lọc trên cột ID (0) và Họ tên (1)
                     sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + val, 0, 1));
                 }
             }
         });
 
-        JButton nutTimKiem = new JButton("🔍 Tìm kiếm");
-
-        nutThem.addActionListener(e -> themKhachHang());
-        nutSua.addActionListener(e -> suaKhachHang());
-        nutXoa.addActionListener(e -> xoaKhachHang());
-        nutReset.addActionListener(e -> resetForm());
-        nutTimKiem.addActionListener(e -> timKiemKhachHang(fieldTimKiem.getText()));
-
-        bangNut.add(nutThem); bangNut.add(nutSua); bangNut.add(nutXoa);
-        bangNut.add(nutReset); 
-        bangNut.add(new JLabel("|"));
-        bangNut.add(new JLabel("Tìm kiếm:")); 
-        bangNut.add(fieldTimKiem); bangNut.add(nutTimKiem);
-
-        return bangNut;
+        tableKhachHang.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tableKhachHang.getSelectedRow() != -1) {
+                hienThiKhachHangDuocChon();
+            }
+        });
     }
 
     private void themKhachHang() {
@@ -219,15 +229,6 @@ public class BangDieuKhienKhachHang extends JPanel {
         }
     }
 
-    private void timKiemKhachHang(String keyword) {
-        if (keyword.trim().isEmpty()) {
-            taiDuLieuVaoBang();
-            return;
-        }
-        // Sử dụng hàm tìm kiếm đã có trong controller
-        List<KhachHang> ketQua = quanLyKhachHang.timKhachHang(keyword);
-        dienDuLieuVaoBang(ketQua);
-    }
 
     private void dienDuLieuVaoBang(List<KhachHang> danhSach) {
         moHinhBang.setRowCount(0);

@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
         itemAbout.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     "PHẦN MỀM QUẢN LÝ CỬA HÀNG MÁY TÍNH\n" +
-                            "Phiên bản: 2.0 (Build 2026.04.02)\n" +
+                            "Phiên bản: 2.0 (Build 2026.04.03)\n" +
                             "Phát triển bởi: Team ISAD C5-13_05\n" +
                             "Hệ thống đã sẵn sàng phục vụ.",
                     "Thông tin", JOptionPane.INFORMATION_MESSAGE);
@@ -174,7 +174,7 @@ public class MainFrame extends JFrame {
     public static void main(String[] args) {
         // Thiết lập giao diện FlatLaf Dark
         try {
-            com.formdev.flatlaf.FlatDarkLaf.setup();
+            com.formdev.flatlaf.themes.FlatMacDarkLaf.setup();
         } catch (Exception e) {
             System.err.println("Không thể thiết lập FlatLaf. Đang dùng theme mặc định.");
         }

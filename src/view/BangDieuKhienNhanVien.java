@@ -5,7 +5,6 @@ import controller.QuanLyNhanVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
 import util.DinhDang;
 
 public class BangDieuKhienNhanVien extends JPanel {
@@ -24,19 +23,27 @@ public class BangDieuKhienNhanVien extends JPanel {
 
     public BangDieuKhienNhanVien(QuanLyNhanVien quanLyNhanVien) {
         this.quanLyNhanVien = quanLyNhanVien;
-        this.setLayout(new BorderLayout(10, 10));
-
-        thietLapBang();
-
-        JPanel panelPhiaDuoi = new JPanel(new BorderLayout(5, 5));
-        panelPhiaDuoi.add(thietLapBangForm(), BorderLayout.CENTER);
-        panelPhiaDuoi.add(thietLapBangNut(), BorderLayout.SOUTH);
-
-        this.add(new JScrollPane(tableNhanVien), BorderLayout.CENTER);
-        this.add(panelPhiaDuoi, BorderLayout.SOUTH);
-
+        
+        initComponents();
+        initEvents();
+        
         taiDuLieuVaoBang();
         fieldID.setText(quanLyNhanVien.phatSinhIDTuDong());
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // --- Table Section (Center) ---
+        thietLapBang();
+        add(new JScrollPane(tableNhanVien), BorderLayout.CENTER);
+
+        // --- Control Section (South) ---
+        JPanel pnlControl = new JPanel(new BorderLayout(10, 10));
+        pnlControl.add(thietLapBangForm(), BorderLayout.CENTER);
+        pnlControl.add(thietLapBangNut(), BorderLayout.SOUTH);
+        add(pnlControl, BorderLayout.SOUTH);
     }
 
     private void thietLapBang() {
@@ -46,8 +53,8 @@ public class BangDieuKhienNhanVien extends JPanel {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tableNhanVien = new JTable(moHinhBang);
-        tableNhanVien.setRowHeight(25);
-        tableNhanVien.setAutoCreateRowSorter(true);
+        tableNhanVien.setRowHeight(30);
+        tableNhanVien.getTableHeader().setReorderingAllowed(false);
         
         // --- UX: Thiết lập bộ lọc thời gian thực ---
         sorter = new javax.swing.table.TableRowSorter<>(moHinhBang);
@@ -107,15 +114,34 @@ public class BangDieuKhienNhanVien extends JPanel {
     }
 
     private JPanel thietLapBangNut() {
-        JPanel bang = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        JButton nutThem = new JButton("+ Thêm mới");
-        JButton nutSua = new JButton("✎ Cập nhật");
-        JButton nutXoa = new JButton("🗑 Xóa");
-        JButton nutReset = new JButton("↻ Làm mới");
-
-        fieldTimKiem = new JTextField(15);
-        fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên nhân viên...");
+        JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         
+        JButton nutThem = new JButton("Thêm mới");
+        JButton nutSua = new JButton("Cập nhật");
+        JButton nutXoa = new JButton("Xóa");
+        JButton nutReset = new JButton("Làm mới");
+
+        fieldTimKiem = new JTextField(25);
+        fieldTimKiem.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên nhân viên để lọc nhanh...");
+        
+        bangNut.add(nutThem); 
+        bangNut.add(nutSua); 
+        bangNut.add(nutXoa);
+        bangNut.add(nutReset); 
+        bangNut.add(new JLabel(" | "));
+        bangNut.add(new JLabel("Tìm kiếm: ")); 
+        bangNut.add(fieldTimKiem);
+
+        // Action Listeners
+        nutThem.addActionListener(e -> themNhanVien());
+        nutSua.addActionListener(e -> suaNhanVien());
+        nutXoa.addActionListener(e -> xoaNhanVien());
+        nutReset.addActionListener(e -> resetForm());
+
+        return bangNut;
+    }
+
+    private void initEvents() {
         // --- UX: Lọc thời gian thực ---
         fieldTimKiem.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
@@ -127,53 +153,19 @@ public class BangDieuKhienNhanVien extends JPanel {
                 if (val.isEmpty()) {
                     sorter.setRowFilter(null);
                 } else {
-                    // Lọc trên cột ID (0) và Họ tên (1)
                     sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + val, 0, 1));
                 }
             }
         });
 
-        JButton nutTimKiem = new JButton("🔍 Tìm kiếm");
-
-        nutThem.addActionListener(e -> themNhanVien());
-        nutSua.addActionListener(e -> suaNhanVien());
-        nutXoa.addActionListener(e -> xoaNhanVien());
-        nutReset.addActionListener(e -> resetForm());
-        nutTimKiem.addActionListener(e -> thucHienTimKiem(fieldTimKiem.getText()));
-
-        bang.add(nutThem); bang.add(nutSua); bang.add(nutXoa);
-        bang.add(nutReset); 
-        bang.add(new JLabel("|"));
-        bang.add(new JLabel("Tìm kiếm:")); 
-        bang.add(fieldTimKiem); bang.add(nutTimKiem);
-        return bang;
+        tableNhanVien.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tableNhanVien.getSelectedRow() != -1) {
+                hienThiNhanVienDuocChon();
+            }
+        });
     }
 
     // --- CẬP NHẬT LOGIC TÌM KIẾM ---
-    private void thucHienTimKiem(String keyword) {
-        String tuKhoa = keyword.trim();
-        if (tuKhoa.isEmpty()) {
-            taiDuLieuVaoBang();
-            return;
-        }
-
-        // Sử dụng hàm timNhanVien(keyword) của Controller để lấy danh sách kết quả
-        List<NhanVien> ketQua = quanLyNhanVien.timNhanVien(tuKhoa);
-
-        moHinhBang.setRowCount(0);
-        if (!ketQua.isEmpty()) {
-            for (NhanVien nv : ketQua) {
-                moHinhBang.addRow(new Object[]{
-                        nv.getID(), nv.getHoTen(), nv.getGioiTinh(), nv.getNamSinh(),
-                        nv.getSdt(), nv.getDiaChi(), nv.getChucVu(), nv.xepLoai(),
-                        DinhDang.tien(nv.tinhLuong())
-                });
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên phù hợp với: " + tuKhoa);
-            taiDuLieuVaoBang();
-        }
-    }
 
     // --- CÁC PHƯƠNG THỨC KHÁC GIỮ NGUYÊN ---
     private void taiDuLieuVaoBang() {

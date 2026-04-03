@@ -13,32 +13,65 @@ public class BangDieuKhienBaoHanh extends JPanel {
     private PhieuBaoHanhDAO pbhDAO = new PhieuBaoHanhDAO();
     private JTextField txtSearch;
     private javax.swing.table.TableRowSorter<DefaultTableModel> sorter;
-    private JTable bang;
+    private JTable tblShow;
     private DefaultTableModel model;
+    private JButton btnLapPhieu, btnXuLy, btnRefresh;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public BangDieuKhienBaoHanh() {
-        setLayout(new BorderLayout(10, 10));
+        initComponents();
+        initEvents();
+        taiDuLieu();
+    }
 
-        // 1. Buttons
-        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        JButton btnLapPhieu = new JButton("+ Lập phiếu tiếp nhận");
-        btnLapPhieu.setFont(new Font("Inter", Font.BOLD, 14));
-        btnLapPhieu.setBackground(new Color(0, 120, 200));
-        btnLapPhieu.setForeground(Color.WHITE);
+    private void initComponents() {
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // --- Top Panel (Actions & Search) ---
+        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         
-        JButton btnXuLy = new JButton("⛭ Xử lý & trả máy");
-        btnXuLy.setFont(new Font("Inter", Font.BOLD, 14));
+        btnLapPhieu = new JButton("Lập phiếu tiếp nhận");
+        btnLapPhieu.setFont(btnLapPhieu.getFont().deriveFont(Font.BOLD));
+        btnLapPhieu.setBackground(new Color(0, 120, 200));
+        
+        btnXuLy = new JButton("Xử lý & Trả máy");
+        btnXuLy.setFont(btnXuLy.getFont().deriveFont(Font.BOLD));
         btnXuLy.setBackground(new Color(235, 215, 0));
         btnXuLy.setForeground(Color.BLACK);
         
-        JButton btnRefresh = new JButton("↻ Làm mới");
-        btnRefresh.setFont(new Font("Inter", Font.PLAIN, 14));
+        btnRefresh = new JButton("Làm mới");
 
-        txtSearch = new JTextField(15);
+        txtSearch = new JTextField(20);
         txtSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã phiếu hoặc sêri...");
         
-        // --- UX: Lọc thời gian thực ---
+        panelTop.add(btnLapPhieu);
+        panelTop.add(btnXuLy);
+        panelTop.add(new JLabel(" | "));
+        panelTop.add(new JLabel("Tìm kiếm: "));
+        panelTop.add(txtSearch);
+        panelTop.add(btnRefresh);
+        add(panelTop, BorderLayout.NORTH);
+
+        // --- Table Section ---
+        String[] columns = {"Mã phiếu", "Mã sêri", "Mã KH", "Ngày tiếp nhận", "Ngày hẹn trả", "Trạng thái", "Chi phí"};
+        model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) { return false; }
+        };
+        
+        tblShow = new JTable(model);
+        tblShow.setRowHeight(30);
+        tblShow.getTableHeader().setReorderingAllowed(false);
+        
+        sorter = new javax.swing.table.TableRowSorter<>(model);
+        tblShow.setRowSorter(sorter);
+
+        add(new JScrollPane(tblShow), BorderLayout.CENTER);
+    }
+
+    private void initEvents() {
+        // --- Real-time Filter ---
         txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { loc(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { loc(); }
@@ -46,32 +79,15 @@ public class BangDieuKhienBaoHanh extends JPanel {
             
             private void loc() {
                 String val = txtSearch.getText().trim();
-                if (val.isEmpty()) sorter.setRowFilter(null);
-                else sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + val, 0, 1));
+                if (val.isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + val, 0, 1));
+                }
             }
         });
 
-        panelTop.add(btnLapPhieu);
-        panelTop.add(btnXuLy);
-        panelTop.add(new JLabel(" | "));
-        panelTop.add(txtSearch);
-        panelTop.add(btnRefresh);
-        add(panelTop, BorderLayout.NORTH);
-
-        // 2. Table
-        String[] columns = {"Mã phiếu", "Mã sêri", "Mã KH", "Ngày tiếp nhận", "Ngày hẹn trả", "Trạng thái", "Chi phí"};
-        model = new DefaultTableModel(columns, 0);
-        bang = new JTable(model);
-        bang.setRowHeight(25);
-        bang.setAutoCreateRowSorter(true);
-        
-        // --- UX: Lọc thời gian thực ---
-        sorter = new javax.swing.table.TableRowSorter<>(model);
-        bang.setRowSorter(sorter);
-
-        add(new JScrollPane(bang), BorderLayout.CENTER);
-
-        // 3. Events
+        // --- Actions ---
         btnLapPhieu.addActionListener(e -> {
             TiepNhanBaoHanhDialog dialog = new TiepNhanBaoHanhDialog((Frame) SwingUtilities.getWindowAncestor(this));
             dialog.setVisible(true);
@@ -79,12 +95,13 @@ public class BangDieuKhienBaoHanh extends JPanel {
         });
 
         btnXuLy.addActionListener(e -> {
-            int row = bang.getSelectedRow();
+            int row = tblShow.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu bảo hành!");
                 return;
             }
-            String maPBH = (String) model.getValueAt(row, 0);
+            int modelRow = tblShow.convertRowIndexToModel(row);
+            String maPBH = (String) model.getValueAt(modelRow, 0);
             PhieuBaoHanh selectedPBH = timPhieuTrongDanhSach(maPBH);
             if (selectedPBH != null) {
                 ChiTietBaoHanhDialog dialog = new ChiTietBaoHanhDialog((Frame) SwingUtilities.getWindowAncestor(this), selectedPBH);
@@ -94,8 +111,6 @@ public class BangDieuKhienBaoHanh extends JPanel {
         });
 
         btnRefresh.addActionListener(e -> taiDuLieu());
-
-        taiDuLieu();
     }
 
     public void taiDuLieu() {

@@ -33,7 +33,7 @@ public class DangNhapDialog extends JDialog {
 
         // Header
         JLabel lblHeader = new JLabel("Computer Shop Manager", SwingConstants.CENTER);
-        lblHeader.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+        lblHeader.setFont(lblHeader.getFont().deriveFont(Font.BOLD, 20f));
         lblHeader.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(lblHeader, BorderLayout.NORTH);
 

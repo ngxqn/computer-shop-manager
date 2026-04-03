@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
 import util.DinhDang;
 
 public class BangDieuKhienSanPham extends JPanel {
@@ -23,21 +22,26 @@ public class BangDieuKhienSanPham extends JPanel {
 
     public BangDieuKhienSanPham(QuanLySanPham qlsp) {
         this.quanLySanPham = qlsp;
-        this.setLayout(new BorderLayout(10, 10));
-
-        thietLapBang();
-
-        JPanel bangDieuKhien = new JPanel(new BorderLayout(10, 10));
-        JPanel bangForm = thietLapBangForm();
-        bangDieuKhien.add(bangForm, BorderLayout.CENTER);
-
-        JPanel bangNut = thietLapBangNut();
-        bangDieuKhien.add(bangNut, BorderLayout.SOUTH);
-
-        this.add(new JScrollPane(tableSanPham), BorderLayout.CENTER);
-        this.add(bangDieuKhien, BorderLayout.SOUTH);
-
+        
+        initComponents();
+        initEvents();
+        
         taiDuLieuVaoBang();
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // --- Table Section (Center) ---
+        thietLapBang();
+        add(new JScrollPane(tableSanPham), BorderLayout.CENTER);
+
+        // --- Control Section (South) ---
+        JPanel pnlControl = new JPanel(new BorderLayout(10, 10));
+        pnlControl.add(thietLapBangForm(), BorderLayout.CENTER);
+        pnlControl.add(thietLapBangNut(), BorderLayout.SOUTH);
+        add(pnlControl, BorderLayout.SOUTH);
     }
 
     private void thietLapBang() {
@@ -47,8 +51,8 @@ public class BangDieuKhienSanPham extends JPanel {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tableSanPham = new JTable(moHinhBang);
-        tableSanPham.setRowHeight(25);
-        tableSanPham.setAutoCreateRowSorter(true);
+        tableSanPham.setRowHeight(30);
+        tableSanPham.getTableHeader().setReorderingAllowed(false);
         
         // --- UX: Thiết lập bộ lọc thời gian thực ---
         boLoc = new javax.swing.table.TableRowSorter<>(moHinhBang);
@@ -97,15 +101,34 @@ public class BangDieuKhienSanPham extends JPanel {
     }
 
     private JPanel thietLapBangNut() {
-        JPanel bang = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        JButton btnCreate = new JButton("+ Thêm mới");
-        JButton btnUpdate = new JButton("✎ Cập nhật");
-        JButton btnDelete = new JButton("🗑 Xóa");
-        JButton btnRefresh = new JButton("↻ Làm mới");
+        JPanel bangNut = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         
-        fieldSearch = new JTextField(15);
-        fieldSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên sản phẩm...");
+        JButton btnCreate = new JButton("Thêm mới");
+        JButton btnUpdate = new JButton("Cập nhật");
+        JButton btnDelete = new JButton("Xóa");
+        JButton btnRefresh = new JButton("Làm mới");
         
+        fieldSearch = new JTextField(25);
+        fieldSearch.putClientProperty("JTextField.placeholderText", "🔍 Nhập mã hoặc tên sản phẩm để lọc nhanh...");
+        
+        bangNut.add(btnCreate); 
+        bangNut.add(btnUpdate); 
+        bangNut.add(btnDelete);
+        bangNut.add(btnRefresh); 
+        bangNut.add(new JLabel(" | "));
+        bangNut.add(new JLabel("Tìm kiếm: ")); 
+        bangNut.add(fieldSearch);
+
+        // Action Listeners
+        btnCreate.addActionListener(e -> themSanPham());
+        btnUpdate.addActionListener(e -> suaSanPham());
+        btnDelete.addActionListener(e -> xoaSanPham());
+        btnRefresh.addActionListener(e -> resetForm());
+
+        return bangNut;
+    }
+
+    private void initEvents() {
         // --- UX: Lắng nghe thay đổi trên ô tìm kiếm để lọc ngay lập tức ---
         fieldSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { thucHienLoc(); }
@@ -117,27 +140,16 @@ public class BangDieuKhienSanPham extends JPanel {
                 if (text.isEmpty()) {
                     boLoc.setRowFilter(null);
                 } else {
-                    // Lọc không phân biệt hoa thường (?i) trên các cột ID (0) và Tên (1)
                     boLoc.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + text, 0, 1));
                 }
             }
         });
 
-        JButton btnSearch = new JButton("🔍 Tìm kiếm");
-
-        btnCreate.addActionListener(e -> themSanPham());
-        btnUpdate.addActionListener(e -> suaSanPham());
-        btnDelete.addActionListener(e -> xoaSanPham());
-        btnRefresh.addActionListener(e -> resetForm());
-        btnSearch.addActionListener(e -> timKiemSanPham(fieldSearch.getText()));
-
-        bang.add(btnCreate); bang.add(btnUpdate); bang.add(btnDelete);
-        bang.add(btnRefresh); 
-        bang.add(new JLabel("|"));
-        bang.add(new JLabel("Tìm kiếm:")); 
-        bang.add(fieldSearch); bang.add(btnSearch);
-
-        return bang;
+        tableSanPham.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && tableSanPham.getSelectedRow() != -1) {
+                hienThiSanPhamDuocChon();
+            }
+        });
     }
 
     public void taiDuLieuVaoBang() {
@@ -236,13 +248,6 @@ public class BangDieuKhienSanPham extends JPanel {
         }
     }
 
-    private void timKiemSanPham(String id) {
-        if (id.trim().isEmpty()) { taiDuLieuVaoBang(); return; }
-        SanPham sp = quanLySanPham.timSanPhamTheoID(id.trim());
-        List<SanPham> list = new ArrayList<>();
-        if (sp != null) list.add(sp);
-        dienDuLieuVaoBang(list);
-    }
 
     private void resetForm() {
         fieldID.setText(""); 
